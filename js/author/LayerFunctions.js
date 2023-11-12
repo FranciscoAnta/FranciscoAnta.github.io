@@ -1,0 +1,717 @@
+class LayerFunctions {
+
+  // Funciones de capa / Layer functions
+
+  // Sismos /Quakes
+
+  static getQuakesPointToLayerFunction(feature, latlng, pane) {
+    return L.circleMarker(latlng, {
+      pane: pane
+    })
+  }
+
+  static getQuakesFilterFunction(feature, filters) {
+    let isMagnitude, isIntensity, isDepth, isDate, isInside;
+    const magnitude = feature.properties[AttributesConfig.QUAKE_MAGNITUDE];
+    const depth = feature.properties[AttributesConfig.QUAKE_DEPTH];
+    const intensityString = feature.properties[AttributesConfig.QUAKE_INTENSITY];
+    const intensityValue = MiscFunctions.getIntensityValue(intensityString)
+    const date = MiscFunctions.getDate(feature.properties[AttributesConfig.QUAKE_DATE]);
+
+    if (filters.minMagnitude !== undefined && filters.maxMagnitude !== undefined) {
+      isMagnitude = magnitude >= filters.minMagnitude && magnitude <= filters.maxMagnitude;
+    } else {
+      isMagnitude = true;
+    }
+
+    if (filters.minIntensity !== undefined && filters.maxIntensity !== undefined) {
+      isIntensity = intensityValue >= filters.minIntensity && intensityValue <= filters.maxIntensity;
+    } else {
+      isIntensity = true;
+    }
+
+    if (filters.minDepth !== undefined && filters.maxDepth !== undefined) {
+      isDepth = depth >= filters.minDepth && depth <= filters.maxDepth;
+    } else {
+      isDepth = true;
+    }
+
+    if (filters.minDate !== undefined && filters.maxDate !== undefined) {
+      isDate = date >= filters.minDate && date <= filters.maxDate;
+    } else {
+      isDate = true;
+    }
+
+    if (filters.latitude !== undefined && filters.longitude !== undefined && filters.radius !== undefined) {
+      isInside = GeometryFunctions.isFeatureInsideCircle(feature, filters.latitude, filters.longitude, filters.radius * 1000);
+    } else {
+      isInside = true;
+    }
+
+    return isMagnitude && isIntensity && isDepth && isDate && isInside;
+  }
+
+  static getQuakesOnEachFeatureFunction(feature, layer) {
+    layer.bindPopup(PopupFunctions.getText(PopupQuakeAttributes, feature));
+    layer.on({
+      mouseover: StyleFunctions.highlightLayer,
+      mouseout: StyleFunctions.unhighlightLayer,
+      contextmenu: GeneralFunctions.setSelectedObject
+    })
+  }
+
+  // Fallas / Faults
+
+  static getFaultsOnEachFeatureFunction(feature, layer) {
+    layer.bindPopup(PopupFunctions.getText(PopupFaultAttributes, feature));
+    layer.on({
+      mouseover: StyleFunctions.highlightLayer,
+      mouseout: StyleFunctions.unhighlightLayer,
+      contextmenu: GeneralFunctions.setSelectedObject
+    });
+    layer.bindContextMenu({
+      contextmenu: true,
+      contextmenuItems: QueryFunctions.getFaultsContextMenuItems()
+    });
+  }
+
+  static getFaultsFilterFunction(feature, filters) {
+    let isMagnitude, isDepth, isInside;
+    const magnitude = feature.properties[AttributesConfig.FAULT_MAGNITUDE];
+    const depth = feature.properties[AttributesConfig.FAULT_DEPTH];
+    if (filters.minMagnitude !== undefined && filters.maxMagnitude !== undefined) {
+      isMagnitude = magnitude >= filters.minMagnitude && magnitude <= filters.maxMagnitude;
+    } else {
+      isMagnitude = true;
+    }
+
+    if (filters.minDepth !== undefined && filters.maxDepth !== undefined) {
+      isDepth = depth >= filters.minDepth && depth <= filters.maxDepth;
+    } else {
+      isDepth = true;
+    }
+
+    if (filters.latitude !== undefined && filters.longitude !== undefined && filters.radius !== undefined) {
+      isInside = GeometryFunctions.isFeatureInsideCircle(feature, filters.latitude, filters.longitude, filters.radius * 1000);
+    } else {
+      isInside = true;
+    }
+
+    return isMagnitude && isDepth && isInside;
+  }
+
+  // Poblaciones / Populations
+
+  static getPopulationsOnEachFeatureFunction(feature, layer) {
+    layer.bindPopup(PopupFunctions.getText(PopupPopulationAttributes, feature));
+    layer.on({
+      mouseover: StyleFunctions.highlightLayer,
+      mouseout: StyleFunctions.unhighlightLayer,
+      contextmenu: GeneralFunctions.setSelectedObject
+    });
+    layer.bindContextMenu({
+      contextmenu: true,
+      contextmenuItems: QueryFunctions.getPopulationsContextMenuItems()
+    })
+  }
+
+  static getPopulationsPointToLayerFunction(feature, latlng, pane) {
+    return L.shapeMarker(latlng, StyleFunctions.getPopulationsStyle(feature, pane));
+  }
+
+  static getPopulationsFilterFunction(feature, filters) {
+    let isNumber, isInside;
+    const number = feature.properties[AttributesConfig.POPULATION_NUMBER];
+
+    if (filters.minNumber !== undefined && filters.maxNumber !== undefined) {
+      isNumber = number >= filters.minNumber && number <= filters.maxNumber;
+    } else {
+      isNumber = true;
+    }
+
+    if (filters.latitude !== undefined && filters.longitude !== undefined && filters.radius !== undefined) {
+      isInside = GeometryFunctions.isFeatureInsideCircle(feature, filters.latitude, filters.longitude, filters.radius * 1000);
+    } else {
+      isInside = true;
+    }
+
+    return isNumber && isInside;
+  }
+
+  // Intensidades / Intensities
+
+  static getIntensitiesOnEachFeatureFunction(feature, layer) {
+    layer.bindPopup(PopupFunctions.getText(PopupIntensityAttributes, feature));
+    layer.on({
+      mouseover: StyleFunctions.highlightLayer,
+      mouseout: StyleFunctions.unhighlightLayer,
+      contextmenu: GeneralFunctions.setSelectedObject
+    })
+  }
+
+  // Capa importada / Imported layer
+
+  static getImportedLayerOnEachFeatureFunction(feature, layer) {
+    layer.on({
+      mouseover: StyleFunctions.highlightLayer,
+      mouseout: StyleFunctions.unhighlightLayer
+    })
+  }
+
+  // Funciones de creación de capas 
+  // Permiten obtener un objeto de capa a partir de unos parámetros
+
+  static getRegionsLayer() {
+    const options = {
+      interactive: false,
+      pane: PaneSymbol.REGIONS,
+      style: StyleFunctions.getRegionsStyle
+    }
+    return L.geoJSON(regionsData, options);
+  }
+
+  static getProvincesLayer() {
+    const options = {
+      interactive: false,
+      pane: PaneSymbol.PROVINCES,
+      style: StyleFunctions.getProvincesStyle
+    }
+    return L.geoJSON(provincesData, options);
+  }
+  
+  static getQuakesLayer(pane, filters) {
+    if (!pane) pane = PaneSymbol.QUAKES;
+    if (!filters) filters = {};
+    const pointToLayerFunction = this.getQuakesPointToLayerFunction;
+    const filterFunction = this.getQuakesFilterFunction;
+    let options = {
+      interactive: true,
+      pane: pane,
+      style: StyleFunctions.getQuakesStyle,
+      onEachFeature: this.getQuakesOnEachFeatureFunction,
+      pointToLayer: function(feature, latlng) {
+        return pointToLayerFunction(feature, latlng, pane);
+      },
+      filter: function(feature) {
+        return filterFunction(feature, filters);
+      }
+    }
+    return L.geoJSON(quakesData, options);
+  }
+
+  static getFaultsLayer(pane, filters) {
+    if (!pane) pane = PaneSymbol.FAULTS;
+    if (!filters) filters = {};
+    const filterFunction = this.getFaultsFilterFunction;
+    let options = {
+      interactive: true,
+      pane: pane,
+      style: StyleFunctions.getFaultsStyle,
+      onEachFeature: this.getFaultsOnEachFeatureFunction,
+      filter: function(feature) {
+        return filterFunction(feature, filters);
+      }
+    }
+    return L.geoJSON(faultsData, options);
+  }
+
+  static getPopulationsLayer(pane, filters) {
+    if (!pane) pane = PaneSymbol.POPULATIONS;
+    if (!filters) filters = {};
+    const pointToLayerFunction = this.getPopulationsPointToLayerFunction;
+    const filterFunction = this.getPopulationsFilterFunction;
+    let options = {
+      interactive: true,
+      pane: pane,
+      onEachFeature: this.getPopulationsOnEachFeatureFunction,
+      pointToLayer: function(feature, latlng) {
+        return pointToLayerFunction(feature, latlng, pane);
+      },
+      filter: function(feature) {
+        return filterFunction(feature, filters);
+      }
+    }
+    return L.geoJSON(populationsData, options);
+  }
+
+  static getIntensitiesLayer() {
+    const options = {
+      interactive: true,
+      pane: PaneSymbol.INTENSITIES,
+      onEachFeature: this.getIntensitiesOnEachFeatureFunction,
+      style: function(feature) {
+        return StyleFunctions.getIntensitiesStyle(feature);
+      }
+    }
+    return L.geoJSON(intensitiesData, options);
+  }
+
+  static getFilterCircleLayer(latlng, isInteractive) {
+    return L.circle(latlng, StyleFunctions.getFilterCircleOptions(isInteractive));
+  }
+
+  static getFilterCircleOriginLayer(latlng, isInteractive) {
+    return L.circleMarker(latlng, StyleFunctions.getFilterCircleOriginOptions(isInteractive));
+  }
+
+  static getFilterBufferLayer(latlngs, width) {
+    return L.corridor(latlngs, StyleFunctions.getFilterBufferOptions(width));
+  }
+
+  static getImportedLayer(data) {
+    const options = {
+      interactive: true,
+      pane: PaneSymbol.IMPORTED_LAYER,
+      onEachFeature: this.getImportedLayerOnEachFeatureFunction,
+      style: function() {
+        return StyleFunctions.getImportedLayerStyle();
+      }
+    }
+    return L.geoJSON(data, options);
+  }
+
+  // Funciones para añadir capas
+  // Añaden la capa al mapa y al control de capas con un nombre
+  // También pueden (y se recomienda hacerlo) asginar el objeto de capa a un objeto global
+  // No utilizar con capas base
+
+  static addLayer(layer, layerName) {
+    this.showLayer(layer);
+    layerControl.addOverlay(layer, layerName);
+  }
+
+  static addRegionsLayer() {
+    const layer = this.getRegionsLayer();
+    regionsLayer = layer;
+    this.addLayer(layer, LangageFunctions.getText('REGIONS_LAYER'));
+  }
+
+  static addProvincesLayer() {
+    const layer = this.getProvincesLayer();
+    provincesLayer = layer;
+    this.addLayer(layer, LangageFunctions.getText('PROVINCES_LAYER'));
+  }
+
+  static addQuakesLayer(filters) {
+    const layer = this.getQuakesLayer(PaneSymbol.QUAKES, filters);
+    quakesLayer = layer;
+    this.addLayer(layer, LangageFunctions.getText('QUAKES_LAYER'));
+  }
+
+  static addFaultsLayer(filters) {
+    const layer = this.getFaultsLayer(PaneSymbol.FAULTS, filters);
+    faultsLayer = layer;
+    this.addLayer(layer, LangageFunctions.getText('FAULTS_LAYER'));
+  }
+
+  static addPopulationsLayer(filters) {
+    const layer = this.getPopulationsLayer(PaneSymbol.POPULATIONS, filters);
+    populationsLayer = layer;
+    this.addLayer(layer, LangageFunctions.getText('POPULATIONS_LAYER'));
+  }
+
+  static addIntensitiesLayer() {
+    const layer = this.getIntensitiesLayer(PaneSymbol.INTENSITIES);
+    intensitiesLayer = layer;
+    this.addLayer(layer, LangageFunctions.getText('INTENSITIES_LAYER'));
+  }
+
+  static addDuplicatedQuakesLayer(filters) {
+    const layer = this.getQuakesLayer(PaneSymbol.DUPLICATED_QUAKES, filters);
+    duplicatedQuakesLayer = layer;
+    this.addLayer(layer, LangageFunctions.getText('DUPLICATED_QUAKES_LAYER'));
+  }
+
+  static addDuplicatedFaultsLayer(filters) {
+    const layer = this.getFaultsLayer(PaneSymbol.DUPLICATED_FAULTS, filters);
+    duplicatedFaultsLayer = layer;
+    this.addLayer(layer, LangageFunctions.getText('DUPLICATED_FAULTS_LAYER'));
+  }
+
+  static addDuplicatedPopulationsLayer(filters) {
+    const layer = this.getPopulationsLayer(PaneSymbol.DUPLICATED_POPULATIONS, filters);
+    duplicatedPopulationsLayer = layer;
+    this.addLayer(layer, LangageFunctions.getText('DUPLICATED_POPULATIONS_LAYER'));
+  }
+
+  static addFilterCircleLayer(latLng, isInteractive) {
+    // Se añaden tanto la capa del círculo como la del origen
+    // Al contrario que el resto de capas, no se añade al control de capas, puesto que no se quiere
+    // que el usuario tenga control sobre su visibilidad
+
+    // Both the circle layer and the origin are added
+    // Unlike the rest of layer, they are not added to the layer control, since we do not want
+    // the user to have control on its visibility
+
+    const circleLayer = this.getFilterCircleLayer(latLng, isInteractive);
+    const circleOriginLayer = this.getFilterCircleOriginLayer(latLng, isInteractive);
+    filterCircle = circleLayer;
+    filterCircleOrigin = circleOriginLayer;
+    map.addLayer(circleLayer);
+    map.addLayer(circleOriginLayer);
+  }
+
+  static addFilterBufferLayer(latlngs, width) {
+    // Parámetro "width" en metros
+    // Parameter "width" in meters
+    const layer = this.getFilterBufferLayer(latlngs, width);
+    filterBuffer = layer;
+    map.addLayer(layer);
+  }
+
+  static addImportedLayer(data, name) {
+    const layer = this.getImportedLayer(data);
+    importedLayer = layer;
+    this.addLayer(layer, name);
+  }
+
+  // Funciones de quitar capa / Remove layer functions
+
+  static removeLayer(layer) {
+    map.removeLayer(layer);
+    layerControl.removeLayer(layer);
+  }
+
+  static removeAllLayers() {
+    this.removeAllRegularLayers();
+    this.removeAllDuplicatedLayers();
+  }
+
+  static removeAllRegularLayers() {
+    this.removeQuakesLayer();
+    this.removeFaultsLayer();
+    this.removePopulationsLayer();
+    this.removeIntensitiesLayer();
+  }
+
+  static removeAllDuplicatedLayers() {
+    this.removeDuplicatedQuakesLayer();
+    this.removeDuplicatedFaultsLayer();
+    this.removeDuplicatedPopulationsLayer();
+  }
+
+  static removeQuakesLayer() {
+    if (quakesLayer) {
+      this.removeLayer(quakesLayer);
+      quakesLayer = null;
+    }
+  }
+
+  static removeFaultsLayer() {
+    if (faultsLayer) {
+      this.removeLayer(faultsLayer);
+      faultsLayer = null;
+    }
+  }
+
+  static removePopulationsLayer() {
+    if (populationsLayer) {
+      this.removeLayer(populationsLayer);
+      populationsLayer = null;
+    }
+  }
+
+  static removeDuplicatedQuakesLayer() {
+    if (duplicatedQuakesLayer) {
+      this.removeLayer(duplicatedQuakesLayer);
+      duplicatedQuakesLayer = null;
+    }
+  }
+
+  static removeDuplicatedFaultsLayer() {
+    if (duplicatedFaultsLayer) {
+      this.removeLayer(duplicatedFaultsLayer);
+      duplicatedFaultsLayer = null;
+    }
+  }
+
+  static removeDuplicatedPopulationsLayer() {
+    if (duplicatedPopulationsLayer) {
+      this.removeLayer(duplicatedPopulationsLayer);
+      duplicatedPopulationsLayer = null;
+    }
+  }
+
+  static removeIntensitiesLayer() {
+    if (intensitiesLayer) {
+      this.removeLayer(intensitiesLayer);
+      intensitiesLayer = null;
+    }
+  }
+
+  static removeFilterCircleLayer() {
+    if (filterCircle && filterCircleOrigin) {
+      map.removeLayer(filterCircle);
+      map.removeLayer(filterCircleOrigin);
+      filterCircle = null;
+      filterCircleOrigin = null;
+    }
+  }
+
+  static removeFilterBufferLayer() {
+    if (filterBuffer) {
+      map.removeLayer(filterBuffer);
+      filterBuffer = null;
+    }
+  }
+
+  static removeImportedLayer() {
+    if (importedLayer) {
+      this.removeLayer(importedLayer);
+      importedLayer = null;
+    }
+  }
+
+  // Funciones de visibilidad de capa
+
+  static isLayerVisible(layer) {
+    return layer && map.hasLayer(layer);
+  }
+
+  static toogleLayer(layer) {
+    if (layer) {
+      if (this.isLayerVisible(layer)) {
+        this.hideLayer(layer);
+      } else {
+        this.showLayer(layer);
+      }
+    }
+  }
+
+  static showLayer(layer) {
+    if (layer && !this.isLayerVisible(layer)) map.addLayer(layer);
+  }
+
+  static hideLayer(layer) {
+    if (layer && this.isLayerVisible(layer)) map.removeLayer(layer);
+  }
+
+  static toogleRegionsLayer() {
+    this.toogleLayer(regionsLayer);
+  }
+
+  static showRegionsLayer() {
+    this.showLayer(regionsLayer);
+  }
+
+  static hideRegionsLayer() {
+    this.hideLayer(regionsLayer);
+  }
+
+  static toogleProvincesLayer() {
+    this.toogleLayer(provincesLayer);
+  }
+
+  static showProvincesLayer() {
+    this.showLayer(provincesLayer);
+  }
+
+  static hideProvincesLayer() {
+    this.hideLayer(provincesLayer);
+  }
+
+  static toogleQuakesLayer() {
+    this.toogleLayer(quakesLayer);
+  }
+
+  static showQuakesLayer() {
+    this.showLayer(quakesLayer);
+  }
+
+  static hideQuakesLayer() {
+    this.hideLayer(quakesLayer);
+  }
+
+  static toogleFaultsLayer() {
+    this.toogleLayer(faultsLayer);
+  }
+
+  static showFaultsLayer() {
+    this.showLayer(faultsLayer);
+  }
+
+  static hideFaultsLayer() {
+    this.hideLayer(faultsLayer);
+  }
+
+  static tooglePopulationsLayer() {
+    this.toogleLayer(populationsLayer);
+  }
+
+  static showPopulationsLayer() {
+    this.showLayer(populationsLayer);
+  }
+
+  static hidePopulationsLayer() {
+    this.hideLayer(populationsLayer);
+  }
+
+  static toogleDuplicatedQuakesLayer() {
+    this.toogleLayer(duplicatedQuakesLayer);
+  }
+
+  static showDuplicatedQuakesLayer() {
+    this.showLayer(duplicatedQuakesLayer);
+  }
+
+  static hideDuplicatedQuakesLayer() {
+    this.hideLayer(duplicatedQuakesLayer);
+  }
+
+  static toogleDuplicatedFaultsLayer() {
+    this.toogleLayer(duplicatedFaultsLayer);
+  }
+
+  static showDuplicatedFaultsLayer() {
+    this.showLayer(duplicatedFaultsLayer);
+  }
+
+  static hideDuplicatedFaultsLayer() {
+    this.hideLayer(duplicatedFaultsLayer);
+  }
+
+  static toogleDuplicatedPopulationsLayer() {
+    this.toogleLayer(duplicatedPopulationsLayer);
+  }
+
+  static showDuplicatedPopulationsLayer() {
+    this.showLayer(duplicatedPopulationsLayer);
+  }
+
+  static hideDuplicatedPopulationsLayer() {
+    this.hideLayer(duplicatedPopulationsLayer);
+  }
+
+  static toogleIntensitiesLayer() {
+    this.toogleLayer(intensitiesLayer);
+  }
+
+  static showIntensitiesLayer() {
+    this.showLayer(intensitiesLayer);
+  }
+
+  static hideIntensitiesLayer() {
+    this.hideLayer(intensitiesLayer);
+  }
+
+  static toogleAllLayers() {
+    this.toogleAllRegularLayers();
+    this.toogleAllDuplicatedLayers();
+  }
+
+  static toogleAllRegularLayers() {
+    this.toogleQuakesLayer();
+    this.toogleFaultsLayer();
+    this.tooglePopulationsLayer();
+    this.toogleIntensitiesLayer();
+  }
+
+  static toogleAllDuplicatedLayers() {
+    this.toogleDuplicatedQuakesLayer();
+    this.toogleDuplicatedFaultsLayer();
+    this.toogleDuplicatedPopulationsLayer();
+  }
+
+  static showAllLayers() {
+    this.showAllRegularLayers();
+    this.showAllDuplicatedLayers();
+  }
+
+  static showAllRegularLayers() {
+    this.showQuakesLayer();
+    this.showFaultsLayer();
+    this.showPopulationsLayer();
+    this.showIntensitiesLayer();
+  }
+
+  static showAllDuplicatedLayers() {
+    this.showDuplicatedQuakesLayer();
+    this.showDuplicatedFaultsLayer();
+    this.showDuplicatedPopulationsLayer();
+  }
+
+  static hideAllLayers() {
+    this.hideAllRegularLayers();
+    this.hideAllDuplicatedLayers();
+  }
+
+  static hideAllRegularLayers() {
+    this.hideQuakesLayer();
+    this.hideFaultsLayer();
+    this.hidePopulationsLayer();
+    this.hideIntensitiesLayer();
+  }
+
+  static hideAllDuplicatedLayers() {
+    this.hideDuplicatedQuakesLayer();
+    this.hideDuplicatedFaultsLayer();
+    this.hideDuplicatedPopulationsLayer();
+  }
+
+  // Funciones de marcado / Mark options
+
+  static isLayerMarked(layer) {
+    return layer && layer.options.marked === true;
+  }
+
+  static markLayer(layer) {
+    if (!this.isLayerMarked(layer)) {
+      layer.options.marked = true;
+      StyleFunctions.markLayer(layer);
+    }
+  }
+
+  static unmarkLayer(layer, color) {
+    if (this.isLayerMarked(layer)) {
+      layer.options.marked = false;
+      StyleFunctions.unmarkLayer(layer, color);
+    }
+  }
+
+  static unmarkLayers(layers, color) {
+    for (let i = 0; i < layers.length; i++) {
+      this.unmarkLayer(layers[i], color);
+    }
+  }
+
+  static unmarkAllLayers() {
+    this.unmarkLayers(quakesLayer.getLayers(), StyleFunctions.getValue('quakeBorderColor'));
+    this.unmarkLayers(faultsLayer.getLayers(), StyleFunctions.getValue('faultColor'));
+    this.unmarkLayers(populationsLayer.getLayers(), StyleFunctions.getValue('populationBorderColor'));
+    if (duplicatedQuakesLayer) this.unmarkLayers(duplicatedQuakesLayer.getLayers(), StyleFunctions.getValue('quakeBorderColor'));
+    if (duplicatedFaultsLayer) this.unmarkLayers(duplicatedFaultsLayer.getLayers(), StyleFunctions.getValue('faultColor'));
+    if (duplicatedPopulationsLayer) this.unmarkLayers(duplicatedPopulationsLayer.getLayers(), StyleFunctions.getValue('populationBorderColor'));
+  }
+
+  static unmarkQuake(layer) {
+    this.unmarkLayer(layer, LayerStyles.quakeBorderColor);
+  }
+
+  static unmarkFault(layer) {
+    this.unmarkLayer(layer, LayerStyles.faultColor);
+  }
+
+  static unmarkPopulation(layer) {
+    this.unmarkLayer(layer, LayerStyles.populationBorderColor);
+  }
+
+  // Otras funciones / Other functions
+
+  static getLayerByKeyName(key) {
+    if (key === 'quakesLayer') {
+      return quakesLayer;
+    } else if (key === 'faultsLayer') {
+      return faultsLayer;
+    } else if (key === 'populationsLayer') {
+      return populationsLayer;
+    } else if (key === 'duplicatedQuakesLayer') {
+      return duplicatedQuakesLayer;
+    } else if (key === 'duplicatedFaultsLayer') {
+      return duplicatedFaultsLayer;
+    } else if (key === 'duplicatedPopulationsLayer') {
+      return duplicatedPopulationsLayer;
+    } else {
+      return null;
+    }
+  }
+}

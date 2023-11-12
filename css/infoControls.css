@@ -1,0 +1,30 @@
+.infoControls {
+	background: white;
+	border-color: black;
+	border: 1px solid #444444;
+	padding: 6px;
+	border-radius: 5px;
+}
+
+.infoControls legend {
+	font-size: 12px;
+}
+
+.infoControls legend i {
+	border-style: thin;
+	background-color: organge;
+	float: left;
+	opacity: 0.8;
+}
+
+th {
+	font-size: 1.5em;
+	background-color: mediumturquoise;
+	border: 1px solid black;
+}
+
+td {
+	font-size: 0.8em;
+	text-align: center;
+	border: 1px solid black;
+}
