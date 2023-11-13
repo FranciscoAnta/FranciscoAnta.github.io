@@ -62,7 +62,7 @@ class WindowFunctions {
   static getQuakesNumberTable(layers) {
     let i, layer, properties;
     let text = "<table border='1px'><tr><td>" + LangageFunctions.getText('QUERY_NAME_TEXT')
-    + "</td><td>" + LangageFunctions.getText('QUERY_MAGNITUDE_TEXT') + "</td></tr>";
+    + "</td><td>" + LangageFunctions.getText('QUERY_QUAKE_MAGNITUDE_TEXT') + "</td></tr>";
 
     for (i = 0; i < layers.length; i++) {
       layer = layers[i];

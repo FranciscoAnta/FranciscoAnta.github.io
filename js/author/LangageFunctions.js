@@ -187,7 +187,7 @@ class LangageFunctions {
     CONTEXT_MENU_ZOOM_TO_CLOSEST_FAULTS_ITEM: "Zoom a falla más cercana al lugar seleccionado",
     CONTEXT_MENU_ZOOM_TO_CLOSEST_POPULATIONS_ITEM: "Zoom a población más cercana al lugar seleccionado",
     CONTEXT_MENU_ZOOM_TO_BIGGEST_MAGNITUDE_QUAKE_IN_RADIUS_TEXT: "Zoom a sismo de mayor magnitud en radio",
-    CONTEXT_MENU_ZOOM_TO_BIGGEST_INTENSITY_QUAKE_IN_RADIUS_TEXT: "Zoom a simos de mayor intensidad en radio",
+    CONTEXT_MENU_ZOOM_TO_BIGGEST_INTENSITY_QUAKE_IN_RADIUS_TEXT: "Zoom a sismo de mayor intensidad en radio",
     CONTEXT_MENU_PAN_TO_MAX_INTENSITY_IN_RADIUS: "Desplazar a intensidad máxima en radio",
     CONTEXT_MENU_QUAKES_NUMBER_IN_RADIUS_TEXT: "Obtener número de sismos en radio",
     CONTEXT_MENU_FAULTS_NUMBER_IN_RADIUS_TEXT: "Obtener número de fallas en radio",

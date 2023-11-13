@@ -1108,20 +1108,20 @@ class SidePanelFunctions {
   }
 
   static onQuakesUnmarkButtonClick() {
-    LayerFunctions.unmarkLayers(quakesLayer.getLayers());
-    LayerFunctions.unmarkLayers(duplicatedQuakesLayer.getLayers());
+    LayerFunctions.unmarkLayers(quakesLayer.getLayers(), StyleFunctions.getValue('quakeBorderColor'));
+    if (duplicatedQuakesLayer) LayerFunctions.unmarkLayers(duplicatedQuakesLayer.getLayers(), StyleFunctions.getValue('quakeBorderColor'));
     WindowFunctions.showUnmarkQuakesWindow();
   }
 
   static onFaultsUnmarkButtonClick() {
-    LayerFunctions.unmarkLayers(faultsLayer.getLayers());
-    LayerFunctions.unmarkLayers(duplicatedFaultsLayer.getLayers());
+    LayerFunctions.unmarkLayers(faultsLayer.getLayers(), StyleFunctions.getValue('faultColor'));
+    if (duplicatedFaultsLayer) LayerFunctions.unmarkLayers(duplicatedFaultsLayer.getLayers(), StyleFunctions.getValue('faultColor'));
     WindowFunctions.showUnmarkFaultsWindow();
   }
 
   static onPopulationsUnmarkButtonClick() {
-    LayerFunctions.unmarkLayers(populationsLayer.getLayers());
-    LayerFunctions.unmarkLayers(duplicatedPopulationsLayer.getLayers());
+    LayerFunctions.unmarkLayers(populationsLayer.getLayers(), StyleFunctions.getValue('populationBorderColor'));
+    if (duplicatedPopulationsLayer) LayerFunctions.unmarkLayers(duplicatedPopulationsLayer.getLayers(), StyleFunctions.getValue('populationBorderColor'));
     WindowFunctions.showUnmarkPopulationsWindow();
   }
 
