@@ -137,6 +137,14 @@ class MiscFunctions {
     return this.getFeaturesMaxValue(populationsData.features, AttributesConfig.POPULATION_NUMBER);
   }
 
+  static getIntensitiesMinValue() {
+    return this.getFeaturesMinValue(intensitiesData.features, AttributesConfig.INTENSITY_VALUE);
+  }
+
+  static getIntensitiesMaxValue() {
+    return this.getFeaturesMaxValue(intensitiesData.features, AttributesConfig.INTENSITY_VALUE);
+  }
+
   static getQuakesMinIntensity() {
     let i, properties, value;
     let minValue = Infinity;

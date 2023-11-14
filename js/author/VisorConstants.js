@@ -21,7 +21,10 @@ const DEFAULT_EXPORT_LAYER_VISIBLE_BOUND_ONLY_CHECKED = false;
 const DEFAULT_LAYER_CONTROL_ALLWAYS_DEPLOYED = true;
 const DEAULT_SCALEBAR_CONTROL_VISIBLE = true;
 const DEFAULT_COORDINATE_VISOR_CONTROL_VISIBLE = true;
+const DEFAULT_FILTER_LEGEND_CONTROL_VISIBLE = true;
+const DEFAULT_EVENT_LEGEND_CONTROL_VISIBLE = true;
 const MAX_BUFFER_WIDTH = 1000; // En km / In km
+const CONTEXT_MENU_WIDTH = 400;
 
 const MIN_LATITUDE = -90;
 const MAX_LATITUDE = 90;
@@ -46,3 +49,6 @@ const FAULTS_MAX_DEPTH = MiscFunctions.getFaultsMaxDepth();
 
 const POPULATIONS_MIN_NUMBER = MiscFunctions.getPopulationsMinNumber();
 const POPULATIONS_MAX_NUMBER = MiscFunctions.getPopulationsMaxNumber();
+
+const INTENSITIES_MIN_VALUE = MiscFunctions.getIntensitiesMinValue();
+const INTENSITIES_MAX_VALUE = MiscFunctions.getIntensitiesMaxValue();

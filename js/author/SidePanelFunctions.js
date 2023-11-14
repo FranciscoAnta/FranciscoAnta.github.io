@@ -219,6 +219,8 @@ class SidePanelFunctions {
     this.setText('optionsTabLayerControlAllwaysDeployedText', 'SIDE_PANEL_OPTIONS_LAYER_CONTROL_ALWAYS_DEPLOYED_TEXT');
     this.setText('optionsTabScalebarControlVisibleText', 'SIDE_PANEL_OPTIONS_SCALEBAR_CONTROL_VISIBLE_TEXT');
     this.setText('optionsTabCoordinateVisorControlVisibleText', 'SIDE_PANEL_OPTIONS_COORDINATE_VISOR_CONTROL_VISIBLE_TEXT');
+    this.setText('optionsTabFilterLegendControlVisibleText', 'SIDE_PANEL_OPTIONS_FILTER_LEGEND_CONTROL_VISIBLE_TEXT');
+    this.setText('optionsTabEventLegendControlVisibleText', 'SIDE_PANEL_OPTIONS_EVENT_LEGEND_CONTROL_VISIBLE_TEXT');
     this.setText('optionsTabStylesTitle', 'SIDE_PANEL_OPTIONS_STYLES_TITLE');
     this.setText('optionsTabQuakesStylesTitle', 'SIDE_PANEL_OPTIONS_QUAKES_STYLES_TITLE');
     this.setText('optionsTabQuakesBorderColorText', 'SIDE_PANEL_OPTIONS_QUAKES_BORDER_COLOR_TEXT');
@@ -330,6 +332,8 @@ class SidePanelFunctions {
     this.initializeCheckbox('optionsTabLayerControlAllwaysDeployedCheckbox', DEFAULT_LAYER_CONTROL_ALLWAYS_DEPLOYED, this.onControlLayerAllwaysDeployedClick);
     this.initializeCheckbox('optionsTabScalebarControlVisibleCheckbox', DEAULT_SCALEBAR_CONTROL_VISIBLE, this.onScalebarControlVisibleClick);
     this.initializeCheckbox('optionsTabCoordinateVisorControlVisibleCheckbox', DEFAULT_COORDINATE_VISOR_CONTROL_VISIBLE, this.onCoordinateVisorVisibleClick);
+    this.initializeCheckbox('optionsTabFilterLegendControlVisibleCheckbox', DEFAULT_FILTER_LEGEND_CONTROL_VISIBLE, this.onFilterLegendControlVisibleClick);
+    this.initializeCheckbox('optionsTabEventLegendControlVisibleCheckbox', DEFAULT_EVENT_LEGEND_CONTROL_VISIBLE, this.onEventLegendControlVisibleClick);
   }
 
   static initializeOptionsStylesInputs() {
@@ -963,6 +967,7 @@ class SidePanelFunctions {
     LayerFunctions.addFaultsLayer(SidePanelFunctions.getFaultFilters());
     LayerFunctions.addPopulationsLayer(SidePanelFunctions.getPopulationFilters());
     WindowFunctions.showFilterAllWindow();
+    SidePanelFunctions.setFilterLegendAllRegularLayersFilters();
   }
 
   static onQuakesFilterButtonClick() {
@@ -970,6 +975,7 @@ class SidePanelFunctions {
     LayerFunctions.removeQuakesLayer();
     LayerFunctions.addQuakesLayer(SidePanelFunctions.getQuakeFilters());
     WindowFunctions.showFilterQuakesWindow();
+    SidePanelFunctions.setFilterLegendQuakesFilters();
   }
 
   static onFaultsFilterButtonClick() {
@@ -977,6 +983,7 @@ class SidePanelFunctions {
     LayerFunctions.removeFaultsLayer();
     LayerFunctions.addFaultsLayer(SidePanelFunctions.getFaultFilters());
     WindowFunctions.showFilterFaultsWindow();
+    SidePanelFunctions.setFilterLegendFaultsFilters();
   }
 
   static onPopulationsFilterButtonClick() {
@@ -984,6 +991,7 @@ class SidePanelFunctions {
     LayerFunctions.removePopulationsLayer();
     LayerFunctions.addPopulationsLayer(SidePanelFunctions.getPopulationFilters());
     WindowFunctions.showFilterPopulationsWindow();
+    SidePanelFunctions.setFilterLegendPopulationsFilters();
   }
 
   static onSpatialFilterButtonClick() {
@@ -993,6 +1001,7 @@ class SidePanelFunctions {
     LayerFunctions.addFaultsLayer(SidePanelFunctions.getSpatialFilters());
     LayerFunctions.addPopulationsLayer(SidePanelFunctions.getSpatialFilters());
     WindowFunctions.showFilterAllWindow();
+    SidePanelFunctions.setFilterLegendAllRegularLayersFilters();
   }
 
   // Duplicar y filtrar / Duplicate and filter
@@ -1005,6 +1014,7 @@ class SidePanelFunctions {
     LayerFunctions.addDuplicatedPopulationsLayer(SidePanelFunctions.getPopulationFilters());
     SidePanelFunctions.initializeExportLayerSelect();
     WindowFunctions.showDuplicateAllWindow();
+    SidePanelFunctions.setFilterLegendAllDuplicatedLayersFilters();
   }
 
   static onQuakesDuplicateButtonClick() {
@@ -1013,6 +1023,7 @@ class SidePanelFunctions {
     LayerFunctions.addDuplicatedQuakesLayer(SidePanelFunctions.getQuakeFilters());
     SidePanelFunctions.initializeExportLayerSelect();
     WindowFunctions.showDuplicateQuakesWindow();
+    SidePanelFunctions.setFilterLegendDuplicatedQuakesFilters();
   }
 
   static onFaultsDuplicateButton() {
@@ -1021,6 +1032,7 @@ class SidePanelFunctions {
     LayerFunctions.addDuplicatedFaultsLayer(SidePanelFunctions.getFaultFilters());
     SidePanelFunctions.initializeExportLayerSelect();
     WindowFunctions.showDuplicateFaultsWindow();
+    SidePanelFunctions.setFilterLegendDuplicatedFaultsFilters();
   }
 
   static onPopulationsDuplicateButton() {
@@ -1029,6 +1041,7 @@ class SidePanelFunctions {
     LayerFunctions.addDuplicatedPopulationsLayer(SidePanelFunctions.getPopulationFilters());
     SidePanelFunctions.initializeExportLayerSelect();
     WindowFunctions.showDuplicateWindow();
+    SidePanelFunctions.setFilterLegendDuplicatedPopulationsFilters();
   }
 
   static onSpatialDuplicateButton() {
@@ -1039,6 +1052,7 @@ class SidePanelFunctions {
     LayerFunctions.addDuplicatedPopulationsLayer(SidePanelFunctions.getSpatialFilters());
     SidePanelFunctions.initializeExportLayerSelect();
     WindowFunctions.showDuplicateAllWindow();
+    SidePanelFunctions.setFilterLegendAllDuplicatedLayersFilters();
   }
 
   // Limpiar / Refresh
@@ -1049,12 +1063,14 @@ class SidePanelFunctions {
     SidePanelFunctions.initializePopulationFiltersInputs();
     SidePanelFunctions.initializeSpatialFiltersInputs();
     LayerFunctions.removeAllLayers();
+    LayerFunctions.removeFilterBufferLayer();
     LayerFunctions.addQuakesLayer(SidePanelFunctions.getQuakeFilters());
     LayerFunctions.addFaultsLayer(SidePanelFunctions.getFaultFilters());
     LayerFunctions.addPopulationsLayer(SidePanelFunctions.getPopulationFilters());
     GeneralFunctions.finishDraw();
     SidePanelFunctions.initializeExportLayerSelect();
     WindowFunctions.showRefreshAllWindow();
+    SidePanelFunctions.setFilterLegendAllLayersFilters();
   }
 
   static onQuakesRefreshButtonClick() {
@@ -1066,6 +1082,8 @@ class SidePanelFunctions {
     GeneralFunctions.finishDraw();
     SidePanelFunctions.initializeExportLayerSelect();
     WindowFunctions.showRefreshQuakesWindow();
+    SidePanelFunctions.setFilterLegendQuakesFilters();
+    SidePanelFunctions.setFilterLegendDuplicatedQuakesFilters();
   }
 
   static onFaultsRefreshButtonClick() {
@@ -1074,9 +1092,12 @@ class SidePanelFunctions {
     LayerFunctions.removeFaultsLayer();
     LayerFunctions.removeDuplicatedFaultsLayer();
     LayerFunctions.addFaultsLayer(SidePanelFunctions.getFaultFilters());
+    LayerFunctions.removeFilterBufferLayer();
     GeneralFunctions.finishDraw();
     SidePanelFunctions.initializeExportLayerSelect();
     WindowFunctions.showRefreshFaultsWindow();
+    SidePanelFunctions.setFilterLegendFaultsFilters();
+    SidePanelFunctions.setFilterLegendDuplicatedFaultsFilters();
   }
 
   static onPopulationsRefreshButtonClick() {
@@ -1088,16 +1109,20 @@ class SidePanelFunctions {
     GeneralFunctions.finishDraw();
     SidePanelFunctions.initializeExportLayerSelect();
     WindowFunctions.showRefreshPopulationsWindow();
+    SidePanelFunctions.setFilterLegendPopulationsFilters();
+    SidePanelFunctions.setFilterLegendDuplicatedPopulationsFilters();
   }
 
   static onSpatialRefreshButtonClick() {
     SidePanelFunctions.initializeSpatialFiltersInputs();
     LayerFunctions.removeAllLayers();
+    LayerFunctions.removeFilterBufferLayer();
     LayerFunctions.addQuakesLayer(GeneralFunctions.getQuakeInitialFilters());
     LayerFunctions.addFaultsLayer();
     GeneralFunctions.finishDraw();
     SidePanelFunctions.initializeExportLayerSelect();
     WindowFunctions.showRefreshAllWindow();
+    SidePanelFunctions.setFilterLegendAllLayersFilters();
   }
 
   // Desmarcar / Unmark
@@ -1204,11 +1229,20 @@ class SidePanelFunctions {
     GeneralFunctions.toogleControlVisibility(coordinatesVisorControl);
   }
 
+  static onFilterLegendControlVisibleClick() {
+    GeneralFunctions.toogleControlVisibility(filterLegendControl);
+  }
+
+  static onEventLegendControlVisibleClick() {
+    GeneralFunctions.toogleControlVisibility(eventLegendControl);
+  }
+
   static onOptionsQuakesBorderColorChange() {
     const value = SidePanelFunctions.getOptionsQuakesBorderColor();
     const style = {color: value};
     StyleFunctions.setValue('quakeBorderColor', value);
     quakesLayer.setStyle(style);
+    if (eventLegendControl) eventLegendControl.update();
   }
 
   static onOptionsQuakesFillColorChange() {
@@ -1216,6 +1250,7 @@ class SidePanelFunctions {
     const style = {fillColor: value};
     StyleFunctions.setValue('quakeFillColor', value);
     quakesLayer.setStyle(style);
+    if (eventLegendControl) eventLegendControl.update();
   }
 
   static onOptionsFaultsBorderColorChange() {
@@ -1223,6 +1258,7 @@ class SidePanelFunctions {
     const style = {color: value};
     StyleFunctions.setValue('faultColor', value);
     faultsLayer.setStyle(style);
+    if (eventLegendControl) eventLegendControl.update();
   }
 
   static onOptionsPopulationsBorderColorChange() {
@@ -1230,6 +1266,7 @@ class SidePanelFunctions {
     const style = {color: value};
     StyleFunctions.setValue('populationBorderColor', value);
     populationsLayer.setStyle(style);
+    if (eventLegendControl) eventLegendControl.update();
   }
 
   static onOptionsPopulationsFillColorChange() {
@@ -1237,6 +1274,7 @@ class SidePanelFunctions {
     const style = {fillColor: value};
     StyleFunctions.setValue('populationFillColor', value);
     populationsLayer.setStyle(style);
+    if (eventLegendControl) eventLegendControl.update();
   }
 
   static onOptionsIntensitiesBorderColorChange() {
@@ -1305,7 +1343,7 @@ class SidePanelFunctions {
   static onOptionsMarkedColorChange() {
     const value = SidePanelFunctions.getOptionsMarkedColor();
     StyleFunctions.setValue('markedColor', value);
-    // ¿Pendiente?
+    LayerFunctions.unmarkAllLayers();
   }
 
   // Funciones de obtención de filtros / Filters get functions
@@ -1353,6 +1391,89 @@ class SidePanelFunctions {
       latitude: this.getSpatialLatitudeFilter(),
       longitude: this.getSpatialLongitudeFilter(),
       radius: this.getSpatialRadiusFilter()
+    }
+  }
+
+  // Funciones de asignación de la leyenda de filtros / Filter legend set functions
+
+  static setFilterLegendAllLayersFilters() {
+    this.setFilterLegendAllRegularLayersFilters();
+    this.setFilterLegendAllDuplicatedLayersFilters();
+  }
+
+  static setFilterLegendAllRegularLayersFilters() {
+    this.setFilterLegendQuakesFilters();
+    this.setFilterLegendFaultsFilters();
+    this.setFilterLegendPopulationsFilters();
+  }
+
+  static setFilterLegendAllDuplicatedLayersFilters() {
+    this.setFilterLegendDuplicatedQuakesFilters();
+    this.setFilterLegendDuplicatedFaultsFilters();
+    this.setFilterLegendDuplicatedPopulationsFilters();
+  }
+
+  static setFilterLegendQuakesFilters() {
+    if (filterLegendControl) {
+      filterLegendControl.setValue('minQuakeMag', SidePanelFunctions.getQuakeMinMagnitudeFilter());
+      filterLegendControl.setValue('maxQuakeMag', SidePanelFunctions.getQuakeMaxMagnitudeFilter());
+      filterLegendControl.setValue('minQuakeDepth', SidePanelFunctions.getQuakeMinDateFilter());
+      filterLegendControl.setValue('maxQuakeDepth', SidePanelFunctions.getQuakeMaxDepthFilter());
+      filterLegendControl.setValue('minQuakeInt', SidePanelFunctions.getQuakeMinIntensityFilter());
+      filterLegendControl.setValue('maxQuakeInt', SidePanelFunctions.getQuakeMaxIntensityFilter());
+      filterLegendControl.setValue('minQuakeDate', SidePanelFunctions.getQuakeMinDateFilter());
+      filterLegendControl.setValue('maxQuakeDate', SidePanelFunctions.getQuakeMaxDateFilter());
+      filterLegendControl.update();
+    }
+  }
+
+  static setFilterLegendFaultsFilters() {
+    if (filterLegendControl) {
+      filterLegendControl.setValue('minFaultMag', SidePanelFunctions.getFaultMinMagnitudeFilter());
+      filterLegendControl.setValue('maxFaultMag', SidePanelFunctions.getFaultMaxMagnitudeFilter());
+      filterLegendControl.setValue('minFaultDepth', SidePanelFunctions.getFaultMinDepthFilter());
+      filterLegendControl.setValue('maxFaultDepth', SidePanelFunctions.getFaultMaxDepthFilter());
+      filterLegendControl.update();
+    }
+  }
+
+  static setFilterLegendPopulationsFilters() {
+    if (filterLegendControl) {
+      filterLegendControl.setValue('minPopNumber', SidePanelFunctions.getPopulationMinNumberFilter());
+      filterLegendControl.setValue('maxPopNumber', SidePanelFunctions.getPopulationMaxNumberFilter());
+      filterLegendControl.update();
+    }
+  }
+
+  static setFilterLegendDuplicatedQuakesFilters() {
+    if (filterLegendControl) {
+      filterLegendControl.setValue('minDupQuakeMag', SidePanelFunctions.getQuakeMinMagnitudeFilter());
+      filterLegendControl.setValue('maxDupQuakeMag', SidePanelFunctions.getQuakeMaxMagnitudeFilter());
+      filterLegendControl.setValue('minDupQuakeDepth', SidePanelFunctions.getQuakeMinDateFilter());
+      filterLegendControl.setValue('maxDupQuakeDepth', SidePanelFunctions.getQuakeMaxDepthFilter());
+      filterLegendControl.setValue('minDupQuakeInt', SidePanelFunctions.getQuakeMinIntensityFilter());
+      filterLegendControl.setValue('maxDupQuakeInt', SidePanelFunctions.getQuakeMaxIntensityFilter());
+      filterLegendControl.setValue('minDupQuakeDate', SidePanelFunctions.getQuakeMinDateFilter());
+      filterLegendControl.setValue('maxDupQuakeDate', SidePanelFunctions.getQuakeMaxDateFilter());
+      filterLegendControl.update();
+    }
+  }
+
+  static setFilterLegendDuplicatedFaultsFilters() {
+    if (filterLegendControl) {
+      filterLegendControl.setValue('minDupFaultMag', SidePanelFunctions.getFaultMinMagnitudeFilter());
+      filterLegendControl.setValue('maxDupFaultMag', SidePanelFunctions.getFaultMaxMagnitudeFilter());
+      filterLegendControl.setValue('minDupFaultDepth', SidePanelFunctions.getFaultMinDepthFilter());
+      filterLegendControl.setValue('maxDupFaultDepth', SidePanelFunctions.getFaultMaxDepthFilter());
+      filterLegendControl.update();
+    }
+  }
+
+  static setFilterLegendDuplicatedPopulationsFilters() {
+    if (filterLegendControl) {
+      filterLegendControl.setValue('minDupPopNumber', SidePanelFunctions.getPopulationMinNumberFilter());
+      filterLegendControl.setValue('maxDupPopNumber', SidePanelFunctions.getPopulationMaxNumberFilter());
+      filterLegendControl.update();
     }
   }
 }
