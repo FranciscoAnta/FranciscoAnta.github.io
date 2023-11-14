@@ -8,7 +8,7 @@
     border-bottom-right-radius: 20px 50%;
     position: absolute; 
     left: 50px;
-    top: 10px;
+    top: -70px;
 }
 
 .leaflet-searchbox-wrapper .leaflet-searchbox,
