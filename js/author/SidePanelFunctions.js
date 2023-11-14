@@ -1417,7 +1417,7 @@ class SidePanelFunctions {
     if (filterLegendControl) {
       filterLegendControl.setValue('minQuakeMag', SidePanelFunctions.getQuakeMinMagnitudeFilter());
       filterLegendControl.setValue('maxQuakeMag', SidePanelFunctions.getQuakeMaxMagnitudeFilter());
-      filterLegendControl.setValue('minQuakeDepth', SidePanelFunctions.getQuakeMinDateFilter());
+      filterLegendControl.setValue('minQuakeDepth', SidePanelFunctions.getQuakeMinDepthFilter());
       filterLegendControl.setValue('maxQuakeDepth', SidePanelFunctions.getQuakeMaxDepthFilter());
       filterLegendControl.setValue('minQuakeInt', SidePanelFunctions.getQuakeMinIntensityFilter());
       filterLegendControl.setValue('maxQuakeInt', SidePanelFunctions.getQuakeMaxIntensityFilter());
@@ -1449,7 +1449,7 @@ class SidePanelFunctions {
     if (filterLegendControl) {
       filterLegendControl.setValue('minDupQuakeMag', SidePanelFunctions.getQuakeMinMagnitudeFilter());
       filterLegendControl.setValue('maxDupQuakeMag', SidePanelFunctions.getQuakeMaxMagnitudeFilter());
-      filterLegendControl.setValue('minDupQuakeDepth', SidePanelFunctions.getQuakeMinDateFilter());
+      filterLegendControl.setValue('minDupQuakeDepth', SidePanelFunctions.getQuakeMinDepthFilter());
       filterLegendControl.setValue('maxDupQuakeDepth', SidePanelFunctions.getQuakeMaxDepthFilter());
       filterLegendControl.setValue('minDupQuakeInt', SidePanelFunctions.getQuakeMinIntensityFilter());
       filterLegendControl.setValue('maxDupQuakeInt', SidePanelFunctions.getQuakeMaxIntensityFilter());
