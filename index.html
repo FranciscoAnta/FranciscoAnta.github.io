@@ -21,6 +21,8 @@
     <link rel="stylesheet" href="css/leaflet-sidepanel.css" />
     <link rel="stylesheet" href="css/L.Control.Window.css" />
     <link rel="stylesheet" href="css/toogleButton.css" />
+    <link rel="stylesheet" href="css/filterLegend.css" />
+    <link rel="stylesheet" href="css/eventLegend.css" />
     <link rel="stylesheet" href="css/Author.css" />
 
     <style>
@@ -432,6 +434,22 @@
                       </label>
                       <span id="optionsTabCoordinateVisorControlVisibleText" class="biggerFont"></span>
                     </div>
+                    <br>
+                    <div>
+                      <label class="switch">
+                        <input type="checkbox" id="optionsTabFilterLegendControlVisibleCheckbox">
+                        <span class="slider round"></span>
+                      </label>
+                      <span id="optionsTabFilterLegendControlVisibleText" class="biggerFont"></span>
+                    </div>
+                    <br>
+                    <div>
+                      <label class="switch">
+                        <input type="checkbox" id="optionsTabEventLegendControlVisibleCheckbox">
+                        <span class="slider round"></span>
+                      </label>
+                      <span id="optionsTabEventLegendControlVisibleText" class="biggerFont"></span>
+                    </div>
                     <h2 id="optionsTabStylesTitle"></h2>
                     <h3 id="optionsTabQuakesStylesTitle"></h3>
                     <div>
@@ -550,6 +568,8 @@
 
         <!--Controles / Controls -->
         <script src="js/author/CoordinatesVisorControl.js"></script>
+        <script src="js/author/FilterLegendControl.js"></script>
+        <script src="js/author/EventLegendControl.js"></script>
 
         <!-- Plugins de terceros / Third party plugins -->
         <script src="js/plugins/leaflet-svg-shape-markers.js"></script>
@@ -578,7 +598,8 @@
           let previousCircleLat, previousCircleLng, previousCircleRadius;
 
           // Controles / Controls
-          let zoomControl, layerControl, scalebarControl, coordinatesVisorControl, searchboxControl, printControl, printButton, sidePanelControl;
+          let zoomControl, layerControl, scalebarControl, coordinatesVisorControl, searchboxControl, 
+          printControl, printButton, sidePanelControl, filterLegendControl, eventLegendControl;
 
           // Ventanas / Windows
           let alertWindow, queryWindow;
@@ -605,7 +626,7 @@
           center: [INITIAL_LATITUDE, INITIAL_LONGITUDE],
           zoom: INITIAL_ZOOM_LEVEL,
           contextmenu: true,
-          contextmenuWidth: 350,
+          contextmenuWidth: CONTEXT_MENU_WIDTH,
           contextmenuItems: GeneralFunctions.getContextMenuItems()
         });
 
