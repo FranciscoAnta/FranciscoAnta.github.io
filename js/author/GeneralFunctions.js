@@ -20,10 +20,10 @@ VisorMode = {
 class GeneralFunctions {
   static intialize() {
     this.initializePanes();
-    this.initializeControls();
+    this.initializeFirstControls();
     this.initializeLayers();
     this.initializeMapEvents();
-    this.initializeSidePanelControl();
+    this.initializeSecondControls();
   }
 
   static initializePanes() {
@@ -85,14 +85,19 @@ class GeneralFunctions {
     LayerFunctions.hideIntensitiesLayer();
   }
 
-  static initializeControls() {
+  static initializeFirstControls() {
     this.initializeZoomControl();
     this.initializeLayerControl();
     this.initializeScalebarControl();
     this.initializeCoordinatesVisorControl();
     this.initializeSearchboxControl();
     this.initializePrintControl();
-    //this.initializeSidePanelControl();
+  }
+
+  static initializeSecondControls() {
+    this.initializeSidePanelControl();
+    this.initializeFilterLegendControl();
+    this.initializeEventLegendControl();
   }
 
   static initializeZoomControl() {
@@ -148,10 +153,21 @@ class GeneralFunctions {
     this.showSidePanel();
   }
 
+  static initializeFilterLegendControl() {
+    filterLegendControl = L.control.filterLegend({position: 'bottomright'}).addTo(map);
+  }
+
+  static initializeEventLegendControl() {
+    eventLegendControl = L.control.eventLegend({position: 'bottomleft'}).addTo(map);
+    eventLegendControl.update();
+  }
+
   static initializeMapEvents() {
     map.on('mousemove', this.onMapMouseMove);
     map.on('click', this.onMapLeftClick);
     map.on('contextmenu', this.onMapContextMenu);
+    map.on('overlayadd', this.onMapOverlayAdd);
+    map.on('overlayremove', this.onMapOverlayRemove);
   }
 
   // Eventos de mapa / Map events
@@ -173,9 +189,9 @@ class GeneralFunctions {
     if (GeneralFunctions.isDraw()) {
       GeneralFunctions.processDrawMode();
       GeneralFunctions.finishDrawMode();
-    } else if (filterCircle) {
-      GeneralFunctions.removeFilterCircle();
-      GeneralFunctions.removeFilterBuffer();
+    } else {
+      if (filterCircle) GeneralFunctions.removeFilterCircle();
+      if (filterBuffer) GeneralFunctions.removeFilterBuffer();
     }
   }
 
@@ -183,6 +199,14 @@ class GeneralFunctions {
     if (GeneralFunctions.isDraw()) {
       GeneralFunctions.cancelDraw();
     }
+  }
+
+  static onMapOverlayAdd(ev) {
+    if (eventLegendControl) eventLegendControl.update();
+  }
+
+  static onMapOverlayRemove(ev) {
+    if (eventLegendControl) eventLegendControl.update();
   }
 
   static updateCoordinatesVisor(ev) {

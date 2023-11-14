@@ -111,6 +111,8 @@ class LangageFunctions {
     SIDE_PANEL_OPTIONS_LAYER_CONTROL_ALWAYS_DEPLOYED_TEXT: "C. de capas siempre desplegado",
     SIDE_PANEL_OPTIONS_SCALEBAR_CONTROL_VISIBLE_TEXT: "Mostrar barra de escala",
     SIDE_PANEL_OPTIONS_COORDINATE_VISOR_CONTROL_VISIBLE_TEXT: "Mostrar visor de coordenadas",
+    SIDE_PANEL_OPTIONS_FILTER_LEGEND_CONTROL_VISIBLE_TEXT: "Mostrar leyenda de filtros",
+    SIDE_PANEL_OPTIONS_EVENT_LEGEND_CONTROL_VISIBLE_TEXT: "Mostrar leyenda de eventos",
     SIDE_PANEL_OPTIONS_QUAKES_STYLES_TITLE: "Estilos de sismos",
     SIDE_PANEL_OPTIONS_QUAKES_BORDER_COLOR_TEXT: "Color de borde de sismo",
     SIDE_PANEL_OPTIONS_QUAKES_FILL_COLOR_TEXT: "Color de relleno de sismo",
@@ -120,7 +122,7 @@ class LangageFunctions {
     SIDE_PANEL_OPTIONS_POPULATIONS_BORDER_COLOR_TEXT: "Color de borde de población",
     SIDE_PANEL_OPTIONS_POPULATIONS_FILL_COLOR_TEXT: "Color de relleno de población",
     SIDE_PANEL_OPTIONS_INTENSITIES_STYLES_TITLE: "Estilos de intensidades",
-    SIDE_PANEL_OPTIONS_INTENSITIES_BORDER_COLOR_TEXT: "Color de borde de población",
+    SIDE_PANEL_OPTIONS_INTENSITIES_BORDER_COLOR_TEXT: "Color de borde de intensidad",
     SIDE_PANEL_OPTIONS_REGIONS_STYLES_TITLE: "Estilos de comunidades autónomas",
     SIDE_PANEL_OPTIONS_REGIONS_BORDER_COLOR_TEXT: "C. de borde de comunidad autónoma",
     SIDE_PANEL_OPTIONS_PROVINCES_STYLES_TITLE: "Estilos de provincias",
@@ -192,8 +194,8 @@ class LangageFunctions {
     CONTEXT_MENU_QUAKES_NUMBER_IN_RADIUS_TEXT: "Obtener número de sismos en radio",
     CONTEXT_MENU_FAULTS_NUMBER_IN_RADIUS_TEXT: "Obtener número de fallas en radio",
     CONTEXT_MENU_POPULATIONS_NUMBER_IN_RADIUS_TEXT: "Obtener número de habitantes en radio",
-    CONTEXT_MENU_LAST_QUAKE_BY_MAGNITUDE_IN_RADIUS_TEXT: "Obtener último sismo mayor mayor que una magnitud en radio",
-    CONTEXT_MENU_LAST_QUAKE_BY_INTENSITY_IN_RADIUS_TEXT: "Obtener último sismo mayor mayor que una intensidad en radio",
+    CONTEXT_MENU_LAST_QUAKE_BY_MAGNITUDE_IN_RADIUS_TEXT: "Obtener último sismo mayor que una magnitud en radio",
+    CONTEXT_MENU_LAST_QUAKE_BY_INTENSITY_IN_RADIUS_TEXT: "Obtener último sismo mayor que una intensidad en radio",
 
     // Fallas
     CONTEXT_MENU_POPULATIONS_DISTANCE_TO_FAULT: "Obtener poblaciones a una distancia de la falla",
@@ -233,8 +235,31 @@ class LangageFunctions {
     COORDINATE_VISOR_CONTROL_LATITUDE: "Latitud",
     COORDINATE_VISOR_CONTROL_LONGITUDE: "Longitud",
 
+    // Textos de la leyenda de filtros
+    FILTER_LEGEND_CONTROL_TITLE: "Filtros activos",
+    FILTER_LEGEND_CONTROL_MAGNITUDE: "Mag.",
+    FILTER_LEGEND_CONTROL_DEPTH: "Prof.[km]",
+    FILTER_LEGEND_CONTROL_INTENSITY: "Int.",
+    FILTER_LEGEND_CONTROL_DATE: "Fecha",
+    FILTER_LEGEND_CONTROL_POPULATION: "Habs.",
+    FILTER_LEGEND_CONTROL_UNKNOWN: "Des.",
+
+    // Textos de la leyenda de eventos
+    EVENT_LEGEND_CONTROL_TITLE: "Leyenda",
+    EVENT_LEGEND_CONTROL_INTENSITY_TITLE: "Intensidades máximas",
+    EVENT_LEGEND_CONTROL_FAULT_TITLE: "Fallas",
+    EVENT_LEGEND_CONTROL_FAULT_TEXT: "Falla",
+    EVENT_LEGEND_CONTROL_POPULATION_TITLE: "Habitantes",
+    EVENT_LEGEND_CONTROL_POPULATION_TEXT: "H",
+    EVENT_LEGEND_CONTROL_MAGNITUDE_TITLE: "Magnitud",
+    EVENT_LEGEND_CONTROL_MAGNITUDE_Text: "M",
+
     // Textos de archivo
-    PRINTED_MAP_FILENAME: "Captura de pantalla"
+    PRINTED_MAP_FILENAME: "Captura de pantalla",
+
+    // Otros textos
+    MINIMIZE_BUTTON_SYMBOl: "-",
+    MAXIMIZE_BUTTON_SYMBOl: "+"
   }
 
   static english = {
