@@ -76,7 +76,7 @@
 .leaflet-searchbox-container .leaflet-searchbox-autocomplete {
     position: absolute;
     left: 50px;
-    top: 30px;
+    top: -50px;
     /* width: 100%; */
     width: 334px;
     list-style-type: none;
