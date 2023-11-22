@@ -201,6 +201,13 @@
                       <span id="spatialRadiusFilterText"></span>
                       <input id="spatialRadiusFilterInput">
                     </p>
+                    <div>
+                      <label class="switch">
+                        <input type="checkbox" id="spatialFiltersInsideTerritorialLimitCheckbox">
+                        <span class="slider round"></span>
+                      </label>
+                      <span id="spatialFiltersInsideTerritorialLimitText" class="biggerFont"></span>
+                    </div>
                     <p>
                       <button type="button" id="allFilterButton"></button><button type="button" id="allDuplicateButton"></button>
                     </p>
@@ -261,6 +268,13 @@
                       <span id="spatialRadiusFilterText"></span>
                       <input id="spatialRadiusFilterInput">
                     </p>
+                    <div>
+                      <label class="switch">
+                        <input type="checkbox" id="spatialFiltersInsideTerritorialLimitCheckbox">
+                        <span class="slider round"></span>
+                      </label>
+                      <span id="spatialFiltersInsideTerritorialLimitText" class="biggerFont"></span>
+                    </div>
                     <p>
                       <button type="button" id="quakesFilterButton"></button><button type="button" id="quakesDuplicateButton"></button>
                     </p>
@@ -303,6 +317,13 @@
                       <span id="spatialRadiusFilterText"></span>
                       <input id="spatialRadiusFilterInput">
                     </p>
+                    <div>
+                      <label class="switch">
+                        <input type="checkbox" id="spatialFiltersInsideTerritorialLimitCheckbox">
+                        <span class="slider round"></span>
+                      </label>
+                      <span id="spatialFiltersInsideTerritorialLimitText" class="biggerFont"></span>
+                    </div>
                       <button type="button" id="faultsFilterButton"></button><button type="button" id="faultsDuplicateButton"></button>
                     </p>
                     <p>
@@ -335,6 +356,13 @@
                       <span id="spatialRadiusFilterText"></span>
                       <input id="spatialRadiusFilterInput">
                     </p>
+                    <div>
+                      <label class="switch">
+                        <input type="checkbox" id="spatialFiltersInsideTerritorialLimitCheckbox">
+                        <span class="slider round"></span>
+                      </label>
+                      <span id="spatialFiltersInsideTerritorialLimitText" class="biggerFont"></span>
+                    </div>
                     <p>
                       <button type="button" id="populationsFilterButton"></button><button type="button" id="populationsDuplicateButton"></button>
                     </p>
@@ -360,6 +388,14 @@
                       <span id="spatialRadiusFilterText"></span>
                       <input id="spatialRadiusFilterInput">
                     </p>
+                    <h2 id="spatialFiltersConditionTitle"></h2>
+                    <div>
+                      <label class="switch">
+                        <input type="checkbox" id="spatialFiltersInsideTerritorialLimitCheckbox">
+                        <span class="slider round"></span>
+                      </label>
+                      <span id="spatialFiltersInsideTerritorialLimitText" class="biggerFont"></span>
+                    </div>
                     <p>
                       <button type="button" id="spatialFilterButton"></button><button type="button" id="spatialDuplicateButton"></button>
                     </p>
@@ -410,6 +446,7 @@
                     <p id="optionsTabDescription"></p>
                     <h2 id="optionsTabLangageTitle"></h2>
                     <p><select id="optionsTabLangageInput"></select></p>
+                    <p id="optionsTabLangageText"></p>
                     <h2 id="optionsTabControlsTitle"></h2>
                     <div>
                       <label class="switch">
@@ -491,6 +528,11 @@
                       <input id="optionsTabProvincesBorderColorInput">
                       <span id="optionsTabProvincesBorderColorText" class="biggerFont"></span>
                     </div>
+                    <h3 id="optionsTabTerritorialLimitStylesTitle"></h3>
+                    <div>
+                      <input id="optionsTabTerritorialLimitBorderColorInput">
+                      <span id="optionsTabTerritorialLimitBorderColorText" class="biggerFont"></span>
+                    </div>
                     <h3 id="optionsTabFilterCircleStylesTitle"></h3>
                     <div>
                       <input id="optionsTabFilterCircleBorderColorInput">
@@ -540,6 +582,7 @@
         <!-- Datos crudos / Raw data -->
         <script src="data/regionsData.js"></script>
         <script src="data/provincesData.js"></script>
+        <script src="data/territorialLimitData.js"></script>
         <script src="data/quakesData.js"></script>
         <script src="data/faultsData.js"></script>
         <script src="data/populationsData.js"></script>
@@ -588,7 +631,7 @@
 
           // Objetos principales / Main objects
           // Capas / Layers
-          let emptyLayer, osmLayer, regionsLayer, provincesLayer, quakesLayer, faultsLayer, populationsLayer, intensitiesLayer,
+          let emptyLayer, osmLayer, regionsLayer, provincesLayer, territorialLimitLayer, quakesLayer, faultsLayer, populationsLayer, intensitiesLayer,
           duplicatedQuakesLayer, duplicatedFaultsLayer, duplicatedPopulationsLayer, importedLayer;
 
           // Capas de filtrado / Filter layers
@@ -596,13 +639,14 @@
 
           // Otros objetos
           let previousCircleLat, previousCircleLng, previousCircleRadius;
+          let insideTerritorialLimit = DEFAULT_INSIDE_TERRITORIAL_LIMIT;
 
           // Controles / Controls
           let zoomControl, layerControl, scalebarControl, coordinatesVisorControl, searchboxControl, 
           printControl, printButton, sidePanelControl, filterLegendControl, eventLegendControl;
 
           // Ventanas / Windows
-          let alertWindow, queryWindow;
+          let alertWindow, queryWindow, filterCircleWindow;
 
           // Idioma / Langage
           let langage = 'spanish';
