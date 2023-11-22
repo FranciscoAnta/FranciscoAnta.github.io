@@ -138,7 +138,6 @@ L.Control.EventLegend = L.Control.extend({
 
   getPopulationsContains: function() {
     const title = LangageFunctions.getText('EVENT_LEGEND_CONTROL_POPULATION_TITLE');
-    const text = LangageFunctions.getText('EVENT_LEGEND_CONTROL_POPULATION_TEXT');
     const bc = StyleFunctions.getValue('populationBorderColor');
     const fc = StyleFunctions.getValue('populationFillColor');
     const sw = StyleFunctions.getValue('populationWeight');
@@ -166,7 +165,7 @@ L.Control.EventLegend = L.Control.extend({
   },
 
   getQuakeSizeFormula: function(magnitude) {
-    return 4 * Math.pow(magnitude, 2);
+    return 4 * Math.pow(magnitude, 1.8);
   },
 
   getQuakeText: function(mag, min, max) {
