@@ -154,7 +154,7 @@ class LayerFunctions {
       isInsideTerritorialLimit = true;
     }
 
-    return isNumber && isInsideFilterCircle, isInsideTerritorialLimit;
+    return isNumber && isInsideFilterCircle && isInsideTerritorialLimit;
   }
 
   // Intensidades / Intensities

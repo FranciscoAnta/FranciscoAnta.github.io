@@ -301,6 +301,7 @@ class GeneralFunctions {
     const lng = MiscFunctions.clamp(ev.latlng.lng, MIN_LONGITUDE, MAX_LONGITUDE);
     SidePanelFunctions.setSpatialLatitudeFilter(lat);
     SidePanelFunctions.setSpatialLongitudeFilter(lng);
+    GeneralFunctions.finishDraw();
   }
 
   static starDrawFilterCircle(ev) {
