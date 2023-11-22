@@ -1,5 +1,22 @@
 class WindowFunctions {
-  // Ventana de consulta
+
+  static getFilterCircleWindow(map, lat, lng, r) {
+    const content = "<p>Latitud:  <input type='number' size='5'> Longitud: <input type='number' size='5'</p>"
+    + "<p>Radio:  <input type='number' size='8'><button>Aceptar</button></p>"
+    const options = {
+      title: "Círculo de filtrado",
+      content: content,
+      modal: false,
+      closeButton: false
+    }
+    let win = L.control.window(map, options);
+    let container = win._container;
+    L.DomEvent.disableClickPropagation(container);
+    return win;
+  }
+
+
+  // Ventana de consulta / Query Window
 
   static getQueryWindow(map, title, content) {
     const options = {
@@ -143,6 +160,7 @@ class WindowFunctions {
     queryWindow = this.getQueryWindow(map, title, content);
     input = document.querySelector('#queryInput');
     button = document.querySelector('#queryButton');
+    button.type = 'button';
     input.addEventListener('change', WindowFunctions.onMagnitudeQueryInputChange);
     button.addEventListener('click', WindowFunctions.onMagnitudeQueryButtonClick);
     queryWindow.show();
@@ -158,6 +176,7 @@ class WindowFunctions {
     queryWindow = this.getQueryWindow(map, title, content);
     select = document.querySelector('#querySelect');
     button = document.querySelector('#queryButton');
+    button.type = 'button';
     button.addEventListener('click', WindowFunctions.onIntensityQueryButtonClick);
     for (i = 0; i < options.length; i++) {
       select.add(options[i]);
@@ -179,7 +198,7 @@ class WindowFunctions {
       const localization = layer.feature.properties[AttributesConfig.QUAKE_LOCALIZATION];
       const magnitude = layer.feature.properties[AttributesConfig.QUAKE_MAGNITUDE];
       const date = layer.feature.properties[AttributesConfig.QUAKE_DATE].trim();
-      LayerFunctions.unmarkLayers(geojsonLayer.getLayers(), StyleFunctions.getValue('quakeBorderColor'));;
+      LayerFunctions.unmarkLayers(geojsonLayer, StyleFunctions.getValue('quakeBorderColor'));;
       LayerFunctions.showLayer(geojsonLayer);
       LayerFunctions.markLayer(layer);
       text = MiscFunctions.format(textFormat, localization, magnitude, date, lat, lng, r);
@@ -204,7 +223,7 @@ class WindowFunctions {
       const localization = layer.feature.properties[AttributesConfig.QUAKE_LOCALIZATION];
       const intensity = layer.feature.properties[AttributesConfig.QUAKE_INTENSITY] ? layer.feature.properties[AttributesConfig.QUAKE_INTENSITY] : LangageFunctions.getText('SIDE_PANEL_QUAKE_UNKNOWN_INTENSITY');
       const date = layer.feature.properties[AttributesConfig.QUAKE_DATE].trim();
-      LayerFunctions.unmarkLayers(geojsonLayer.getLayers(), StyleFunctions.getValue('quakeBorderColor'));;
+      LayerFunctions.unmarkLayers(geojsonLayer, StyleFunctions.getValue('quakeBorderColor'));;
       LayerFunctions.showLayer(geojsonLayer);
       LayerFunctions.markLayer(layer);
       text = MiscFunctions.format(textFormat, localization, intensity, date, lat, lng, r);
@@ -244,6 +263,7 @@ class WindowFunctions {
     queryWindow = WindowFunctions.getQueryWindow(map, title, content);
     input = document.querySelector('#queryInput');
     button = document.querySelector('#queryButton');
+    button.type = 'button';
     input.addEventListener('change', WindowFunctions.onDistanceQueryInputChange);
     button.addEventListener('click', buttonListener);
     queryWindow.show();
@@ -275,6 +295,7 @@ class WindowFunctions {
     populationInput = document.querySelector('#queryInput2');
     distanceInput = document.querySelector('#queryInput');
     button = document.querySelector('#queryButton');
+    button.type = 'button';
     populationInput.valueAsNumber = POPULATIONS_MIN_NUMBER;
     populationInput.addEventListener('change', WindowFunctions.onPopulationNumberQueryInputChange);
     distanceInput.addEventListener('change', WindowFunctions.onDistanceQueryInputChange);
@@ -335,7 +356,7 @@ class WindowFunctions {
     const geojsonLayer = duplicatedPopulationsLayer ? duplicatedPopulationsLayer : populationsLayer;
     LayerFunctions.removeFilterBufferLayer();
     LayerFunctions.addFilterBufferLayer(faultLayer.getLatLngs(), value);
-    LayerFunctions.unmarkLayers(geojsonLayer.getLayers(), StyleFunctions.getValue('populationBorderColor'));
+    LayerFunctions.unmarkLayers(geojsonLayer, StyleFunctions.getValue('populationBorderColor'));
     LayerFunctions.showLayer(geojsonLayer);
     WindowFunctions.showPopulationsDistanceToFault(value);
   }
@@ -349,7 +370,7 @@ class WindowFunctions {
     const geojsonLayer = duplicatedPopulationsLayer ? duplicatedPopulationsLayer : populationsLayer;
     LayerFunctions.removeFilterBufferLayer();
     LayerFunctions.addFilterBufferLayer(faultLayer.getLatLngs(), distanceValue);
-    LayerFunctions.unmarkLayers(geojsonLayer.getLayers(), StyleFunctions.getValue('populationBorderColor'));
+    LayerFunctions.unmarkLayers(geojsonLayer, StyleFunctions.getValue('populationBorderColor'));
     LayerFunctions.showLayer(geojsonLayer);
     WindowFunctions.showPopulationsByNumberDistanceToFault(distanceValue, populationNumber);
   }

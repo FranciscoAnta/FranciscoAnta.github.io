@@ -72,7 +72,7 @@ L.Control.FilterLegend = L.Control.extend({
     this.setValue('minFaultDepth', FAULTS_MIN_DEPTH);
     this.setValue('maxFaultDepth', FAULTS_MAX_DEPTH);
 
-    this.setValue('minPopNumber', POPULATIONS_MIN_NUMBER);
+    this.setValue('minPopNumber', INITIAL_POPULATION_MIN_NUMBER);
     this.setValue('maxPopNumber', POPULATIONS_MAX_NUMBER);
   },
 
@@ -86,13 +86,14 @@ L.Control.FilterLegend = L.Control.extend({
       text += this.getTableRow2();
       text += this.getTableRow3();
       text += this.getTableRow4();
-      text += this.getTableRow5();
-      text += this.getTableRow6();
-      text += this.getTableRow7();
+      if (duplicatedQuakesLayer) text += this.getTableRow5();
+      if (duplicatedFaultsLayer) text += this.getTableRow6();
+      if (duplicatedPopulationsLayer) text += this.getTableRow7();
     }
     text += "</tbody></table>";
     this.container.innerHTML = text;
     button = this.container.querySelector('#filterLegendMinimizeButton');
+    button.type = 'button';
     L.DomEvent.on(button, 'click', this.onMinimizeButton, this);
   },
 

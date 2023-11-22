@@ -192,7 +192,7 @@ class MiscFunctions {
       date = this.getDate(value);
       if (date < minValue) minValue = date;
     }
-    if (minValue === Infinity || minValue < 0) minValue = 0;
+    if (minValue === Infinity) minValue = Date.now();
     return minValue;
   }
 
@@ -215,7 +215,16 @@ class MiscFunctions {
   }
 
   static getIntensityValue(intensityString) {
-    const index = INTENSITY_STRING.indexOf(intensityString);
-    return index !== -1 ? index : 0;
+    let i, value;
+    const array = intensityString.trim().split('-');
+    let maxValue = 0;
+    for (i = 0; i < array.length; i++) {
+      value = INTENSITY_STRING.indexOf(array[i]);
+      if (value < 0) value = 0;
+      if (value > maxValue) maxValue = value;
+    }
+    return maxValue;
+    // const index = INTENSITY_STRING.indexOf(intensityString);
+    // return index !== -1 ? index : 0;
   }
 }

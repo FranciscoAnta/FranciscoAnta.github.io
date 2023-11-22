@@ -11,7 +11,7 @@ class LayerFunctions {
   }
 
   static getQuakesFilterFunction(feature, filters) {
-    let isMagnitude, isIntensity, isDepth, isDate, isInside;
+    let isMagnitude, isIntensity, isDepth, isDate, isInsideFilterCircle, isInsideTerritorialLimit;
     const magnitude = feature.properties[AttributesConfig.QUAKE_MAGNITUDE];
     const depth = feature.properties[AttributesConfig.QUAKE_DEPTH];
     const intensityString = feature.properties[AttributesConfig.QUAKE_INTENSITY];
@@ -43,12 +43,18 @@ class LayerFunctions {
     }
 
     if (filters.latitude !== undefined && filters.longitude !== undefined && filters.radius !== undefined) {
-      isInside = GeometryFunctions.isFeatureInsideCircle(feature, filters.latitude, filters.longitude, filters.radius * 1000);
+      isInsideFilterCircle = GeometryFunctions.isFeatureInsideRadius(feature, filters.longitude, filters.latitude, filters.radius * 1000);
     } else {
-      isInside = true;
+      isInsideFilterCircle = true;
     }
 
-    return isMagnitude && isIntensity && isDepth && isDate && isInside;
+    if (filters.insideTerritorialLimit) {
+      isInsideTerritorialLimit = GeometryFunctions.isFeatureInsidelayerGroup(territorialLimitLayer, feature);
+    } else {
+      isInsideTerritorialLimit = true;
+    }
+
+    return isMagnitude && isIntensity && isDepth && isDate && isInsideFilterCircle && isInsideTerritorialLimit;
   }
 
   static getQuakesOnEachFeatureFunction(feature, layer) {
@@ -76,7 +82,7 @@ class LayerFunctions {
   }
 
   static getFaultsFilterFunction(feature, filters) {
-    let isMagnitude, isDepth, isInside;
+    let isMagnitude, isDepth, isInsideFilterCircle, isInsideTerritorialLimit;
     const magnitude = feature.properties[AttributesConfig.FAULT_MAGNITUDE];
     const depth = feature.properties[AttributesConfig.FAULT_DEPTH];
     if (filters.minMagnitude !== undefined && filters.maxMagnitude !== undefined) {
@@ -92,12 +98,19 @@ class LayerFunctions {
     }
 
     if (filters.latitude !== undefined && filters.longitude !== undefined && filters.radius !== undefined) {
-      isInside = GeometryFunctions.isFeatureInsideCircle(feature, filters.latitude, filters.longitude, filters.radius * 1000);
+      isInsideFilterCircle = GeometryFunctions.isFeatureInsideRadius(feature, filters.longitude, filters.latitude, filters.radius * 1000);
     } else {
-      isInside = true;
+      isInsideFilterCircle = true;
     }
 
-    return isMagnitude && isDepth && isInside;
+    if (filters.insideTerritorialLimit) {
+      isInsideTerritorialLimit = GeometryFunctions.isFeatureInsidelayerGroup(territorialLimitLayer, feature);
+      //isInsideTerritorialLimit = true;
+    } else {
+      isInsideTerritorialLimit = true;
+    }
+
+    return isMagnitude && isDepth && isInsideFilterCircle && isInsideTerritorialLimit;
   }
 
   // Poblaciones / Populations
@@ -120,7 +133,7 @@ class LayerFunctions {
   }
 
   static getPopulationsFilterFunction(feature, filters) {
-    let isNumber, isInside;
+    let isNumber, isInsideFilterCircle, isInsideTerritorialLimit;
     const number = feature.properties[AttributesConfig.POPULATION_NUMBER];
 
     if (filters.minNumber !== undefined && filters.maxNumber !== undefined) {
@@ -130,12 +143,18 @@ class LayerFunctions {
     }
 
     if (filters.latitude !== undefined && filters.longitude !== undefined && filters.radius !== undefined) {
-      isInside = GeometryFunctions.isFeatureInsideCircle(feature, filters.latitude, filters.longitude, filters.radius * 1000);
+      isInsideFilterCircle = GeometryFunctions.isFeatureInsideRadius(feature, filters.longitude, filters.latitude, filters.radius * 1000);
     } else {
-      isInside = true;
+      isInsideFilterCircle = true;
     }
 
-    return isNumber && isInside;
+    if (filters.insideTerritorialLimit) {
+      isInsideTerritorialLimit = GeometryFunctions.isFeatureInsidelayerGroup(territorialLimitLayer, feature);
+    } else {
+      isInsideTerritorialLimit = true;
+    }
+
+    return isNumber && isInsideFilterCircle, isInsideTerritorialLimit;
   }
 
   // Intensidades / Intensities
@@ -161,6 +180,17 @@ class LayerFunctions {
   // Funciones de creación de capas 
   // Permiten obtener un objeto de capa a partir de unos parámetros
 
+  static getEmptyLayer() {
+    return L.geoJSON();
+  }
+
+  static getOsmLayer() {
+    return L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }) 
+  }
+
   static getRegionsLayer() {
     const options = {
       interactive: false,
@@ -177,6 +207,15 @@ class LayerFunctions {
       style: StyleFunctions.getProvincesStyle
     }
     return L.geoJSON(provincesData, options);
+  }
+
+  static getTerritorialLimitLayer() {
+    const options = {
+      interactive: false,
+      pane: PaneSymbol.TERRITORIAL_LIMIT,
+      style: StyleFunctions.getTerritorialLimitStyle
+    }
+    return L.geoJSON(territorialLimitData, options);
   }
   
   static getQuakesLayer(pane, filters) {
@@ -292,6 +331,12 @@ class LayerFunctions {
     this.addLayer(layer, LangageFunctions.getText('PROVINCES_LAYER'));
   }
 
+  static addTerritorialLimitLayer() {
+    const layer = this.getTerritorialLimitLayer();
+    territorialLimitLayer = layer;
+    this.addLayer(layer, LangageFunctions.getText('TERRITORIAL_LIMIT'));
+  }
+
   static addQuakesLayer(filters) {
     const layer = this.getQuakesLayer(PaneSymbol.QUAKES, filters);
     quakesLayer = layer;
@@ -370,6 +415,7 @@ class LayerFunctions {
   static removeLayer(layer) {
     map.removeLayer(layer);
     layerControl.removeLayer(layer);
+    if (eventLegendControl) eventLegendControl.update();
   }
 
   static removeAllLayers() {
@@ -388,6 +434,33 @@ class LayerFunctions {
     this.removeDuplicatedQuakesLayer();
     this.removeDuplicatedFaultsLayer();
     this.removeDuplicatedPopulationsLayer();
+  }
+
+  static removeLimitsLayers() {
+    this.removeRegionsLayer();
+    this.removeProvincesLayer();
+    this.removeTerritorialLimitLayer();
+  }
+
+  static removeRegionsLayer() {
+    if (regionsLayer) {
+      this.removeLayer(regionsLayer);
+      regionsLayer = null;
+    }
+  }
+
+  static removeProvincesLayer() {
+    if (provincesLayer) {
+      this.removeLayer(provincesLayer);
+      provincesLayer = null;
+    }
+  }
+
+  static removeTerritorialLimitLayer() {
+    if (territorialLimitLayer) {
+      this.removeLayer(territorialLimitLayer);
+      territorialLimitLayer = null;
+    }
   }
 
   static removeQuakesLayer() {
@@ -480,10 +553,12 @@ class LayerFunctions {
 
   static showLayer(layer) {
     if (layer && !this.isLayerVisible(layer)) map.addLayer(layer);
+    if (eventLegendControl) eventLegendControl.update();
   }
 
   static hideLayer(layer) {
     if (layer && this.isLayerVisible(layer)) map.removeLayer(layer);
+    if (eventLegendControl) eventLegendControl.update();
   }
 
   static toogleRegionsLayer() {
@@ -508,6 +583,18 @@ class LayerFunctions {
 
   static hideProvincesLayer() {
     this.hideLayer(provincesLayer);
+  }
+
+  static toogleTerritorialLimitLayer() {
+    this.toogleLayer(territorialLimitLayer);
+  }
+
+  static showTerritorialLimitLayer() {
+    this.showLayer(territorialLimitLayer);
+  }
+
+  static hideTerritorialLimitLayer() {
+    this.hideLayer(territorialLimitLayer);
   }
 
   static toogleQuakesLayer() {
@@ -668,19 +755,22 @@ class LayerFunctions {
     }
   }
 
-  static unmarkLayers(layers, color) {
-    for (let i = 0; i < layers.length; i++) {
-      this.unmarkLayer(layers[i], color);
+  static unmarkLayers(groupLayer, color) {
+    if (groupLayer) {
+      const layers = groupLayer.getLayers();
+      for (let i = 0; i < layers.length; i++) {
+        this.unmarkLayer(layers[i], color);
+      }
     }
   }
 
   static unmarkAllLayers() {
-    this.unmarkLayers(quakesLayer.getLayers(), StyleFunctions.getValue('quakeBorderColor'));
-    this.unmarkLayers(faultsLayer.getLayers(), StyleFunctions.getValue('faultColor'));
-    this.unmarkLayers(populationsLayer.getLayers(), StyleFunctions.getValue('populationBorderColor'));
-    if (duplicatedQuakesLayer) this.unmarkLayers(duplicatedQuakesLayer.getLayers(), StyleFunctions.getValue('quakeBorderColor'));
-    if (duplicatedFaultsLayer) this.unmarkLayers(duplicatedFaultsLayer.getLayers(), StyleFunctions.getValue('faultColor'));
-    if (duplicatedPopulationsLayer) this.unmarkLayers(duplicatedPopulationsLayer.getLayers(), StyleFunctions.getValue('populationBorderColor'));
+    this.unmarkLayers(quakesLayer, StyleFunctions.getValue('quakeBorderColor'));
+    this.unmarkLayers(faultsLayer, StyleFunctions.getValue('faultColor'));
+    this.unmarkLayers(populationsLayer, StyleFunctions.getValue('populationBorderColor'));
+    if (duplicatedQuakesLayer) this.unmarkLayers(duplicatedQuakesLayer, StyleFunctions.getValue('quakeBorderColor'));
+    if (duplicatedFaultsLayer) this.unmarkLayers(duplicatedFaultsLayer, StyleFunctions.getValue('faultColor'));
+    if (duplicatedPopulationsLayer) this.unmarkLayers(duplicatedPopulationsLayer, StyleFunctions.getValue('populationBorderColor'));
   }
 
   static unmarkQuake(layer) {
