@@ -12,9 +12,11 @@ const INITIAL_ZOOM_LEVEL = 5;
 const INITIAL_LONGITUDE = -3.7;
 const INITIAL_LATITUDE = 40.41;
 const INITIAL_DATE = new Date();
+const INITIAL_POPULATION_MIN_NUMBER = 2000;
 const POPULATION_NAMES = MiscFunctions.getPopulationNames(populationsData.features);
 const INTENSITY_STRING = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
 
+const DEFAULT_INSIDE_TERRITORIAL_LIMIT = false;
 const DEFAULT_EXPORT_NAME = "Exported";
 const MAX_FILE_NAME = 20;
 const DEFAULT_EXPORT_LAYER_VISIBLE_BOUND_ONLY_CHECKED = false;

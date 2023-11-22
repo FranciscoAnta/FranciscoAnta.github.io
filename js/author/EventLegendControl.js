@@ -36,6 +36,7 @@ L.Control.EventLegend = L.Control.extend({
     }
 
     button = this.container.querySelector('#eventLegendMinimizeButton') ;
+    button.type = 'button';
     L.DomEvent.on(button, 'click', this.onMinimizeButton, this);
   },
 
@@ -52,7 +53,7 @@ L.Control.EventLegend = L.Control.extend({
     const max = INTENSITIES_MAX_VALUE;
     const maxItems = (max - min + 1) * 2;
     const cols = maxItems;
-    const title = LangageFunctions.getText('EVENT_LEGEND_CONTROL_TITLE');
+    const title = LangageFunctions.getText('EVENT_LEGEND_CONTROL_INTENSITY_TITLE');
     let contains = "<p><div><b><em>" + title + "</em></b></div><div><table>";
     for (i = 0; i < maxItems; i++) {
       value = Math.floor(i / 2) + min;
@@ -76,39 +77,52 @@ L.Control.EventLegend = L.Control.extend({
     const title = LangageFunctions.getText('EVENT_LEGEND_CONTROL_FAULT_TITLE');
     const text = LangageFunctions.getText('EVENT_LEGEND_CONTROL_FAULT_TEXT');
     const color = StyleFunctions.getValue('faultColor');
+    const sw = StyleFunctions.getValue('faultWeight');
+    const w = 32;
+    const h = 16;
+    const b = 4;
+    const x1 = b;
+    const x2 = w - b;
+    const y = h - sw;
     let contains = "<p><div><b><em>" + title + "</em></b></div>";
-    contains += "<div><i class='faultSymbol' style='background:" + color + "'></i>" + text + "</div></p>";
+    contains += "<div><svg width='" + w + "' height='" + h + "'><line x1='" + x1 + "' x2='" + x2 + "' y1='" + y + "' y2='" + y + "' stroke='" + color + "' stroke-width='" + sw + "'/></svg>" + text + "</div>";
     return contains;
   },
 
   getQuakesContains: function() {
-    let i, size, dx, dy, dty, text;
+    let i, size, y, r, text, yl;
     const min = Math.max(1, Math.floor(QUAKES_MIN_MAGNITUDE));
     const max = Math.ceil(QUAKES_MAX_MAGNITUDE);
     const maxSize = this.getQuakeSizeFormula(max);
-    const x = 25;
-    const y = this.getContainer().offsetHeight + maxSize + 10;
-    const dl = x + maxSize / 2;
-    const dw = maxSize * 3 / 5;
-    const dtx = dl + dw + 10;
     const title = LangageFunctions.getText('EVENT_LEGEND_CONTROL_MAGNITUDE_TITLE');
-    const borderColor = StyleFunctions.getValue('quakeBorderColor');
-    const fillColor = StyleFunctions.getValue('quakeFillColor');
+    const bc = StyleFunctions.getValue('quakeBorderColor');
+    const fc = StyleFunctions.getValue('quakeFillColor');
+    const sw = StyleFunctions.getValue('quakeWeight');
+    const fo = StyleFunctions.getValue('quakeFillOpacity');
+    const b = 4;
+    const ts = 60;
+    const w = maxSize + b + ts;
+    const h = maxSize  + b * 3;
+    const x = (maxSize + b) / 2;
+    const mr = maxSize / 2;
+    const xl = x + mr + b;
+    const xt = xl + b;
     let contains = "<p>";
     contains += "<div><b><em>" + title + "</em></b></div>";
+    contains += "<div><svg width='" + w + "' height='" + h + "'>";
 
-    contains += "<div style='height:" + maxSize + "px'>";
     for (i = max; i >= min; i--) {
       text = this.getQuakeText(i, min, max);
       size = this.getQuakeSizeFormula(i);
-      dx = x + maxSize / 2 - size / 2;
-      dy = y - size;
-      dty = dy - 10;
-      contains += "<i class='quakeLine' style='width: " + dw + "px; left:" + dl + "px; top:" + dy + "px'></i>"
-      contains += "<i class='quakeSymbol' style='width:" +  size + "px; height:" + size + "px; left:" + dx + "px; top:" + dy + "px; border-color:" + borderColor + "; background-color:" + fillColor + "'></i>"
-      contains += "<i class='quakeText' style='left:" + dtx + "px; top:" + dty + "px'>" + text + "</i>"
+      r = size / 2;
+      y = h / 2 + mr - r;
+      yl = y - r;
+      contains += "<circle cx='" + x + "' cy='" + y + "'r='" + r + "' stroke='" + bc + "' stroke-width='" + sw + "' fill='" + fc + "' fill-opacity='" + fo + "'/>";
+      contains += "<line x1='" + x + "' x2='" + xl + "' y1='" + yl + "' y2='" + yl + "' stroke='black' stroke-width='1'/>";
+      contains += "<text x='" + xt + "' y='" + (yl + 4) +"'>" + text + "</text>";
     }
-
+    
+    contains += "</svg></div>"
     contains += "</div>";
     contains += "</p>";
     return contains;
@@ -125,34 +139,58 @@ L.Control.EventLegend = L.Control.extend({
   getPopulationsContains: function() {
     const title = LangageFunctions.getText('EVENT_LEGEND_CONTROL_POPULATION_TITLE');
     const text = LangageFunctions.getText('EVENT_LEGEND_CONTROL_POPULATION_TEXT');
-    const borderColor = StyleFunctions.getValue('populationBorderColor');
-    const fillColor = StyleFunctions.getValue('populationFillColor');
+    const bc = StyleFunctions.getValue('populationBorderColor');
+    const fc = StyleFunctions.getValue('populationFillColor');
+    const sw = StyleFunctions.getValue('populationWeight');
+    const fo = StyleFunctions.getValue('populationFillOpacity');
+    const b = 4;
+    const w = 32;
+    const h = 32;
+    const tw = 120;
+    const ty = h / 2 + 4;
     let contains = "<p>";
     contains += "<div><b><em>" + title + "</em></b></div>";
-    // contains += "<span>Círculo: H < 10000</span><br>";
-    // contains += "<span>Diamante: 10000 ≤ H ≤ 100000</span><br>";
-    // contains += "<span>Círculo: H ≥ 100000</span>";
-    contains += "<div><i class='popCircleSymbol' style='border-color:" + borderColor + "; background-color:" + fillColor + "'></i>" + text + " < 10000</div>";
-    contains += "<div><i class='popDiamondSymbol' style='border-color:" + borderColor + "; background-color:" + fillColor + "'></i>10000 ≤ " + text + " ≤ 100000</div>";
-    contains += "<div><svg width='24px' height='24px' viewBox='10 10 16 16' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'  version='1.2' baseProfile='tiny'> <title>Qt SVG Document</title> <desc>Generated with Qt</desc> <defs></defs><g fill='none' stroke='black' stroke-width='1' fill-rule='evenodd' stroke-linecap='square' stroke-linejoin='bevel' ><g fill='" + fillColor + "' fill-opacity='1' stroke='" + borderColor + "' stroke-opacity='1' stroke-width='1.13386' stroke-linecap='square' stroke-linejoin='bevel' transform='matrix(1,0,0,1,0,0)' font-family='MS Shell Dlg 2' font-size='8.25' font-weight='400' font-style='normal'><path vector-effect='none' fill-rule='evenodd' d='M14.409,13.8101 L9.26023,13.8101 L13.4256,16.8365 L11.8346,21.7332 L16,18.7068 L20.1654,21.7332 L18.5744,16.8365 L22.7398,13.8101 L17.591,13.8101 L16,8.91339 L14.409,13.8101'/></g></g></svg>"
-    + text + "≥ 100000</div>";
+    // Primera línea / First line
+    contains += "<div><svg width='" + w + "' height='" + h + "'><circle cx='" + w / 2 + "'cy='" + h / 2 + "' r='" + StyleFunctions.getPopulationRadius('circle') + "' stroke='" + bc + "' stroke-width='" + sw + "' fill='" + fc + "' fill-opacity='" + fo + "'/></svg>"
+    contains += "<svg width='" + tw + "' height='" + h + "'><text x='0' y='" + ty + "'>" + this.getPopulationText(null, 1000) + "</text></svg>";
+    contains += "<svg width='" + w + "' height='" + h + "'><polygon points='8," + (h - 8) + " " + (w - 8) + "," + (h - 8) + " " + (w / 2) + ",8' stroke='" + bc + "' stroke-width='" + sw + "' fill='" + fc + "' fill-opacity='" + fo + "'/></svg>"
+    contains += "<svg width='" + tw + "' height='" + h + "'><text x='0' y='" + ty + "'>" + this.getPopulationText(1000, 10000) + "</text></svg><div>";
+
+    // Segunda línea / Second line
+    contains += "<div><svg width='" + w + "' height='" + h + "'><rect x='13' y='-9' width='" + (32 - 15) + "' height='" + (32 - 15) + "' transform='rotate(45)' stroke='" + bc + "' stroke-width='" + sw + "' fill='" + fc + "' fill-opacity='" + fo + "'/></svg>"
+    contains += "<svg width='" + tw + "' height='" + h + "'><text x='0' y='" + ty + "'>" + this.getPopulationText(10000, 100000) + "</text></svg>";
+    contains += "<svg width='32' height='32' viewBox='8 8 16 16' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'  version='1.2' baseProfile='tiny'> <title>Qt SVG Document</title> <desc>Generated with Qt</desc> <defs></defs><g fill='none' stroke='black' stroke-width='1' fill-rule='evenodd' stroke-linecap='square' stroke-linejoin='bevel' ><g fill='" + fc + "' fill-opacity='" + fo + "' stroke='" + bc + "' stroke-opacity='1' stroke-width='1' stroke-linecap='square' stroke-linejoin='bevel' transform='matrix(1,0,0,1,0,0)' font-family='MS Shell Dlg 2' font-size='8.25' font-weight='400' font-style='normal'><path vector-effect='none' fill-rule='evenodd' d='M14.409,13.8101 L9.26023,13.8101 L13.4256,16.8365 L11.8346,21.7332 L16,18.7068 L20.1654,21.7332 L18.5744,16.8365 L22.7398,13.8101 L17.591,13.8101 L16,8.91339 L14.409,13.8101'/></g></g></svg>"
+    contains += "<svg width='" + tw + "' height='" + h + "'><text x='0' y='" + ty + "'>" + this.getPopulationText(100000) + "</text></svg><div>";
     contains += "</p>";
     return contains;
   },
 
   getQuakeSizeFormula: function(magnitude) {
-    return 4 * Math.pow(magnitude, 2) + 2.85;
+    return 4 * Math.pow(magnitude, 2);
   },
 
   getQuakeText: function(mag, min, max) {
     let text = "";
-    const title = LangageFunctions.getText('EVENT_LEGEND_CONTROL_MAGNITUDE_Text');
+    const letter = LangageFunctions.getText('EVENT_LEGEND_CONTROL_MAGNITUDE_LETTER');
     if (mag === min) {
-      text = min + " ≤ " + title;
+      text = min + " ≤ " + letter;
     } else if (mag === max) {
-      text = mag + " ≤ " + title;
+      text = mag + " ≤ " + letter;
     } else {
-      text = mag + " ≤ " + title + " < " + String(mag + 1);
+      text = mag + " ≤ " + letter + " < " + String(mag + 1);
+    }
+    return text;
+  },
+
+  getPopulationText: function(min, max) {
+    let text = "";
+    const letter = LangageFunctions.getText('EVENT_LEGEND_CONTROL_POPULATION_NUMBER_LETTER');
+    if (min && max) {
+      text = min + " < " + letter + " ≤ " + max;
+    } else if (min && !max) {
+      text = letter + " > " + min;
+    } else {
+      text = letter + " ≤ " + max;
     }
     return text;
   },

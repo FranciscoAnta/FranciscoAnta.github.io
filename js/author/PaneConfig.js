@@ -20,6 +20,7 @@ PaneSymbol = {
   INTENSITIES:' intensities',
   REGIONS: 'regions',
   PROVINCES: 'provinces',
+  TERRITORIAL_LIMIT: 'territorialLimit',
   FILTER_BUFFER: 'filterBuffer', // No es una capa de usuario / Not an user layer
   QUAKES: 'quakes',
   DUPLICATED_QUAKES: 'duplicatedQuakes',
@@ -35,6 +36,7 @@ PaneZIndex = {
   INTENSITIES: 290,
   REGIONS: 300,
   PROVINCES: 310,
+  TERRITORIAL_LIMIT: 311,
   FILTER_BUFFER: 320, // No es una capa de usuario / Not an user layer
   QUAKES: 330,
   DUPLICATED_QUAKES: 340,

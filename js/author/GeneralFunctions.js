@@ -24,6 +24,7 @@ class GeneralFunctions {
     this.initializeLayers();
     this.initializeMapEvents();
     this.initializeSecondControls();
+    this.initializeFilterCircleWindow();
   }
 
   static initializePanes() {
@@ -35,6 +36,7 @@ class GeneralFunctions {
     map.createPane(PaneSymbol.INTENSITIES);
     map.createPane(PaneSymbol.REGIONS);
     map.createPane(PaneSymbol.PROVINCES);
+    map.createPane(PaneSymbol.TERRITORIAL_LIMIT);
     map.createPane(PaneSymbol.FILTER_BUFFER);
     map.createPane(PaneSymbol.QUAKES);
     map.createPane(PaneSymbol.DUPLICATED_QUAKES);
@@ -50,6 +52,7 @@ class GeneralFunctions {
     map.getPane(PaneSymbol.INTENSITIES).style.zIndex = PaneZIndex.INTENSITIES;
     map.getPane(PaneSymbol.REGIONS).style.zIndex = PaneZIndex.REGIONS;
     map.getPane(PaneSymbol.PROVINCES).style.zIndex = PaneZIndex.PROVINCES;
+    map.getPane(PaneSymbol.TERRITORIAL_LIMIT).style.zIndex = PaneZIndex.TERRITORIAL_LIMIT;
     map.getPane(PaneSymbol.FILTER_BUFFER).style.zIndex = PaneZIndex.FILTER_BUFFER;
     map.getPane(PaneSymbol.QUAKES).style.zIndex = PaneZIndex.QUAKES;
     map.getPane(PaneSymbol.DUPLICATED_QUAKES).style.zIndex = PaneZIndex.INTENSITIES;
@@ -62,22 +65,25 @@ class GeneralFunctions {
   }
 
   static initializeLayers() {
-    emptyLayer = L.geoJSON();
+    this.initializeBaseLayers();
+    this.initializeOverlayLayers();
+  }
 
-    osmLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    })
-
+  static initializeBaseLayers() {
+    emptyLayer = LayerFunctions.getEmptyLayer();
+    osmLayer = LayerFunctions.getOsmLayer();
     map.addLayer(osmLayer);
     layerControl.addBaseLayer(emptyLayer, LangageFunctions.getText('EMPTY_LAYER'));
     layerControl.addBaseLayer(osmLayer, LangageFunctions.getText('OSM_LAYER'));
-
+  }
+  
+  static initializeOverlayLayers() {
     LayerFunctions.addRegionsLayer();
     LayerFunctions.addProvincesLayer();
-    LayerFunctions.addQuakesLayer(this.getQuakeInitialFilters())
-    LayerFunctions.addFaultsLayer()
-    LayerFunctions.addPopulationsLayer();
+    LayerFunctions.addTerritorialLimitLayer();
+    LayerFunctions.addQuakesLayer(this.getQuakeInitialFilters());
+    LayerFunctions.addFaultsLayer();
+    LayerFunctions.addPopulationsLayer(this.getPopulationInitialFilters());
     LayerFunctions.addIntensitiesLayer();
 
     LayerFunctions.hideProvincesLayer();
@@ -159,7 +165,6 @@ class GeneralFunctions {
 
   static initializeEventLegendControl() {
     eventLegendControl = L.control.eventLegend({position: 'bottomleft'}).addTo(map);
-    eventLegendControl.update();
   }
 
   static initializeMapEvents() {
@@ -168,6 +173,10 @@ class GeneralFunctions {
     map.on('contextmenu', this.onMapContextMenu);
     map.on('overlayadd', this.onMapOverlayAdd);
     map.on('overlayremove', this.onMapOverlayRemove);
+  }
+
+  static initializeFilterCircleWindow() {
+    filterCircleWindow = WindowFunctions.getFilterCircleWindow(map);
   }
 
   // Eventos de mapa / Map events
@@ -462,6 +471,13 @@ class GeneralFunctions {
     return {
       minDate: MiscFunctions.getPreviousYearDate(QUAKES_MAX_DATE),
       maxDate: QUAKES_MAX_DATE
+    }
+  }
+
+  static getPopulationInitialFilters() {
+    return {
+      minNumber: INITIAL_POPULATION_MIN_NUMBER,
+      maxNumber: POPULATIONS_MAX_NUMBER
     }
   }
 }

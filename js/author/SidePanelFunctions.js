@@ -16,6 +16,7 @@ class SidePanelFunctions {
     for (i = 0; i < array.length; i++) {
       element = array[i];
       element.innerHTML = LangageFunctions.getText(textKey);
+      element.type = 'button';
       element.addEventListener('click', clickListener);
     }
   }
@@ -194,9 +195,11 @@ class SidePanelFunctions {
     this.setText('spatialFiltersTitle', 'SIDE_PANEL_SPATIAL_FILTERS_TITLE');
     this.setText('spatialFiltersCoordinatesTitle', 'SIDE_PANEL_SPATIAL_FILTERS_COORDINATES_TITLE');
     this.setText('spatialFiltersRadiusTitle', 'SIDE_PANEL_SPATIAL_FILTERS_RADIUS_TITLE')
+    this.setText('spatialFiltersConditionTitle', 'SIDE_PANEL_SPATIAL_CONDITION_TITLE');
     this.setText('spatialLatitudeFilterText', 'SIDE_PANEL_SPATIAL_LATITUDE_FILTER_TEXT');
     this.setText('spatialLongitudeFilterText', 'SIDE_PANEL_SPATIAL_LONGITUDE_FILTER_TEXT');
     this.setText('spatialRadiusFilterText', 'SIDE_PANEL_SPATIAL_RADIUS_FILTER_TEXT');
+    this.setText('spatialFiltersInsideTerritorialLimitText', 'SIDE_PANEL_SPATIAL_INSIDE_TERRITORIAL_LIMIT_FILTER_TEXT');
   }
 
   static setFilesTabTexts() {
@@ -215,6 +218,7 @@ class SidePanelFunctions {
     this.setText('optionsTabTitle', 'SIDE_PANEL_OPTIONS_TITLE');
     this.setText('optionsTabDescription', 'SIDE_PANEL_OPTIONS_DESCRIPTION');
     this.setText('optionsTabLangageTitle', 'SIDE_PANEL_OPTIONS_LANGAGE_TITLE');
+    this.setText('optionsTabLangageText', 'SIDE_PANEL_OPTIONS_LANGAGE_TEXT');
     this.setText('optionsTabControlsTitle', 'SIDE_PANEL_OPTIONS_CONTROLS_TITLE');
     this.setText('optionsTabLayerControlAllwaysDeployedText', 'SIDE_PANEL_OPTIONS_LAYER_CONTROL_ALWAYS_DEPLOYED_TEXT');
     this.setText('optionsTabScalebarControlVisibleText', 'SIDE_PANEL_OPTIONS_SCALEBAR_CONTROL_VISIBLE_TEXT');
@@ -236,6 +240,8 @@ class SidePanelFunctions {
     this.setText('optionsTabRegionsBorderColorText', 'SIDE_PANEL_OPTIONS_REGIONS_BORDER_COLOR_TEXT');
     this.setText('optionsTabProvincesStylesTitle', 'SIDE_PANEL_OPTIONS_PROVINCES_STYLES_TITLE');
     this.setText('optionsTabProvincesBorderColorText', 'SIDE_PANEL_OPTIONS_PROVINCES_BORDER_COLOR_TEXT');
+    this.setText('optionsTabTerritorialLimitStylesTitle', 'SIDE_PANEL_OPTIONS_TERRITORIAL_LIMIT_STYLES_TITLE');
+    this.setText('optionsTabTerritorialLimitBorderColorText', 'SIDE_PANEL_OPTIONS_TERRITORIAL_LIMIT_BORDER_COLOR_TEXT');
     this.setText('optionsTabFilterCircleStylesTitle', 'SIDE_PANEL_OPTIONS_FILTER_CIRCLE_STYLES_TITLE');
     this.setText('optionsTabFilterCircleBorderColorText', 'SIDE_PANEL_OPTIONS_FILTER_CIRCLE_BORDER_COLOR_TEXT');
     this.setText('optionsTabFilterCircleFillColorText', 'SIDE_PANEL_OPTIONS_FILTER_CIRCLE_FILL_COLOR_TEXT');
@@ -278,14 +284,16 @@ class SidePanelFunctions {
   }
 
   static initializePopulationFiltersInputs() {
-    this.initializePopulationFiltersNumericInputs('populationMinNumberFilterInput', POPULATIONS_MIN_NUMBER, this.onPopulationMinNumberChange);
+    this.initializePopulationFiltersNumericInputs('populationMinNumberFilterInput', INITIAL_POPULATION_MIN_NUMBER, this.onPopulationMinNumberChange);
     this.initializePopulationFiltersNumericInputs('populationMaxNumberFilterInput', POPULATIONS_MAX_NUMBER, this.onPopulationMaxNumberChange);
   }
 
   static initializeSpatialFiltersInputs() {
+    insideTerritorialLimit = DEFAULT_INSIDE_TERRITORIAL_LIMIT;
     this.initializeNumericInput('spatialLatitudeFilterInput', INITIAL_LATITUDE, this.onSpatialLatitudeChange, 10, 1, 4);
     this.initializeNumericInput('spatialLongitudeFilterInput', INITIAL_LONGITUDE, this.onSpatialLongitudeChange, 10, 1, 4);
     this.initializeNumericInput('spatialRadiusFilterInput', MIN_RADIUS, this.onSpatialRadiusChange, 10, 1, 3);
+    this.initializeCheckbox('spatialFiltersInsideTerritorialLimitCheckbox', insideTerritorialLimit, this.onSpatialInsideTerritorialLimitClick)
   }
 
   static initializeFilesTabInputs() {
@@ -345,6 +353,7 @@ class SidePanelFunctions {
     this.initializeColorInput('optionsTabIntensitiesBorderColorInput', StyleFunctions.getValue('intensityBorderColor'), this.onOptionsIntensitiesBorderColorChange);
     this.initializeColorInput('optionsTabRegionsBorderColorInput', StyleFunctions.getValue('regionBorderColor'), this.onOptionsRegionsBorderColorChange);
     this.initializeColorInput('optionsTabProvincesBorderColorInput', StyleFunctions.getValue('provinceBorderColor'), this.onOptionsProvincesBorderColorChange);
+    this.initializeColorInput('optionsTabTerritorialLimitBorderColorInput', StyleFunctions.getValue('territorialLimitBorderColor'), this.onOptionsTerritorialLimitBorderColorChange);
     this.initializeColorInput('optionsTabFilterCircleBorderColorInput', StyleFunctions.getValue('filterCircleBorderColor'), this.onOptionsFilterCircleBorderColorChange);
     this.initializeColorInput('optionsTabFilterCircleFillColorInput', StyleFunctions.getValue('filterCircleFillColor'), this.onOptionsFilterCircleFillColorChange);
     this.initializeColorInput('optionsTabImportedLayerBorderColorInput', StyleFunctions.getValue('importedLayerBorderColor'), this.onOptionsImportedLayerBorderColorChange);
@@ -481,7 +490,7 @@ class SidePanelFunctions {
   }
 
   static getFilterSelectValue(id) {
-    return document.querySelector('#' + id).value;
+    return parseFloat(document.querySelector('#' + id).value);
   }
 
   static getFilterDateValue(id) {
@@ -638,6 +647,10 @@ class SidePanelFunctions {
 
   static getOptionsProvincesBorderColor() {
     return document.querySelector('#optionsTabProvincesBorderColorInput').value;
+  }
+
+  static getOptionsTerritorialLimitBorderColor() {
+    return document.querySelector('#optionsTabTerritorialLimitBorderColorInput').value;
   }
 
   static getOptionsFilterCircleBorderColor() {
@@ -956,6 +969,16 @@ class SidePanelFunctions {
     GeneralFunctions.finishDraw();
   }
 
+  static onSpatialInsideTerritorialLimitClick() {
+    let i, element;
+    const array = document.querySelectorAll('#spatialFiltersInsideTerritorialLimitCheckbox');
+    insideTerritorialLimit = !insideTerritorialLimit;
+    for (i = 0; i < array.length; i++) {
+      element = array[i];
+      element.checked = insideTerritorialLimit;
+    }
+  }
+
   // Botones / Buttons
 
   // Filtrar / Filter
@@ -1133,20 +1156,20 @@ class SidePanelFunctions {
   }
 
   static onQuakesUnmarkButtonClick() {
-    LayerFunctions.unmarkLayers(quakesLayer.getLayers(), StyleFunctions.getValue('quakeBorderColor'));
-    if (duplicatedQuakesLayer) LayerFunctions.unmarkLayers(duplicatedQuakesLayer.getLayers(), StyleFunctions.getValue('quakeBorderColor'));
+    LayerFunctions.unmarkLayers(quakesLayer, StyleFunctions.getValue('quakeBorderColor'));
+    if (duplicatedQuakesLayer) LayerFunctions.unmarkLayers(duplicatedQuakesLayer, StyleFunctions.getValue('quakeBorderColor'));
     WindowFunctions.showUnmarkQuakesWindow();
   }
 
   static onFaultsUnmarkButtonClick() {
-    LayerFunctions.unmarkLayers(faultsLayer.getLayers(), StyleFunctions.getValue('faultColor'));
-    if (duplicatedFaultsLayer) LayerFunctions.unmarkLayers(duplicatedFaultsLayer.getLayers(), StyleFunctions.getValue('faultColor'));
+    LayerFunctions.unmarkLayers(faultsLayer, StyleFunctions.getValue('faultColor'));
+    if (duplicatedFaultsLayer) LayerFunctions.unmarkLayers(duplicatedFaultsLayer, StyleFunctions.getValue('faultColor'));
     WindowFunctions.showUnmarkFaultsWindow();
   }
 
   static onPopulationsUnmarkButtonClick() {
-    LayerFunctions.unmarkLayers(populationsLayer.getLayers(), StyleFunctions.getValue('populationBorderColor'));
-    if (duplicatedPopulationsLayer) LayerFunctions.unmarkLayers(duplicatedPopulationsLayer.getLayers(), StyleFunctions.getValue('populationBorderColor'));
+    LayerFunctions.unmarkLayers(populationsLayer, StyleFunctions.getValue('populationBorderColor'));
+    if (duplicatedPopulationsLayer) LayerFunctions.unmarkLayers(duplicatedPopulationsLayer, StyleFunctions.getValue('populationBorderColor'));
     WindowFunctions.showUnmarkPopulationsWindow();
   }
 
@@ -1214,7 +1237,15 @@ class SidePanelFunctions {
   // Pestaña de opciones / Options tab
 
   static onLangageSelectChange() {
-
+    const value = document.querySelector('#optionsTabLangageInput').value;
+    langage = value;
+    SidePanelFunctions.setTexts();
+    SidePanelFunctions.initializeButtons();
+    LangageFunctions.updateContextMenuTexts();
+    LangageFunctions.updateLayersTexts();
+    if (eventLegendControl) eventLegendControl.update();
+    if (filterLegendControl) filterLegendControl.update();
+    if (coordinatesVisorControl) coordinatesVisorControl.update();
   }
 
   static onControlLayerAllwaysDeployedClick() {
@@ -1298,6 +1329,13 @@ class SidePanelFunctions {
     provincesLayer.setStyle(style);
   }
 
+  static onOptionsTerritorialLimitBorderColorChange() {
+    const value = SidePanelFunctions.getOptionsTerritorialLimitBorderColor();
+    const style = {color: value};
+    StyleFunctions.setValue('territorialLimitBorderColor', value);
+    territorialLimitLayer.setStyle(style);
+  }
+
   static onOptionsFilterCircleBorderColorChange() {
     const value = SidePanelFunctions.getOptionsFilterCircleBorderColor();
     const style = {color: value};
@@ -1360,7 +1398,8 @@ class SidePanelFunctions {
       maxDate: this.getQuakeMaxDateFilter(),
       latitude: this.getSpatialLatitudeFilter(),
       longitude: this.getSpatialLongitudeFilter(),
-      radius: this.getSpatialRadiusFilter()
+      radius: this.getSpatialRadiusFilter(),
+      insideTerritorialLimit: insideTerritorialLimit
     }
   }
 
@@ -1372,7 +1411,8 @@ class SidePanelFunctions {
       maxDepth: this.getFaultMaxDepthFilter(),
       latitude: this.getSpatialLatitudeFilter(),
       longitude: this.getSpatialLongitudeFilter(),
-      radius: this.getSpatialRadiusFilter()
+      radius: this.getSpatialRadiusFilter(),
+      insideTerritorialLimit: insideTerritorialLimit
     }
   }
 
@@ -1382,7 +1422,8 @@ class SidePanelFunctions {
       maxNumber: this.getPopulationMaxNumberFilter(),
       latitude: this.getSpatialLatitudeFilter(),
       longitude: this.getSpatialLongitudeFilter(),
-      radius: this.getSpatialRadiusFilter()
+      radius: this.getSpatialRadiusFilter(),
+      insideTerritorialLimit: insideTerritorialLimit
     }
   }
 
@@ -1390,7 +1431,8 @@ class SidePanelFunctions {
     return {
       latitude: this.getSpatialLatitudeFilter(),
       longitude: this.getSpatialLongitudeFilter(),
-      radius: this.getSpatialRadiusFilter()
+      radius: this.getSpatialRadiusFilter(),
+      insideTerritorialLimit: insideTerritorialLimit
     }
   }
 

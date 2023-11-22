@@ -10,6 +10,40 @@ class LangageFunctions {
     return this[langage][key];
   }
 
+  static updateContextMenuTexts() {
+    let i, item;
+    const items = GeneralFunctions.getContextMenuItems();
+    map.contextmenu.removeAllItems();
+    for (i = 0; i < items.length; i++) {
+      item = items[i];
+      map.contextmenu.addItem(item);
+    }
+  }
+
+  static updateLayersTexts() {
+    SidePanelFunctions.initializeQuakeFiltersInputs();
+    SidePanelFunctions.initializeFaultFiltersInputs();
+    SidePanelFunctions.initializePopulationFiltersInputs();
+    SidePanelFunctions.initializeSpatialFiltersInputs();
+    LayerFunctions.removeAllLayers();
+    LayerFunctions.removeLimitsLayers();
+    LayerFunctions.removeFilterBufferLayer();
+    LangageFunctions.updateLayerControlBaseLayersTexts();
+    GeneralFunctions.initializeOverlayLayers();
+    GeneralFunctions.finishDraw();
+    SidePanelFunctions.initializeExportLayerSelect();
+    SidePanelFunctions.setFilterLegendAllLayersFilters();
+  }
+
+  static updateLayerControlBaseLayersTexts() {
+    if (layerControl) {
+      layerControl.removeLayer(emptyLayer);
+      layerControl.removeLayer(osmLayer);
+      layerControl.addBaseLayer(emptyLayer, LangageFunctions.getText('EMPTY_LAYER'));
+      layerControl.addBaseLayer(osmLayer, LangageFunctions.getText('OSM_LAYER'));
+    }
+  }
+
   static spanish = {
     NAME: "Castellano",
 
@@ -18,6 +52,7 @@ class LangageFunctions {
     OSM_LAYER: "Open Street Map",
     REGIONS_LAYER: "Comunidades Autónomas",
     PROVINCES_LAYER: "Provincias",
+    TERRITORIAL_LIMIT: "Límite territorial",
     QUAKES_LAYER: "Sismos",
     FAULTS_LAYER: "Fallas",
     POPULATIONS_LAYER: "Poblaciones",
@@ -75,9 +110,11 @@ class LangageFunctions {
     SIDE_PANEL_SPATIAL_FILTERS_TITLE: "Filtros espaciales",
     SIDE_PANEL_SPATIAL_FILTERS_COORDINATES_TITLE: "Coordenadas del centro de búsqueda",
     SIDE_PANEL_SPATIAL_FILTERS_RADIUS_TITLE: "Radio de búsqueda",
+    SIDE_PANEL_SPATIAL_CONDITION_TITLE: "Condición",
     SIDE_PANEL_SPATIAL_LATITUDE_FILTER_TEXT: "Latitud [º]:  ",
     SIDE_PANEL_SPATIAL_LONGITUDE_FILTER_TEXT: "Longitud [º]:  ",
     SIDE_PANEL_SPATIAL_RADIUS_FILTER_TEXT: "Radio [km]:  ",
+    SIDE_PANEL_SPATIAL_INSIDE_TERRITORIAL_LIMIT_FILTER_TEXT: "Dentro de límite territorial",
 
     // Botones
     SIDE_PANEL_FILTER_BUTTON: "Filtrar",
@@ -106,6 +143,7 @@ class LangageFunctions {
     SIDE_PANEL_OPTIONS_TITLE: "Opciones del visor",
     SIDE_PANEL_OPTIONS_DESCRIPTION: "Modifica el idioma, visibilidad de controles y estilos de capas",
     SIDE_PANEL_OPTIONS_LANGAGE_TITLE: "Idioma",
+    SIDE_PANEL_OPTIONS_LANGAGE_TEXT: "<em><b>Aviso:</b> Cambiar el idioma reiniciará todas las capas a su estado inicial.</em>",
     SIDE_PANEL_OPTIONS_CONTROLS_TITLE: "Visibilidad de controles",
     SIDE_PANEL_OPTIONS_STYLES_TITLE: "Estilos de capas",
     SIDE_PANEL_OPTIONS_LAYER_CONTROL_ALWAYS_DEPLOYED_TEXT: "C. de capas siempre desplegado",
@@ -127,6 +165,8 @@ class LangageFunctions {
     SIDE_PANEL_OPTIONS_REGIONS_BORDER_COLOR_TEXT: "C. de borde de comunidad autónoma",
     SIDE_PANEL_OPTIONS_PROVINCES_STYLES_TITLE: "Estilos de provincias",
     SIDE_PANEL_OPTIONS_PROVINCES_BORDER_COLOR_TEXT: "Color de borde de provincia",
+    SIDE_PANEL_OPTIONS_TERRITORIAL_LIMIT_STYLES_TITLE: "Estilos de límite territorial",
+    SIDE_PANEL_OPTIONS_TERRITORIAL_LIMIT_BORDER_COLOR_TEXT: "C. de borde de l. territorial",
     SIDE_PANEL_OPTIONS_FILTER_CIRCLE_STYLES_TITLE: "Estilos de círculo de filtrado",
     SIDE_PANEL_OPTIONS_FILTER_CIRCLE_BORDER_COLOR_TEXT: "C. de borde de c. de filtrado",
     SIDE_PANEL_OPTIONS_FILTER_CIRCLE_FILL_COLOR_TEXT: "C. de relleno de c. de filtrado",
@@ -168,7 +208,7 @@ class LangageFunctions {
     + "<h3>Intensidades</h3><b>Autor:</b> Pendiente.<br><b>Dirección:</b> <a href='' target='_blank'>Pendiente</a>"
     + "<h3>Iconos del panel lateral</h3><b>Dirección:</b> <a href='https://www.reshot.com/free-svg-icons' target='_blank'>https://www.reshot.com/free-svg-icons</a>",
 
-    // Ventana de alerta / Alert window
+    // Ventana de alerta
     ALERT_WINDOW_FILTER_ALL_LAYERS_TEXT: "Se han filtrado todas las capas.",
     ALERT_WINDOW_FILTER_LAYER_FORMAT: "Se ha filtrado la capa %1.",
     ALERT_WINDOW_DUPLICATE_ALL_LAYERS_TEXT: "Se han filtrado y duplicado todas las capas.",
@@ -250,9 +290,9 @@ class LangageFunctions {
     EVENT_LEGEND_CONTROL_FAULT_TITLE: "Fallas",
     EVENT_LEGEND_CONTROL_FAULT_TEXT: "Falla",
     EVENT_LEGEND_CONTROL_POPULATION_TITLE: "Habitantes",
-    EVENT_LEGEND_CONTROL_POPULATION_TEXT: "H",
     EVENT_LEGEND_CONTROL_MAGNITUDE_TITLE: "Magnitud",
-    EVENT_LEGEND_CONTROL_MAGNITUDE_Text: "M",
+    EVENT_LEGEND_CONTROL_MAGNITUDE_LETTER: "M",
+    EVENT_LEGEND_CONTROL_POPULATION_NUMBER_LETTER: "M",
 
     // Textos de archivo
     PRINTED_MAP_FILENAME: "Captura de pantalla",
@@ -265,25 +305,261 @@ class LangageFunctions {
   static english = {
     NAME: "English",
 
-    // Control Layer Texts
+    // Layer control texts
     EMPTY_LAYER: "Empty",
     OSM_LAYER: "Open Street Map",
     REGIONS_LAYER: "Regions",
     PROVINCES_LAYER: "Provinces",
+    TERRITORIAL_LIMIT: "Territorial limit",
     QUAKES_LAYER: "Quakes",
     FAULTS_LAYER: "Faults",
     POPULATIONS_LAYER: "Populations",
     INTENSITIES_LAYER: "Intensities",
+    DUPLICATED_QUAKES_LAYER: "Copy of quakes",
+    DUPLICATED_FAULTS_LAYER: "Copy of faults",
+    DUPLICATED_POPULATIONS_LAYER: "Copy of populations",
 
-    // Coordinate Visor Control Texts
+    // Side panel texts
+
+    // All filters
+    SIDE_PANEL_ALL_FILTERS_TAB_TITLE: "Filter all layers",
+    SIDE_PANEL_ALL_FILTERS_TAB_DESCRIPTION: "Filter quakes, faults and populations layers by the specified parameters",
+    SIDE_PANEL_QUAKE_FILTERS_TITLE: "Quakes filters",
+    SIDE_PANEL_FAULT_FILTERS_TITLE: "Faults filters",
+    SIDE_PANEL_POPULATION_FILTERS_TITLE: "Populations filters",
+
+    // Quakes filters
+    SIDE_PANEL_QUAKE_FILTERS_TAB_TITLE: "Filter quakes layer",
+    SIDE_PANEL_QUAKE_FILTERS_TAB_DESCRIPTION: "Filtra únicamente la capa de sismos según los parámetros especificados.",
+    SIDE_PANEL_QUAKE_FILTERS_TAB_DESCRIPTION: "Filters only quakes layers by the specified parameters.",
+    SIDE_PANEL_QUAKE_MAGNITUDE_FILTERS_TITLE: "Magnitude filters",
+    SIDE_PANEL_QUAKE_MIN_MAGNITUDE_FILTER_TEXT: "Minimum magnitude:  ",
+    SIDE_PANEL_QUAKE_MAX_MAGNITUDE_FILTER_TEXT: "Maximum magnitude:  ",
+    SIDE_PANEL_QUAKE_INTENSITY_FILTERS_TITLE: "Intensity filters",
+    SIDE_PANEL_QUAKE_MIN_INTENSITY_FILTER_TEXT: "Minimum intensity:  ",
+    SIDE_PANEL_QUAKE_MAX_INTENSITY_FILTER_TEXT: "Maximum intensity:  ",
+    SIDE_PANEL_QUAKE_DEPTH_FILTERS_TITLE: "Depth filters",
+    SIDE_PANEL_QUAKE_MIN_DEPTH_FILTER_TEXT: "Minimum depth [km]:  ",
+    SIDE_PANEL_QUAKE_MAX_DEPTH_FILTER_TEXT: "Maximum depth [km]:  ",
+    SIDE_PANEL_QUAKE_DATE_FILTERS_TITLE: "Date filters",
+    SIDE_PANEL_QUAKE_MIN_DATE_FILTER_TEXT: "Minimum date:  ",
+    SIDE_PANEL_QUAKE_MAX_DATE_FILTER_TEXT: "Maximum date:  ",
+    SIDE_PANEL_QUAKE_UNKNOWN_INTENSITY: "Unknown",
+
+    // Faults filters
+    SIDE_PANEL_FAULT_FILTERS_TAB_TITLE: "Filter faults layers",
+    SIDE_PANEL_FAULT_FILTERS_TAB_DESCRIPTION: "Filters only populations layer by the specified parameters.<br><br>Faults that partially cross the filter radius are considered as inside.",
+    SIDE_PANEL_FAULT_MAGNITUDE_FILTERS_TITLE: "Magnitude filters",
+    SIDE_PANEL_FAULT_MIN_MAGNITUDE_FILTER_TEXT: "Minimum expected magnitude:  ",
+    SIDE_PANEL_FAULT_MAX_MAGNITUDE_FILTER_TEXT: "Maximum expceted magnitude:  ",
+    SIDE_PANEL_FAULT_DEPTH_FILTERS_TITLE: "Depth filters",
+    SIDE_PANEL_FAULT_MIN_DEPTH_FILTER_TEXT: "Minimum depth [km]:  ",
+    SIDE_PANEL_FAULT_MAX_DEPTH_FILTER_TEXT: "Maximum depth [km]:  ",
+
+    // Populations filters
+    SIDE_PANEL_POPULATION_FILTERS_TAB_TITLE: "Filter populations layers",
+    SIDE_PANEL_POPULATION_FILTERS_TAB_DESCRIPTION: "Filters only populations layer by the specified parameters.",
+    SIDE_PANEL_POPULATION_NUMBER_FILTERS_TITLE: "Inhabitants number filters",
+    SIDE_PANEL_POPULATION_MIN_NUMBER_FILTER_TEXT: "Minimum inhabitants:  ",
+    SIDE_PANEL_POPULATION_MAX_NUMBER_FILTER_TEXT: "Maximum inhabitants:  ",
+
+    // Spatial filters
+    SIDE_PANEL_SPATIAL_FILTERS_TAB_TITLE: "Spatial filters",
+    SIDE_PANEL_SPATIAL_FILTERS_TAB_DESCRIPTION: "Filtra los elementos de las capas cuyos centros (sismos y poblaciones) estén dentro del radio de búsqueda especificados o lo crucen (fallas).<br><br>Esta opción no filtra por ningún otro tipo de parámetro.",
+    SIDE_PANEL_SPATIAL_FILTERS_TAB_DESCRIPTION: "Filters only elements from layers whose centers (quakes and populations) are inside the filter radius or that cross it (faults).<br><br>This option does not filter by any other type of parameter.",
+    SIDE_PANEL_SPATIAL_FILTERS_TITLE: "Spatial filters",
+    SIDE_PANEL_SPATIAL_FILTERS_COORDINATES_TITLE: "Filter center coordinates",
+    SIDE_PANEL_SPATIAL_FILTERS_RADIUS_TITLE: "Filter radius",
+    SIDE_PANEL_SPATIAL_CONDITION_TITLE: "Condition",
+    SIDE_PANEL_SPATIAL_LATITUDE_FILTER_TEXT: "Latitude [º]:  ",
+    SIDE_PANEL_SPATIAL_LONGITUDE_FILTER_TEXT: "Longitude [º]:  ",
+    SIDE_PANEL_SPATIAL_RADIUS_FILTER_TEXT: "Radius [km]:  ",
+    SIDE_PANEL_SPATIAL_INSIDE_TERRITORIAL_LIMIT_FILTER_TEXT: "Inside territorial limit",
+
+    // Buttons
+    SIDE_PANEL_FILTER_BUTTON: "Filter",
+    SIDE_PANEL_FILTER_ALL_BUTTON: "Filter all",
+    SIDE_PANEL_DUPLICATE_BUTTON: "Duplicate and filter",
+    SIDE_PANEL_DUPLICATE_ALL_BUTTON: "Duplicate and filter all",
+    SIDE_PANEL_REFRESH_BUTTON: "Refresh",
+    SIDE_PANEL_REFRESH_ALL_BUTTON: "Refresh all",
+    SIDE_PANEL_UNMARK_BUTTON: "Unmark",
+    SIDE_PANEL_UNMARK_ALL_BUTTON: "Unmark all",
+
+    // Files
+    SIDE_PANEL_FILES_TAB_TITLE: "File management",
+    SIDE_PANEL_FILES_TAB_DESCRIPTION: "Import layers from GeoJSON files and export layers to CSV and GeoJSON formats.",
+    SIDE_PANEL_FILES_IMPORT_TITLE: "Import",
+    SIDE_PANEL_FILES_IMPORT_LAYER_NAME_TEXT: "<b>Name (optional)</b>:",
+    SIDE_PANEL_FILES_IMPORT_LAYER_BUTTON_TEXT: "Load",
+    SIDE_PANEL_FILES_EXPORT_TITLE: "Export",
+    SIDE_PANEL_FILES_EXPORT_NAME_TEXT: "<b>Name:</b>  ",
+    SIDE_PANEL_FILES_EXPORT_LAYER_TEXT: "<b>Layer:</b>  ",
+    SIDE_PANEL_FILES_EXPORT_ONLY_VISIBLE_BOUNDS_TEXT: "Export current view",
+    SIDE_PANEL_FILES_EXPORT_CSV_BUTTON_TEXT: "Export CSV",
+    SIDE_PANEL_FILES_EXPORT_GEOJSON_BUTTON_TEXT: "Export GeoJSON",
+
+    // Options
+    SIDE_PANEL_OPTIONS_TITLE: "Visor options",
+    SIDE_PANEL_OPTIONS_DESCRIPTION: "Modifies langage, controls visibility and layers styles",
+    SIDE_PANEL_OPTIONS_LANGAGE_TITLE: "Langange",
+    SIDE_PANEL_OPTIONS_LANGAGE_TEXT: "<em><b>Warning:</b> Changing langage will revert layers to their original state.</em>",
+    SIDE_PANEL_OPTIONS_CONTROLS_TITLE: "Controls visibility",
+    SIDE_PANEL_OPTIONS_STYLES_TITLE: "Layers styles",
+    SIDE_PANEL_OPTIONS_LAYER_CONTROL_ALWAYS_DEPLOYED_TEXT: "Layer control always deployed",
+    SIDE_PANEL_OPTIONS_SCALEBAR_CONTROL_VISIBLE_TEXT: "Show scalebar",
+    SIDE_PANEL_OPTIONS_COORDINATE_VISOR_CONTROL_VISIBLE_TEXT: "Show coordinate visor",
+    SIDE_PANEL_OPTIONS_FILTER_LEGEND_CONTROL_VISIBLE_TEXT: "Show filter legend",
+    SIDE_PANEL_OPTIONS_EVENT_LEGEND_CONTROL_VISIBLE_TEXT: "Show event legend",
+    SIDE_PANEL_OPTIONS_QUAKES_STYLES_TITLE: "Quakes styles",
+    SIDE_PANEL_OPTIONS_QUAKES_BORDER_COLOR_TEXT: "Quake border color",
+    SIDE_PANEL_OPTIONS_QUAKES_FILL_COLOR_TEXT: "Quake fill color",
+    SIDE_PANEL_OPTIONS_FAULTS_STYLES_TITLE: "Faults styles",
+    SIDE_PANEL_OPTIONS_FAULTS_BORDER_COLOR_TEXT: "Fault border color",
+    SIDE_PANEL_OPTIONS_POPULATIONS_STYLES_TITLE: "Populations styles",
+    SIDE_PANEL_OPTIONS_POPULATIONS_BORDER_COLOR_TEXT: "Population border color",
+    SIDE_PANEL_OPTIONS_POPULATIONS_FILL_COLOR_TEXT: "Population fill color",
+    SIDE_PANEL_OPTIONS_INTENSITIES_STYLES_TITLE: "Intensities styles",
+    SIDE_PANEL_OPTIONS_INTENSITIES_BORDER_COLOR_TEXT: "Intensity border color",
+    SIDE_PANEL_OPTIONS_REGIONS_STYLES_TITLE: "Regions styles",
+    SIDE_PANEL_OPTIONS_REGIONS_BORDER_COLOR_TEXT: "Region border color",
+    SIDE_PANEL_OPTIONS_PROVINCES_STYLES_TITLE: "Provinces styles",
+    SIDE_PANEL_OPTIONS_PROVINCES_BORDER_COLOR_TEXT: "Province border color",
+    SIDE_PANEL_OPTIONS_TERRITORIAL_LIMIT_STYLES_TITLE: "Territorial limit styles",
+    SIDE_PANEL_OPTIONS_TERRITORIAL_LIMIT_BORDER_COLOR_TEXT: "Territorial limit border color",
+    SIDE_PANEL_OPTIONS_FILTER_CIRCLE_STYLES_TITLE: "Filter circle style",
+    SIDE_PANEL_OPTIONS_FILTER_CIRCLE_BORDER_COLOR_TEXT: "Filter circle border color",
+    SIDE_PANEL_OPTIONS_FILTER_CIRCLE_FILL_COLOR_TEXT: "Filter circle fill color",
+    SIDE_PANEL_OPTIONS_IMPORTED_LAYER_TITLE: "Imported layer",
+    SIDE_PANEL_OPTIONS_IMPORTED_LAYER_BORDER_COLOR_TEXT: "Imported layer border color",
+    SIDE_PANEL_OPTIONS_IMPORTED_LAYER_FILL_COLOR_TEXT: "Imported layer fill color",
+    SIDE_PANEL_OPTIONS_SYSTEM_STYLES_TITLE: "System styles",
+    SIDE_PANEL_OPTIONS_MARKED_COLOR_TEXT: "Mark color",
+
+    // User manual
+    SIDE_PANEL_INSTRUCTIONS_TITLE: "User manual",
+    SIDE_PANEL_INSTRUCTIONS_DESCRIPTION: "<h2>Basic controls:<h2>Mouse",
+
+    // Contact
+    SIDE_PANEL_CONTACT_TITLE: "Information",
+    SIDE_PANEL_CONTACT_DESCRIPTION: "<h2>Nombre del proyecto</h2>Visor de eventos sísmicos de España."
+    + "<h2>Asignatura</h2>Trabajo de Fin de Máster de Ingeniería Geodésica y Cartografía."
+    + "<h2>Escuela</h2>Escuela Superior de Ingenieros en Topografía, Geodesia y Cartografía. Universidad Politécnica de Madrid."
+    + "<h2>Información de contacto</h2><h3>Autor</h3><b>Nombre:</b> Francisco Manuel Anta Sánchez.<br>"
+    + "<b>Correo electrónico:</b> <a href='mailto:francisco.anta.sanchez@gmail.com'>francisco.anta.sanchez@gmail.com</a>"
+    + "<h3>Tutor</h3><b>Nombre:</b> Jorge Miguel Gaspar Escribano."
+    + "<h2>Créditos de plugins de terceros</h2>"
+    + "<h3>Leaflet</h3><b>Autor:</b> Volodymyr Agafonkin.<br><b>Dirección:</b> <a href='https://leafletjs.com/' target='_blank'>https://leafletjs.com/</a>"
+    + "<h3>Leaflet.SidePanel</h3><b>Autor:</b> Maxwell Ilai.<br><b>Dirección</b> <a href='https://github.com/maxwell-ilai/Leaflet.SidePanel' target='_blank'>https://github.com/maxwell-ilai/Leaflet.SidePanel</a>"
+    + "<h3>Leaflet.SvgShapeMarkers</h3><b>Autor:</b> Rowan Winsemius.<br><b>Dirección</b> <a href='https://github.com/rowanwins/Leaflet.SvgShapeMarkers' target='_blank'>https://github.com/rowanwins/Leaflet.SvgShapeMarkers</a>"
+    + "<h3>Leaflet.Control.Window</h3><b>Autor:</b> mapshakers.<br><b>Dirección</b> <a href='https://github.com/mapshakers/leaflet-control-window' target='_blank'>https://github.com/mapshakers/leaflet-control-window</a>"
+    + "<h3>Leaflet.EasyPrint</h3><b>Autor:</b> Rowan Winsemius.<br><b>Dirección</b> <a href='https://github.com/rowanwins/leaflet-easyPrint' target='_blank'>https://github.com/rowanwins/leaflet-easyPrint</a>"
+    + "<h3>Leaflet.contextmenu</h3><b>Autor:</b> Adam Ratcliffe.<br><b>Dirección</b> <a href='https://github.com/aratcliffe/Leaflet.contextmenu' target='_blank'>https://github.com/aratcliffe/Leaflet.contextmenu</a>"
+    + "<h3>Leaflet.EasyButton</h3><b>Autor:</b> atstp.<br><b>Dirección</b> <a href='https://github.com/CliffCloud/Leaflet.EasyButton' target='_blank'>https://github.com/CliffCloud/Leaflet.EasyButton</a>"
+    + "<h3>Leaflet.BetterScale</h3><b>Autor:</b> Dan Brown<br><b>Dirección</b> <a href='https://github.com/daniellsu/leaflet-betterscale' target='_blank'>https://github.com/daniellsu/leaflet-betterscale</a>"
+    + "<h3>Leaflet.AnimatedSearchBox</h3><b>Autor:</b> Luka Steinbach.<br><b>Dirección</b> <a href='https://github.com/luka1199/Leaflet.AnimatedSearchBox' target='_blank'>https://github.com/luka1199/Leaflet.AnimatedSearchBox</a>"
+    + "<h3>Fuse</h3><b>Autor:</b> Kiro Risk.<br><b>Dirección</b> <a href='https://www.fusejs.io/' target='_blank'>https://www.fusejs.io/</a>"
+    + "<h2>Orígenes de los datos</h2>"
+    + "<h3>Límites de comunidades autónomas</h3><b>Autor:</b> Pendiente.<br></b>Dirección:</b> <a href='' target='_blank'>Pendiente</a>"
+    + "<h3>Límites de provincias</h3><b>Autor:</b> Pendiente.<br><b>Dirección:</b> <a href='' target='_blank'>Pendiente</a>"
+    + "<h3>Sismos</h3><b>Autor:</b> Instituto Geográfico Nacional.<br><b>Dirección:</b> <a href='https://www.ign.es/' target='_blank'>https://www.ign.es/</a>"
+    + "<h3>Fallas</h3><b>Autor:</b> Pendiente.<br><b>Dirección:</b> <a href='' target='_blank'>Pendiente</a>"
+    + "<h3>Poblaciones</h3><b>Autor:</b> Pendiente.<br><b>Dirección:</b> <a href='' target='_blank'>Pendiente</a>"
+    + "<h3>Intensidades</h3><b>Autor:</b> Pendiente.<br><b>Dirección:</b> <a href='' target='_blank'>Pendiente</a>"
+    + "<h3>Iconos del panel lateral</h3><b>Dirección:</b> <a href='https://www.reshot.com/free-svg-icons' target='_blank'>https://www.reshot.com/free-svg-icons</a>",
+
+    // Alert window
+    ALERT_WINDOW_FILTER_ALL_LAYERS_TEXT: "Filtered all layers.",
+    ALERT_WINDOW_FILTER_LAYER_FORMAT: "Filtered %1 layer.",
+    ALERT_WINDOW_DUPLICATE_ALL_LAYERS_TEXT: "Filtered and duplicated all layers.",
+    ALERT_WINDOW_DUPLICATE_LAYER_FORMAT: "Filtered and duplicated %1 layer.",
+    ALERT_WINDOW_REFRESH_ALL_TEXT: "Refreshed all layers.",
+    ALERT_WINDOW_REFRESH_FORMAT: "Refreshed %1 layer.",
+    ALERT_WINDOW_UNMARK_ALL_TEXT: "Unmarked all layers",
+    ALERT_WINDOW_UNMARK_FORMAT: "Unmarked all events in %1 layer.",
+    ALERT_WINDOW_IMPORT_LAYER_FORMAT: "Imported %1 layer.",
+    ALERT_WINDOW_EXPORT_LAYER_FORMAT: "Exported %1 layer.",
+
+    // Context menut texts
+    // General
+    CONTEXT_MENU_CENTER_MAP_ITEM: "Center map",
+    CONTEXT_MENU_SET_COORDINATES_ITEM: "Set coordinates",
+    CONTEXT_MENU_DRAW_FILTER_CIRCLE_ITEM: "Draw filter circle",
+    CONTEXT_MENU_ZOOM_TO_CLOSEST_QUAKES_ITEM: "Zoom to closest quake to clicked position",
+    CONTEXT_MENU_ZOOM_TO_CLOSEST_FAULTS_ITEM: "Zoom to closest fault to clicked position",
+    CONTEXT_MENU_ZOOM_TO_CLOSEST_POPULATIONS_ITEM: "Zoom to closest population to clicked position",
+    CONTEXT_MENU_ZOOM_TO_BIGGEST_MAGNITUDE_QUAKE_IN_RADIUS_TEXT: "Zoom to biggest magnitude quake in radius",
+    CONTEXT_MENU_ZOOM_TO_BIGGEST_INTENSITY_QUAKE_IN_RADIUS_TEXT: "Zoom to biggest intensity quake in radius",
+    CONTEXT_MENU_PAN_TO_MAX_INTENSITY_IN_RADIUS: "Pan to biggest intensity in radius",
+    CONTEXT_MENU_QUAKES_NUMBER_IN_RADIUS_TEXT: "Get quakes number in radius",
+    CONTEXT_MENU_FAULTS_NUMBER_IN_RADIUS_TEXT: "Get faults number in radius",
+    CONTEXT_MENU_POPULATIONS_NUMBER_IN_RADIUS_TEXT: "Get inhabitants number in radius",
+    CONTEXT_MENU_LAST_QUAKE_BY_MAGNITUDE_IN_RADIUS_TEXT: "Get last quake bigger than a magnitude in radius",
+    CONTEXT_MENU_LAST_QUAKE_BY_INTENSITY_IN_RADIUS_TEXT: "Get last quake bigger than an intensity in radius",
+
+    // Faults
+    CONTEXT_MENU_POPULATIONS_DISTANCE_TO_FAULT: "Get populations from a distance to a fault",
+    CONTEXT_MENU_BIGGEST_QUAKE_DISTANCE_TO_FAULT: "Get biggest magnitude quake from a distance to a fault",
+    CONTEXT_MENU_POPULATION_NUMBER_DISTANCE_TO_FAULT: "Get highest inhabitants number populations from a distance to a fault",
+
+    // Populations
+    CONTEXT_MENU_POPULATION_MAX_INTENSITY_TEXT: "Get highest intensity felt in the population",
+
+    // Query texts
+    QUERY_QUAKE_NUMBER_IN_RADIUS_TITLE: "Number of quakes in radius.<br>Layer: %1.",
+    QUERY_FAULT_NUMBER_IN_RADIUS_TITLE: "Number of faults in radius.<br>Layer: %1.",
+    QUERY_POPULATION_NUMBER_IN_RADIUS_TITLE: "Number of inhabitants in radius.<br>Layer: %1.",
+    QUERY_OBJECT_NUMBER_IN_RADIUS_TEXT: "<b>Total: %1.</b><br><b>Latitude:</b> %2º.<br><b>Longitude:</b> %3º.<br><b>Radius:</b> %4km<br>Objects have been marked in the map.",
+    QUERY_POPULATION_MAX_INTENSITY_TITLE: "Highest intensity felt in the population %1.",
+    QUERY_POPULATION_MAX_INTENSITY_TEXT: "<b>Maximum intensity: %1.</b><br><b>Latitude:</b> %2º.<br><b>Longitude:</b> %3º.",
+    QUERY_LAST_QUAKE_BY_MAGNITUDE_TITLE: "Last quake of magnitude >= %1",
+    QUERY_LAST_QUAKE_BY_MAGNITUDE_FORMAT: "<b>Location: </b>%1.<br><b>Magnitude: </b>%2.<br><b>Date: </b>%3.<br><b>Latitude: </b>%4º.<br><b>Longitude: </b>%5º.<br><b>Radius: </b>%6km.",
+    QUERY_LAST_QUAKE_BY_INTENSITY_TITLE: "Last quake of intensity >= %1",
+    QUERY_LAST_QUAKE_BY_INTENSITY_FORMAT: "<b>Location: </b>%1.<br><b>Intensity: </b>%2.<br><b>Date: </b>%3.<br><b>Latitude: </b>%4º.<br><b>Longitude: </b>%5º.<br><b>Radius: </b>%6km.",
+    QUERY_POPULATIONS_NUMBER_TO_FAULT_TITLE: "Number of inhabitants at %1km from the selected fault",
+    QUERY_POPULATIONS_NUMBER_TO_FAULT_FORMAT: "<b>Total number of inhabitants: </b>%1.<br><b>Number of populations:</b> %2.",
+    QUERY_POPULATIONS_BY_NUMBER_TO_FAULT_TITLE: "Poblaciones de más de %1 habitantes a %2km de la falla seleccionada",
+    QUERY_POPULATIONS_BY_NUMBER_TO_FAULT_TITLE: "Populations with higher than %1 inhabitants at %2km from the selected fault",
+    QUERY_POPULATIONS_BY_NUMBER_TO_FAULT_FORMAT: "<b>Total number of inhabitants: </b>%1.<br><b>Number of populations:</b> %2.",
+    QUERY_NO_OBJECT_FOUND_TEXT: "No object has been found.",
+    QUERY_NAME_TEXT: "Name",
+    QUERY_QUAKE_MAGNITUDE_TEXT: "Magnitude",
+    QUERY_FAULT_MAGNITUDE_TEXT: "Maximum magnitude",
+    QUERY_POPULATION_NUMBER_TEXT: "Inhabitants",
+    QUERY_MAGNITUDE_INPUT_TEXT: "Magnitude >=  ",
+    QUERY_INTENSITY_SELECT_TEXT: "Intensity >=  ",
+    QUERY_DISTANCE_INPUT_TEXT: "Distance [km]:  ",
+    QUERY_POPULATION_NUMBER_INPUT_TEXT: "Number of inhabitants >=  ",
+    QUERY_ACCEPT_BUTTON_TEXT: "Accept",
+
+    // Coordinates visor texts
     COORDINATE_VISOR_CONTROL_LATITUDE: "Latitude",
     COORDINATE_VISOR_CONTROL_LONGITUDE: "Longitude",
 
-    // Context menu texts
-    CONTEXT_MENU_CENTER_MAP_ITEM: "Center map",
-    CONTEXT_MENU_DRAW_FILTER_CIRCLE_ITEM: "Draw filter circle",
+    // Filter legend texts
+    FILTER_LEGEND_CONTROL_TITLE: "Active filters",
+    FILTER_LEGEND_CONTROL_MAGNITUDE: "Mag.",
+    FILTER_LEGEND_CONTROL_DEPTH: "Depth[km]",
+    FILTER_LEGEND_CONTROL_INTENSITY: "Int.",
+    FILTER_LEGEND_CONTROL_DATE: "Date",
+    FILTER_LEGEND_CONTROL_POPULATION: "Inh.",
+    FILTER_LEGEND_CONTROL_UNKNOWN: "Ukn.",
+
+    // Event legend texts
+    EVENT_LEGEND_CONTROL_TITLE: "Legend",
+    EVENT_LEGEND_CONTROL_INTENSITY_TITLE: "Maximum intensities",
+    EVENT_LEGEND_CONTROL_FAULT_TITLE: "Faults",
+    EVENT_LEGEND_CONTROL_FAULT_TEXT: "Fault",
+    EVENT_LEGEND_CONTROL_POPULATION_TITLE: "Population number",
+    EVENT_LEGEND_CONTROL_MAGNITUDE_TITLE: "Magnitude",
+    EVENT_LEGEND_CONTROL_MAGNITUDE_LETTER: "M",
+    EVENT_LEGEND_CONTROL_POPULATION_NUMBER_LETTER: "P",
 
     // File texts
-    PRINTED_MAP_FILENAME: 'Screenshot'
+    PRINTED_MAP_FILENAME: "Screenshot",
+
+    // Other texts
+    MINIMIZE_BUTTON_SYMBOl: "-",
+    MAXIMIZE_BUTTON_SYMBOl: "+"
   }
 }

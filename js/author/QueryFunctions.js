@@ -24,36 +24,39 @@ class QueryFunctions {
   }
 
   static zoomToClosestQuake(ev) {
-    const geojsonLayer = duplicatedQuakesLayer ? duplicatedQuakesLayer : quakesLayer;
-    const layers = geojsonLayer.getLayers();
-    const layer = GeometryFunctions.getClosestObject(layers, ev.latlng);
+    const layerGroup = duplicatedQuakesLayer ? duplicatedQuakesLayer : quakesLayer;
+    const xp = ev.latlng.lng;
+    const yp = ev.latlng.lat;
+    const layer = GeometryFunctions.getClosestLayerToPoint(layerGroup, xp, yp);
     if (layer) {
-      LayerFunctions.unmarkLayers(layers, StyleFunctions.getValue('quakeBorderColor'));
+      LayerFunctions.unmarkLayers(layerGroup, StyleFunctions.getValue('quakeBorderColor'));
       LayerFunctions.markLayer(layer);
     }
-    QueryFunctions.zoomToLayer(geojsonLayer, layer);
+    QueryFunctions.zoomToLayer(layerGroup, layer);
   }
 
   static zoomToClosestFault(ev) {
-    const geojsonLayer = duplicatedFaultsLayer ? duplicatedFaultsLayer : faultsLayer;
-    const layers = geojsonLayer.getLayers();
-    const layer = GeometryFunctions.getClosestObject(layers, ev.latlng);
+    const layerGroup = duplicatedFaultsLayer ? duplicatedFaultsLayer : faultsLayer;
+    const xp = ev.latlng.lng;
+    const yp = ev.latlng.lat;
+    const layer = GeometryFunctions.getClosestLayerToPoint(layerGroup, xp, yp);
     if (layer) {
-      LayerFunctions.unmarkLayers(layers, StyleFunctions.getValue('faultBorderColor'));
+      LayerFunctions.unmarkLayers(layerGroup, StyleFunctions.getValue('faultBorderColor'));
       LayerFunctions.markLayer(layer);
     }
-    QueryFunctions.zoomToLayer(geojsonLayer, layer);
+    QueryFunctions.zoomToLayer(layerGroup, layer);
   }
 
   static zoomToClosestPopulation(ev) {
-    const geojsonLayer = duplicatedPopulationsLayer ? duplicatedPopulationsLayer : populationsLayer;
-    const layers = geojsonLayer.getLayers();
-    const layer = GeometryFunctions.getClosestObject(geojsonLayer.getLayers(), ev.latlng);
+    const layerGroup = duplicatedPopulationsLayer ? duplicatedPopulationsLayer : populationsLayer;
+    const xp = ev.latlng.lng;
+    const yp = ev.latlng.lat;
+    const layer = GeometryFunctions.getClosestLayerToPoint(layerGroup, xp, yp);
     if (layer) {
-      LayerFunctions.unmarkLayers(layers, StyleFunctions.getValue('populationBorderColor'));
+      LayerFunctions.unmarkLayers(layerGroup, StyleFunctions.getValue('populationBorderColor'));
       LayerFunctions.markLayer(layer);
     }
-    QueryFunctions.zoomToLayer(geojsonLayer, layer);
+    QueryFunctions.zoomToLayer(layerGroup, layer);
   }
 
   // Funciones de objeto mayor en radio / Biggest object in radius functions
@@ -80,52 +83,50 @@ class QueryFunctions {
   }
 
   static zoomToBiggestMagnitudeQuakeInRadius() {
-    const geojsonLayer = duplicatedQuakesLayer ? duplicatedQuakesLayer : quakesLayer;
-    const layers = geojsonLayer.getLayers();
+    const layerGroup = duplicatedQuakesLayer ? duplicatedQuakesLayer : quakesLayer;
     const lat = SidePanelFunctions.getSpatialLatitudeFilter();
     const lng = SidePanelFunctions.getSpatialLongitudeFilter();
     const r  = SidePanelFunctions.getSpatialRadiusFilter() * 1000;
-    const layer = this.getBiggestValueInRadius(geojsonLayer.getLayers(), AttributesConfig.QUAKE_MAGNITUDE, lat, lng, r);
+    const layer = this.getBiggestValueInRadius(layerGroup.getLayers(), AttributesConfig.QUAKE_MAGNITUDE, lng, lat, r);
     if (layer) {
-      LayerFunctions.unmarkLayers(layers, StyleFunctions.getValue('quakeBorderColor'));
+      LayerFunctions.unmarkLayers(layerGroup, StyleFunctions.getValue('quakeBorderColor'));
       LayerFunctions.markLayer(layer);
     }
-    this.zoomToLayer(geojsonLayer, layer);
+    this.zoomToLayer(layerGroup, layer);
   }
 
   static zoomToBiggestIntensityQuakeInRadius() {
-    const geojsonLayer = duplicatedQuakesLayer ? duplicatedQuakesLayer : quakesLayer;
-    const layers = geojsonLayer.getLayers();
+    const layerGroup = duplicatedQuakesLayer ? duplicatedQuakesLayer : quakesLayer;
     const lat = SidePanelFunctions.getSpatialLatitudeFilter();
     const lng = SidePanelFunctions.getSpatialLongitudeFilter();
     const r  = SidePanelFunctions.getSpatialRadiusFilter() * 1000;
-    const layer = this.getBiggestIntensityInRadius(geojsonLayer.getLayers(), AttributesConfig.QUAKE_INTENSITY, lat, lng, r);
+    const layer = this.getBiggestIntensityInRadius(layerGroup.getLayers(), AttributesConfig.QUAKE_INTENSITY, lng, lat, r);
     if (layer) {
-      LayerFunctions.unmarkLayers(layers, StyleFunctions.getValue('quakeBorderColor'));
+      LayerFunctions.unmarkLayers(layerGroup, StyleFunctions.getValue('quakeBorderColor'));
       LayerFunctions.markLayer(layer);
     }
-    this.zoomToLayer(geojsonLayer, layer);
+    this.zoomToLayer(layerGroup, layer);
   }
 
   static panToBiggestIntensityInRadius() {
     const lat = SidePanelFunctions.getSpatialLatitudeFilter();
     const lng = SidePanelFunctions.getSpatialLongitudeFilter();
     const r = SidePanelFunctions.getSpatialRadiusFilter() * 1000;
-    const layer = this.getBiggestIntensityPolygonInRadius(intensitiesLayer.getLayers(), AttributesConfig.INTENSITY_VALUE, lat, lng, r);
-    const pLatLngs = layer.getLatLngs()[0][0];
-    const cLatLng = L.PolyUtil.polygonCenter(pLatLngs, map.options.crs);
+    const layer = this.getBiggestIntensityPolygonInRadius(intensitiesLayer, AttributesConfig.INTENSITY_VALUE, lng, lat, r);
+    //const layer = GeometryFunctions.getClosestLayerInRadius(intensitiesLayer, lng, lat, r);
     if (layer) {
+      const centroid = GeometryFunctions.getPolygonCentroid(layer);
       const popup = layer.getPopup();
       LayerFunctions.showLayer(intensitiesLayer);
-      popup.setLatLng(cLatLng)
-      map.flyTo(cLatLng, 5);
+      popup.setLatLng(centroid)
+      map.flyTo(centroid, 5);
       map.openPopup(popup);
     } else {
       WindowFunctions.showAlertWindow(map, LangageFunctions.getText('QUERY_NO_OBJECT_FOUND_TEXT'));
     }
   }
 
-  static getBiggestValueInRadius(layers, attribute, cLat, cLng, r) {
+  static getBiggestValueInRadius(layers, attribute, xc, yc, r) {
     let i, layer, value, feature;
     let maxValue = 0;
     let targetLayer = null;
@@ -133,7 +134,7 @@ class QueryFunctions {
       layer = layers[i];
       feature = layer.feature;
       value = feature.properties[attribute];
-      if (value > maxValue && GeometryFunctions.isFeatureInsideCircle(feature, cLat, cLng, r)) {
+      if (value > maxValue && GeometryFunctions.isFeatureInsideRadius(feature, xc, yc, r)) {
         maxValue = value;
         targetLayer = layer;
       }
@@ -141,7 +142,7 @@ class QueryFunctions {
     return targetLayer;
   }
 
-  static getBiggestIntensityInRadius(layers, attribute, cLat, cLng, r) {
+  static getBiggestIntensityInRadius(layers, attribute, xc, yc, r) {
     let i, layer, value, feature;
     let maxValue = 0;
     let targetLayer = null;
@@ -150,7 +151,7 @@ class QueryFunctions {
       feature = layer.feature;
       value = MiscFunctions.getIntensityValue(feature.properties[attribute]);
       if (value === -1) value = 0;
-      if (value > maxValue && GeometryFunctions.isFeatureInsideCircle(feature, cLat, cLng, r)) {
+      if (value > maxValue && GeometryFunctions.isFeatureInsideRadius(feature, xc, yc, r)) {
         maxValue = value;
         targetLayer = layer;
       }
@@ -158,14 +159,16 @@ class QueryFunctions {
     return targetLayer;
   }
 
-  static getBiggestIntensityPolygonInRadius(layers, attribute, lat, lng, r) {
-    let i, layer, value;
+  static getBiggestIntensityPolygonInRadius(layerGroup, attribute, xc, yc, r) {
+    let i, layer, feature, value;
     let maxValue = 0;
     let finalLayer = null;
+    const layers = layerGroup.getLayers();
     for (i = 0; i < layers.length; i++) {
       layer = layers[i];
-      value = layer.feature.properties[attribute];
-      if (value > maxValue && GeometryFunctions.isPolygonObjectInsideRadius(layer, lat, lng, r)) {
+      feature = layer.feature;
+      value = feature.properties[attribute];
+      if (value > maxValue && GeometryFunctions.isFeatureInsideRadius(feature, xc, yc, r)) {
         maxValue = value;
         finalLayer = layer;
       }
@@ -199,11 +202,11 @@ class QueryFunctions {
     const lat = SidePanelFunctions.getSpatialLatitudeFilter();
     const lng = SidePanelFunctions.getSpatialLongitudeFilter();
     const r = SidePanelFunctions.getSpatialRadiusFilter();
-    const geojsonLayer = duplicatedQuakesLayer ? duplicatedQuakesLayer : quakesLayer;
-    const layers = GeometryFunctions.getLayersInRadius(geojsonLayer.getLayers(), lat, lng, r * 1000);
+    const layerGroup = duplicatedQuakesLayer ? duplicatedQuakesLayer : quakesLayer;
+    const layers = GeometryFunctions.getLayersInRadius(layerGroup, lng, lat, r * 1000);
     const name = duplicatedQuakesLayer ? LangageFunctions.getText('DUPLICATED_QUAKES_LAYER') : LangageFunctions.getText('QUAKES_LAYER');
-    LayerFunctions.unmarkLayers(geojsonLayer.getLayers(), StyleFunctions.getValue('quakeBorderColor'));
-    LayerFunctions.showLayer(geojsonLayer);
+    LayerFunctions.unmarkLayers(layerGroup, StyleFunctions.getValue('quakeBorderColor'));
+    LayerFunctions.showLayer(layerGroup);
     WindowFunctions.showQuakesNumberQuery(name, layers, lat, lng, r);
   }
 
@@ -211,11 +214,11 @@ class QueryFunctions {
     const lat = SidePanelFunctions.getSpatialLatitudeFilter();
     const lng = SidePanelFunctions.getSpatialLongitudeFilter();
     const r = SidePanelFunctions.getSpatialRadiusFilter();
-    const geojsonLayer = duplicatedFaultsLayer ? duplicatedFaultsLayer : faultsLayer;
-    const layers = GeometryFunctions.getLayersInRadius(geojsonLayer.getLayers(), lat, lng, r * 1000);
+    const layerGroup = duplicatedFaultsLayer ? duplicatedFaultsLayer : faultsLayer;
+    const layers = GeometryFunctions.getLayersInRadius(layerGroup, lng, lat, r * 1000);
     const name = duplicatedFaultsLayer ? LangageFunctions.getText('DUPLICATED_FAULTS_LAYER') : LangageFunctions.getText('FAULTS_LAYER');
-    LayerFunctions.unmarkLayers(geojsonLayer.getLayers(), StyleFunctions.getValue('faultColor'));
-    LayerFunctions.showLayer(geojsonLayer);
+    LayerFunctions.unmarkLayers(layerGroup, StyleFunctions.getValue('faultColor'));
+    LayerFunctions.showLayer(layerGroup);
     WindowFunctions.showFaultsNumberQuery(name, layers, lat, lng, r);
   }
 
@@ -223,11 +226,11 @@ class QueryFunctions {
     const lat = SidePanelFunctions.getSpatialLatitudeFilter();
     const lng = SidePanelFunctions.getSpatialLongitudeFilter();
     const r = SidePanelFunctions.getSpatialRadiusFilter();
-    const geojsonLayer = duplicatedPopulationsLayer ? duplicatedPopulationsLayer : populationsLayer;
-    const layers = GeometryFunctions.getLayersInRadius(geojsonLayer.getLayers(), lat, lng, r * 1000);
+    const layerGroup = duplicatedPopulationsLayer ? duplicatedPopulationsLayer : populationsLayer;
+    const layers = GeometryFunctions.getLayersInRadius(layerGroup, lng, lat, r * 1000);
     const name = duplicatedPopulationsLayer ? LangageFunctions.getText('DUPLICATED_POPULATIONS_LAYER') : LangageFunctions.getText('POPULATIONS_LAYER');
-    LayerFunctions.unmarkLayers(geojsonLayer.getLayers(), StyleFunctions.getValue('populationBorderColor'));
-    LayerFunctions.showLayer(geojsonLayer);
+    LayerFunctions.unmarkLayers(layerGroup, StyleFunctions.getValue('populationBorderColor'));
+    LayerFunctions.showLayer(layerGroup);
     WindowFunctions.showPopulationsNumberQuery(name, layers, lat, lng, r);
   }
 
@@ -260,7 +263,7 @@ class QueryFunctions {
       properties = feature.properties;
       date = MiscFunctions.getDate(properties[AttributesConfig.QUAKE_DATE]);
       if (date > maxDate && properties[AttributesConfig.QUAKE_MAGNITUDE] >= value
-        && GeometryFunctions.isFeatureInsideCircle(feature, lat, lng, r)) {
+        && GeometryFunctions.isFeatureInsideRadius(feature, lng, lat, r)) {
         maxDate = date;
         targetLayer = layer;
       }
@@ -280,8 +283,8 @@ class QueryFunctions {
       properties = feature.properties;
       date = MiscFunctions.getDate(properties[AttributesConfig.QUAKE_DATE]);
       intensityValue = MiscFunctions.getIntensityValue(properties[AttributesConfig.QUAKE_INTENSITY])
-      if (date > maxDate && properties[AttributesConfig.QUAKE_INTENSITY] >= intensityValue
-        && GeometryFunctions.isFeatureInsideCircle(feature, lat, lng, r)) {
+      if (date > maxDate && intensityValue >= value
+        && GeometryFunctions.isFeatureInsideRadius(feature, lng, lat, r)) {
         maxDate = date;
         targetLayer = layer;
       }
@@ -300,42 +303,33 @@ class QueryFunctions {
   }
 
   static zoomToBiggestQuakeDistanceToFault(distance) {
-    const geojsonLayer = duplicatedQuakesLayer ? duplicatedQuakesLayer : quakesLayer;
-    const layers = geojsonLayer.getLayers();
+    const layerGroup = duplicatedQuakesLayer ? duplicatedQuakesLayer : quakesLayer;
     const layer = this.getBiggestQuakeToFault(distance);
     if (layer) {
-      LayerFunctions.unmarkLayers(layers, StyleFunctions.getValue('quakeBorderColor'));
+      LayerFunctions.unmarkLayers(layerGroup, StyleFunctions.getValue('quakeBorderColor'));
       LayerFunctions.markLayer(layer);
     }
-    this.zoomToLayer(geojsonLayer, layer);
+    this.zoomToLayer(layerGroup, layer);
   }
 
   static getPopulationsDistanceToFault(distance) {
-    let i, layer;
-    let finalLayers = [];
+    const layerGroup = duplicatedPopulationsLayer ? duplicatedPopulationsLayer : populationsLayer;
     const faultLayer = GeneralFunctions.getSelectedObject().target;
-    const geojsonLayer = duplicatedPopulationsLayer ? duplicatedPopulationsLayer : populationsLayer;
-    const layers = geojsonLayer.getLayers();
-    for (i = 0; i < layers.length; i++) {
-      layer = layers[i];
-      if (GeometryFunctions.isPointInsideBuffer(layer, faultLayer, distance)) {
-        finalLayers.push(layer);
-      }
-    }
-    return finalLayers;
+    return GeometryFunctions.getLayersInBuffer(layerGroup, faultLayer, distance);
   }
 
   static getBiggestQuakeToFault(distance) {
-    let i, layer, value;
+    let i, layer, feature, value;
     let maxValue = 0;
     let targetLayer = null;
     const faultLayer = GeneralFunctions.getSelectedObject().target;
-    const geojsonLayer = duplicatedQuakesLayer ? duplicatedQuakesLayer : quakesLayer;
-    const layers = geojsonLayer.getLayers();
+    const layerGroup = duplicatedQuakesLayer ? duplicatedQuakesLayer : quakesLayer;
+    const layers = layerGroup.getLayers();
     for (i = 0; i < layers.length; i++) {
       layer = layers[i];
-      value = layer.feature.properties[AttributesConfig.QUAKE_MAGNITUDE];
-      if (value > maxValue && GeometryFunctions.isPointInsideBuffer(layer, faultLayer, distance)) {
+      feature = layer.feature;
+      value = feature.properties[AttributesConfig.QUAKE_MAGNITUDE];
+      if (value > maxValue && GeometryFunctions.isFeatureInsideBuffer(faultLayer, feature, distance)) {
         maxValue = value;
         targetLayer = layer;
       }
@@ -344,14 +338,16 @@ class QueryFunctions {
   }
 
   static getPopulationsByNumberDistanceToFault(distance, populationNumber) {
-    let i, layer;
+    let i, layer, feature, value;
     let finalLayers = [];
     const faultLayer = GeneralFunctions.getSelectedObject().target;
-    const geojsonLayer = duplicatedPopulationsLayer ? duplicatedPopulationsLayer : populationsLayer;
-    const layers = geojsonLayer.getLayers();
+    const layerGroup = duplicatedPopulationsLayer ? duplicatedPopulationsLayer : populationsLayer;
+    const layers = layerGroup.getLayers();
     for (i = 0; i < layers.length; i++) {
       layer = layers[i];
-      if (layer.feature.properties[AttributesConfig.POPULATION_NUMBER] >= populationNumber && GeometryFunctions.isPointInsideBuffer(layer, faultLayer, distance)) {
+      feature = layer.feature;
+      value = feature.properties[AttributesConfig.POPULATION_NUMBER];
+      if (value >= populationNumber && GeometryFunctions.isLayerInsideBuffer(faultLayer, layer, distance)) {
         finalLayers.push(layer);
       }
     }
@@ -382,7 +378,7 @@ class QueryFunctions {
     let i, layer;
     for (i = 0; i < intensitiesLayer.length; i++) {
       layer = intensitiesLayer[i];
-      if (GeometryFunctions.isObjectInsidePolygon(pointLayer, layer)) {
+      if (GeometryFunctions.isLayerInsidePolygonLayer(layer, pointLayer)) {
         return layer;
       }
     }

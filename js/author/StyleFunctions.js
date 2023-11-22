@@ -7,6 +7,10 @@ LayerStyles = {
   provinceBorderColor: '#000000',
   provinceWeight: 1,
 
+  // Límite territorial / Territorial limit
+  territorialLimitBorderColor: '#800080',
+  territorialLimitWeight: 1,
+
   // Sismo / Quake
   quakeFillColor: '#ff7800',
   quakeBorderColor: '#000000',
@@ -68,6 +72,14 @@ class StyleFunctions {
     return {
       color: LayerStyles.provinceBorderColor,
       weight: LayerStyles.provinceWeight,
+      fillOpacity: 0
+    }
+  }
+
+  static getTerritorialLimitStyle() {
+    return {
+      color: LayerStyles.territorialLimitBorderColor,
+      weight: LayerStyles.territorialLimitWeight,
       fillOpacity: 0
     }
   }
@@ -162,6 +174,8 @@ class StyleFunctions {
       return 'star-5';
     } else if (populationNumber > 10000) {
       return 'diamond';
+    } else if (populationNumber > 1000) {
+      return 'triangle';
     } else {
       return 'circle';
     }
@@ -172,6 +186,8 @@ class StyleFunctions {
       return 20;
     } else if (shape === 'diamond') {
       return 8;
+    } else if (shape === 'triangle') {
+      return 7;
     } else {
       return 6;
     }
