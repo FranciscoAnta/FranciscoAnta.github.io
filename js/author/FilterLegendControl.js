@@ -154,14 +154,14 @@ L.Control.FilterLegend = L.Control.extend({
   getTableRow5: function() {
     let minIntText, maxIntText;
     const title = LangageFunctions.getText('DUPLICATED_QUAKES_LAYER');
-    const minMag = this.getValue('minQuakeMag');
-    const maxMag = this.getValue('maxQuakeMag');
-    const minDepth = this.getValue('minQuakeDepth');
-    const maxDepth = this.getValue('maxQuakeDepth');
-    const minInt = this.getValue('minQuakeInt');
-    const maxInt = this.getValue('maxQuakeInt');
-    const minDate = this.getValue('minQuakeDate');
-    const maxDate = this.getValue('maxQuakeDate');
+    const minMag = this.getValue('minDupQuakeMag');
+    const maxMag = this.getValue('maxDupQuakeMag');
+    const minDepth = this.getValue('minDupQuakeDepth');
+    const maxDepth = this.getValue('maxDupQuakeDepth');
+    const minInt = this.getValue('minDupQuakeInt');
+    const maxInt = this.getValue('maxDupQuakeInt');
+    const minDate = this.getValue('minDupQuakeDate');
+    const maxDate = this.getValue('maxDupQuakeDate');
     const minDateText = minDate ? minDate.toLocaleDateString() : "-";
     const maxDateText = maxDate ? maxDate.toLocaleDateString() : "-";
     minIntText = minInt !== undefined ? MiscFunctions.getIntensityString(minInt) : "-";
