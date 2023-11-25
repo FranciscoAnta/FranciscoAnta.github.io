@@ -98,9 +98,9 @@ class PopupFunctions {
         suffix = this.getAttributeSuffix(attribute);
         if (!suffix) suffix = "";
         if (typeof value === 'number') {
-          value = String(this.getPreviseValue(value, precision));
+          value = String(this.getPreciseValue(value, precision));
         } else if (typeof value === 'string' && !value.trim()) {
-          value = "Desconocido/a";
+          value = LangageFunctions.getText('POPUP_UNKNOWN_TEXT');
         }
         text += MiscFunctions.format(format, name, value, suffix);
       }
@@ -130,7 +130,7 @@ class PopupFunctions {
     return attribute.suffix;
   }
 
-  static getPreviseValue(value, precision) {
+  static getPreciseValue(value, precision) {
     if (precision !== undefined) value = value.toFixed(precision);
     return parseFloat(value);
   }

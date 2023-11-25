@@ -44,7 +44,7 @@ class SidePanelFunctions {
     }
   }
 
-  static initializeNumericInput(id, value, changeListener, size, step, precision) {
+  static initializeNumericInput(id, value, size, step, precision, min, max, inputListener, blurListener) {
     let i, element;
     let newValue = precision ? value.toFixed(precision) : value;
     newValue = parseFloat(newValue);
@@ -53,9 +53,12 @@ class SidePanelFunctions {
       element = array[i];
       element.type = 'number';
       element.valueAsNumber = value;
-      if (size) element.size = size;
-      if (step) element.step = step;
-      element.addEventListener('change', changeListener);
+      if (size !== undefined) element.size = size;
+      if (step !== undefined) element.step = step;
+      if (min !== undefined) element.min = min;
+      if (max !== undefined) element.max = max;
+      if (inputListener) element.addEventListener('input', inputListener);
+      if (blurListener) element.addEventListener('blur', blurListener);
     }
   }
 
@@ -199,6 +202,7 @@ class SidePanelFunctions {
     this.setText('spatialLatitudeFilterText', 'SIDE_PANEL_SPATIAL_LATITUDE_FILTER_TEXT');
     this.setText('spatialLongitudeFilterText', 'SIDE_PANEL_SPATIAL_LONGITUDE_FILTER_TEXT');
     this.setText('spatialRadiusFilterText', 'SIDE_PANEL_SPATIAL_RADIUS_FILTER_TEXT');
+    this.setText('spatialFiltersFixedRadiusText', 'SIDE_PANEL_SPATIAL_RADIUS_FIXED_TEXT');
     this.setText('spatialFiltersInsideTerritorialLimitText', 'SIDE_PANEL_SPATIAL_INSIDE_TERRITORIAL_LIMIT_FILTER_TEXT');
   }
 
@@ -264,35 +268,34 @@ class SidePanelFunctions {
   // Inputs
 
   static initializeQuakeFiltersInputs() {
-    const previousYearMaxDate = MiscFunctions.getPreviousYearDate(QUAKES_MAX_DATE);
-    const date = previousYearMaxDate > QUAKES_MIN_DATE ? previousYearMaxDate : QUAKES_MIN_DATE;
-    this.initializeFiltersMagnitudeInputs('quakeMinMagnitudeFilterInput', QUAKES_MIN_MAGNITUDE, this.onQuakeMinMagnitudeChange);
-    this.initializeFiltersMagnitudeInputs('quakeMaxMagnitudeFilterInput', QUAKES_MAX_MAGNITUDE, this.onQuakeMaxMagnitudeChange);
-    this.initializeIntensitySelect('quakeMinIntensityFilterInput', QUAKES_MIN_INTENSITY, this.onQuakeMinIntensityChange);
-    this.initializeIntensitySelect('quakeMaxIntensityFilterInput', QUAKES_MAX_INTENSITY, this.onQuakeMaxIntensityChange);
-    this.initializeFiltersDepthInputs('quakeMinDepthFilterInput', QUAKES_MIN_DEPTH, this.onQuakeMinDepthChange);
-    this.initializeFiltersDepthInputs('quakeMaxDepthFilterInput', QUAKES_MAX_DEPTH, this.onQuakeMaxDepthChange);
-    this.initializeDateInput('quakeMinDateFilterInput', date, this.onQuakeMinDateBlur);
-    this.initializeDateInput('quakeMaxDateFilterInput', QUAKES_MAX_DATE, this.onQuakeMaxDateBlur);
+    this.initializeFiltersMagnitudeInputs('quakeMinMagnitudeFilterInput', INITIAL_QUAKES_MIN_MAGNITUDE, QUAKES_MIN_MAGNITUDE, QUAKES_MAX_MAGNITUDE, this.onQuakeMinMagnitudeChange, this.onQuakeMinMagnitudeBlur);
+    this.initializeFiltersMagnitudeInputs('quakeMaxMagnitudeFilterInput', INITIAL_QUAKES_MAX_MAGNITUDE, QUAKES_MIN_MAGNITUDE, QUAKES_MAX_MAGNITUDE, this.onQuakeMaxMagnitudeChange, this.onQuakeMaxMagnitudeBlur);
+    this.initializeIntensitySelect('quakeMinIntensityFilterInput', INITIAL_QUAKES_MIN_INTENSITY, this.onQuakeMinIntensityChange);
+    this.initializeIntensitySelect('quakeMaxIntensityFilterInput', INITIAL_QUAKES_MAX_INTENSITY, this.onQuakeMaxIntensityChange);
+    this.initializeFiltersDepthInputs('quakeMinDepthFilterInput', INITIAL_QUAKES_MIN_DEPTH, QUAKES_MIN_DEPTH, QUAKES_MAX_DEPTH, this.onQuakeMinDepthChange, this.onQuakeMinDepthBlur);
+    this.initializeFiltersDepthInputs('quakeMaxDepthFilterInput', INITIAL_QUAKES_MAX_DEPTH, QUAKES_MIN_DEPTH, QUAKES_MAX_DEPTH, this.onQuakeMaxDepthChange, this.onQuakeMaxDepthBlur);
+    this.initializeDateInput('quakeMinDateFilterInput', INITIAL_QUAKES_MIN_DATE, this.onQuakeMinDateBlur);
+    this.initializeDateInput('quakeMaxDateFilterInput', INITIAL_QUAKES_MAX_DATE, this.onQuakeMaxDateBlur);
   }
 
   static initializeFaultFiltersInputs() {
-    this.initializeFiltersMagnitudeInputs('faultMinMagnitudeFilterInput', FAULTS_MIN_MAGNITUDE, this.onFaultMinMagnitudeChange);
-    this.initializeFiltersMagnitudeInputs('faultMaxMagnitudeFilterInput', FAULTS_MAX_MAGNITUDE, this.onFaultMaxMagnitudeChange);
-    this.initializeFiltersDepthInputs('faultMinDepthFilterInput', FAULTS_MIN_DEPTH, this.onFaultMinDepthChange);
-    this.initializeFiltersDepthInputs('faultMaxDepthFilterInput', FAULTS_MAX_DEPTH, this.onFaultMaxDepthChange);
+    this.initializeFiltersMagnitudeInputs('faultMinMagnitudeFilterInput', INITIAL_FAULTS_MIN_MAGNITUDE, FAULTS_MIN_MAGNITUDE, FAULTS_MAX_MAGNITUDE, this.onFaultMinMagnitudeChange, this.onFaultMinMagnitudeBlur);
+    this.initializeFiltersMagnitudeInputs('faultMaxMagnitudeFilterInput', INITIAL_FAULTS_MAX_MAGNITUDE, FAULTS_MIN_MAGNITUDE, FAULTS_MAX_MAGNITUDE, this.onFaultMaxMagnitudeChange, this.onFaultMaxMagnitudeBlur);
+    this.initializeFiltersDepthInputs('faultMinDepthFilterInput', INITIAL_FAULTS_MIN_DEPTH, FAULTS_MIN_DEPTH, FAULTS_MAX_DEPTH, this.onFaultMinDepthChange, this.onFaultMinDepthBlur);
+    this.initializeFiltersDepthInputs('faultMaxDepthFilterInput', INITIAL_FAULTS_MAX_DEPTH, FAULTS_MIN_DEPTH, FAULTS_MAX_DEPTH, this.onFaultMaxDepthChange, this.onFaultMaxDepthBlur);
   }
 
   static initializePopulationFiltersInputs() {
-    this.initializePopulationFiltersNumericInputs('populationMinNumberFilterInput', INITIAL_POPULATION_MIN_NUMBER, this.onPopulationMinNumberChange);
-    this.initializePopulationFiltersNumericInputs('populationMaxNumberFilterInput', POPULATIONS_MAX_NUMBER, this.onPopulationMaxNumberChange);
+    this.initializePopulationFiltersNumericInputs('populationMinNumberFilterInput', INITIAL_POPULATIONS_MIN_NUMBER, POPULATIONS_MIN_NUMBER, POPULATIONS_MAX_NUMBER, this.onPopulationMinNumberChange, this.onPopulationMinNumberBlur);
+    this.initializePopulationFiltersNumericInputs('populationMaxNumberFilterInput', INITIAL_POPULATIONS_MAX_NUMBER, POPULATIONS_MIN_NUMBER, POPULATIONS_MAX_NUMBER, this.onPopulationMaxNumberChange, this.onPopulationMaxNumberBlur);
   }
 
   static initializeSpatialFiltersInputs() {
     insideTerritorialLimit = DEFAULT_INSIDE_TERRITORIAL_LIMIT;
-    this.initializeNumericInput('spatialLatitudeFilterInput', INITIAL_LATITUDE, this.onSpatialLatitudeChange, 10, 1, 4);
-    this.initializeNumericInput('spatialLongitudeFilterInput', INITIAL_LONGITUDE, this.onSpatialLongitudeChange, 10, 1, 4);
-    this.initializeNumericInput('spatialRadiusFilterInput', MIN_RADIUS, this.onSpatialRadiusChange, 10, 1, 3);
+    this.initializeNumericInput('spatialLatitudeFilterInput', INITIAL_LATITUDE, 10, 1, 4, MIN_LATITUDE, MAX_LATITUDE, this.onSpatialLatitudeChange, this.onSpatialLatitudeBlur);
+    this.initializeNumericInput('spatialLongitudeFilterInput', INITIAL_LONGITUDE, 10, 1, 4, MIN_LONGITUDE, MAX_LONGITUDE, this.onSpatialLongitudeChange, this.onSpatialLongitudeBlur);
+    this.initializeNumericInput('spatialRadiusFilterInput', INITIAL_RADIUS, 10, 1, 3, MIN_RADIUS, MAX_RADIUS, this.onSpatialRadiusChange, this.onSpatialRadiusBlur);
+    this.initializeCheckbox('spatialFiltersFixedRadiusCheckbox', spatialRadiusFixed, this.onSpatialRadiusFixedClick)
     this.initializeCheckbox('spatialFiltersInsideTerritorialLimitCheckbox', insideTerritorialLimit, this.onSpatialInsideTerritorialLimitClick)
   }
 
@@ -312,20 +315,20 @@ class SidePanelFunctions {
 
   //
 
-  static initializeFiltersMagnitudeInputs(id, value, changeListener) {
-    this.initializeNumericInput(id, value, changeListener, 5, 0.1, 2);
+  static initializeFiltersMagnitudeInputs(id, value, min, max, changeListener, blurListener) {
+    this.initializeNumericInput(id, value, 5, 0.1, 2, min, max, changeListener, blurListener);
   }
 
-  static initializeFiltersDepthInputs(id, value, changeListener) {
-    this.initializeNumericInput(id, value, changeListener, 8, 1, 3);
+  static initializeFiltersDepthInputs(id, value, min, max, changeListener, blurListener) {
+    this.initializeNumericInput(id, value, 8, 1, 3, min, max, changeListener, blurListener);
   }
 
   static initializeQuakeFiltersIntensityInputs(id, changeListener, initialValue) {
     this.initializeQuakeIntensitySelect(id, changeListener, initialValue);
   }
 
-  static initializePopulationFiltersNumericInputs(id, value, changeListener) {
-    this.initializeNumericInput(id, value, changeListener, 10, 1, 0);
+  static initializePopulationFiltersNumericInputs(id, value, min, max, changeListener, blurListener) {
+    this.initializeNumericInput(id, value, 10, 1, 0, min, max, changeListener, blurListener);
   }
 
   static initializeIntensitySelect(id, initialValue, changeListener) {
@@ -676,9 +679,9 @@ class SidePanelFunctions {
   // Funciones de asignación de valores / Value set functions
 
   static setFilterValue(id, value, precision) {
-    let i, element;
+    let i, element, newValue;
     const array = document.querySelectorAll('#' + id);
-    let newValue = precision ? value.toFixed(precision) : value;
+    newValue = precision ? value.toFixed(precision) : value;
     newValue = parseFloat(newValue);
     for (i = 0; i < array.length; i++) {
       element = array[i];
@@ -788,49 +791,91 @@ class SidePanelFunctions {
   static onQuakeMinMagnitudeChange() {
     let value = this.valueAsNumber;
     const maxValue = SidePanelFunctions.getQuakeMaxMagnitudeFilter();
+    if (value > maxValue) SidePanelFunctions.setQuakeMaxMagnitudeFilter(value);
+  }
+
+  static onQuakeMinMagnitudeBlur() {
+    let value = this.valueAsNumber;
     if (Number.isNaN(value) || value < QUAKES_MIN_MAGNITUDE) {
       value = QUAKES_MIN_MAGNITUDE;
     } else if (value > QUAKES_MAX_MAGNITUDE) {
       value = QUAKES_MAX_MAGNITUDE;
+      SidePanelFunctions.setQuakeMaxMagnitudeFilter(value);
     }
     SidePanelFunctions.setQuakeMinMagnitudeFilter(value);
-    if (value > maxValue) SidePanelFunctions.setQuakeMaxMagnitudeFilter(value);
   }
+
+  // static onQuakeMaxMagnitudeChange() {
+  //   let value = this.valueAsNumber;
+  //   const minValue = SidePanelFunctions.getQuakeMinMagnitudeFilter();
+  //   if (!Number.isNaN(value)) {
+  //     if (value > QUAKES_MAX_MAGNITUDE) {
+  //       value = QUAKES_MAX_MAGNITUDE;
+  //     } else if (value < QUAKES_MIN_MAGNITUDE) {
+  //       value = QUAKES_MIN_MAGNITUDE;
+  //     }
+  //     SidePanelFunctions.setQuakeMaxMagnitudeFilter(value);
+  //     if (value < minValue) SidePanelFunctions.setQuakeMinMagnitudeFilter(value);
+  //   }
+  // }
 
   static onQuakeMaxMagnitudeChange() {
     let value = this.valueAsNumber;
     const minValue = SidePanelFunctions.getQuakeMinMagnitudeFilter();
-    if (Number.isNaN(value) || value > QUAKES_MAX_MAGNITUDE) {
-      value = QUAKES_MAX_MAGNITUDE;
-    } else if (value < QUAKES_MIN_MAGNITUDE) {
+    if (value < minValue) SidePanelFunctions.setQuakeMinMagnitudeFilter(value);
+  }
+
+  // static onQuakeMaxMagnitudeBlur() {
+  //   let value = this.valueAsNumber;
+  //   if (Number.isNaN(value)) {
+  //     value = QUAKES_MAX_MAGNITUDE;
+  //     SidePanelFunctions.setQuakeMaxMagnitudeFilter(value);
+  //   }
+  // }
+
+  static onQuakeMaxMagnitudeBlur() {
+    let value = this.valueAsNumber;
+    if (Number.isNaN(value) || value < QUAKES_MIN_MAGNITUDE) {
       value = QUAKES_MIN_MAGNITUDE;
+      SidePanelFunctions.setQuakeMinMagnitudeFilter(value);
+    } else if (value > QUAKES_MAX_MAGNITUDE) {
+      value = QUAKES_MAX_MAGNITUDE;
     }
     SidePanelFunctions.setQuakeMaxMagnitudeFilter(value);
-    if (value < minValue) SidePanelFunctions.setQuakeMinMagnitudeFilter(value);
   }
 
   static onQuakeMinDepthChange() {
     let value = this.valueAsNumber;
     const maxValue = SidePanelFunctions.getQuakeMaxDepthFilter();
+    if (value > maxValue) SidePanelFunctions.setQuakeMaxDepthFilter(value);
+  }
+
+  static onQuakeMinDepthBlur() {
+    let value = this.valueAsNumber;
     if (Number.isNaN(value) || value < QUAKES_MIN_DEPTH) {
       value = QUAKES_MIN_DEPTH;
     } else if (value > QUAKES_MAX_DEPTH) {
       value = QUAKES_MAX_DEPTH;
+      SidePanelFunctions.setQuakeMaxDepthFilter(value);
     }
     SidePanelFunctions.setQuakeMinDepthFilter(value);
-    if (value > maxValue) SidePanelFunctions.setQuakeMaxDepthFilter(value);
   }
 
   static onQuakeMaxDepthChange() {
     let value = this.valueAsNumber;
     const minValue = SidePanelFunctions.getQuakeMinDepthFilter();
-    if (Number.isNaN(this.valueAsNumber) || value > QUAKES_MAX_DEPTH) {
-      value = QUAKES_MAX_DEPTH;
-    } else if (value < QUAKES_MIN_DEPTH) {
+    if (value < minValue) SidePanelFunctions.setQuakeMinDepthFilter(value);
+  }
+
+  static onQuakeMaxDepthBlur() {
+    let value = this.valueAsNumber;
+    if (Number.isNaN(value) || value < QUAKES_MIN_DEPTH) {
       value = QUAKES_MIN_DEPTH;
+      SidePanelFunctions.setQuakeMinDepthFilter(value);
+    } else if (value > QUAKES_MAX_DEPTH) {
+      value = QUAKES_MAX_DEPTH;
     }
     SidePanelFunctions.setQuakeMaxDepthFilter(value);
-    if (value < minValue) SidePanelFunctions.setQuakeMinDepthFilter(value);
   }
 
   static onQuakeMinIntensityChange() {
@@ -876,49 +921,69 @@ class SidePanelFunctions {
   static onFaultMinMagnitudeChange() {
     let value = this.valueAsNumber;
     const maxValue = SidePanelFunctions.getFaultMaxMagnitudeFilter();
+    if (value > maxValue) SidePanelFunctions.setFaultMaxMagnitudeFilter(value);
+  }
+
+  static onFaultMinMagnitudeBlur() {
+    let value = this.valueAsNumber;
     if (Number.isNaN(value) || value < FAULTS_MIN_MAGNITUDE) {
       value = FAULTS_MIN_MAGNITUDE;
     } else if (value > FAULTS_MAX_MAGNITUDE) {
       value = FAULTS_MAX_MAGNITUDE;
+      SidePanelFunctions.setFaultMaxMagnitudeFilter(value);
     }
     SidePanelFunctions.setFaultMinMagnitudeFilter(value);
-    if (value > maxValue) SidePanelFunctions.setFaultMaxMagnitudeFilter(value);
   }
 
   static onFaultMaxMagnitudeChange() {
     let value = this.valueAsNumber;
     const minValue = SidePanelFunctions.getFaultMinMagnitudeFilter();
-    if (Number.isNaN(value) || value > FAULTS_MAX_MAGNITUDE) {
-      value = FAULTS_MAX_MAGNITUDE;
-    } else if (value < FAULTS_MIN_MAGNITUDE) {
+    if (value < minValue) SidePanelFunctions.setFaultMinMagnitudeFilter(value);
+  }
+
+  static onFaultMaxMagnitudeBlur() {
+    let value = this.valueAsNumber;
+    if (Number.isNaN(value) || value < FAULTS_MIN_MAGNITUDE) {
       value = FAULTS_MIN_MAGNITUDE;
+      SidePanelFunctions.setFaultMinMagnitudeFilter(value);
+    } else if (value > FAULTS_MAX_MAGNITUDE) {
+      value = FAULTS_MAX_MAGNITUDE;
     }
     SidePanelFunctions.setFaultMaxMagnitudeFilter(value);
-    if (value < minValue) SidePanelFunctions.setFaultMinMagnitudeFilter(value);
   }
 
   static onFaultMinDepthChange() {
     let value = this.valueAsNumber;
     const maxValue = SidePanelFunctions.getFaultMaxDepthFilter();
+    if (value > maxValue) SidePanelFunctions.setFaultMaxDepthFilter(value);
+  }
+
+  static onFaultMinDepthBlur() {
+    let value = this.valueAsNumber;
     if (Number.isNaN(value) || value < FAULTS_MIN_DEPTH) {
       value = FAULTS_MIN_DEPTH;
     } else if (value > FAULTS_MAX_DEPTH) {
       value = FAULTS_MAX_DEPTH;
+      SidePanelFunctions.setFaultMaxDepthFilter(value);
     }
     SidePanelFunctions.setFaultMinDepthFilter(value);
-    if (value > maxValue) SidePanelFunctions.setFaultMaxDepthFilter(value);
   }
 
   static onFaultMaxDepthChange() {
     let value = this.valueAsNumber;
     const minValue = SidePanelFunctions.getFaultMinDepthFilter();
-    if (Number.isNaN(this.valueAsNumber) || value > FAULTS_MAX_DEPTH) {
-      value = FAULTS_MAX_DEPTH;
-    } else if (value < FAULTS_MIN_DEPTH) {
+    if (value < minValue) SidePanelFunctions.setFaultMinDepthFilter(value);
+  }
+
+  static onFaultMaxDepthBlur() {
+    let value = this.valueAsNumber;
+    if (Number.isNaN(value) || value < FAULTS_MIN_DEPTH) {
       value = FAULTS_MIN_DEPTH;
+      SidePanelFunctions.setFaultMinDepthFilter(value);
+    } else if (value > FAULTS_MAX_DEPTH) {
+      value = FAULTS_MAX_DEPTH;
     }
     SidePanelFunctions.setFaultMaxDepthFilter(value);
-    if (value < minValue) SidePanelFunctions.setFaultMinDepthFilter(value);
   }
 
   // Poblaciones / Populations
@@ -926,47 +991,103 @@ class SidePanelFunctions {
   static onPopulationMinNumberChange() {
     let value = this.valueAsNumber;
     const maxValue = SidePanelFunctions.getPopulationMaxNumberFilter();
+    if (value > maxValue) SidePanelFunctions.setPopulationMaxNumberFilter(value);
+  }
+
+  static onPopulationMinNumberBlur() {
+    let value = this.valueAsNumber;
     if (Number.isNaN(value) || value < POPULATIONS_MIN_NUMBER) {
       value = POPULATIONS_MIN_NUMBER;
     } else if (value > POPULATIONS_MAX_NUMBER) {
       value = POPULATIONS_MAX_NUMBER;
+      SidePanelFunctions.setPopulationMaxNumberFilter(value);
     }
     SidePanelFunctions.setPopulationMinNumberFilter(value);
-    if (value > maxValue) SidePanelFunctions.setPopulationMaxNumberFilter(value);
   }
 
   static onPopulationMaxNumberChange() {
     let value = this.valueAsNumber;
     const minValue = SidePanelFunctions.getPopulationMinNumberFilter();
-    if (Number.isNaN(value) || value > POPULATIONS_MAX_NUMBER) {
-      value = POPULATIONS_MAX_NUMBER;
-    } else if (value < POPULATIONS_MIN_NUMBER) {
+    if (value < minValue) SidePanelFunctions.setPopulationMinNumberFilter(value);
+  }
+
+  static onPopulationMaxNumberBlur() {
+    let value = this.valueAsNumber;
+    if (Number.isNaN(value) || value < POPULATIONS_MIN_NUMBER) {
       value = POPULATIONS_MIN_NUMBER;
+      SidePanelFunctions.setPopulationMinNumberFilter(value);
+    } else if (value > POPULATIONS_MAX_NUMBER) {
+      value = POPULATIONS_MAX_NUMBER;
     }
     SidePanelFunctions.setPopulationMaxNumberFilter(value);
-    if (value < minValue) SidePanelFunctions.setPopulationMinNumberFilter(value);
   }
 
   // Espacial / Spatial
 
   static onSpatialLatitudeChange() {
-    const value = MiscFunctions.clamp(this.valueAsNumber, -90, 90);
-    SidePanelFunctions.setSpatialLatitudeFilter(value);
-    GeneralFunctions.finishDraw();
+    let value = this.valueAsNumber;
+    if (!Number.isNaN(value)) {
+      value = MiscFunctions.clamp(value, -90, 90);
+      SidePanelFunctions.setSpatialLatitudeFilter(value);
+      GeneralFunctions.finishDraw();
+    }
+  }
+
+  static onSpatialLatitudeBlur() {
+    let value = this.valueAsNumber;
+    if (Number.isNaN(value)) {
+      value = INITIAL_LATITUDE;
+      SidePanelFunctions.setSpatialLatitudeFilter(value);
+      GeneralFunctions.finishDraw();
+    }
   }
 
   static onSpatialLongitudeChange() {
-    const value = MiscFunctions.clamp(this.valueAsNumber, -180, 180);
-    SidePanelFunctions.setSpatialLongitudeFilter(value);
-    GeneralFunctions.finishDraw();
+    let value = this.valueAsNumber;
+    if (!Number.isNaN(value)) {
+      value = MiscFunctions.clamp(this.valueAsNumber, -180, 180);
+      SidePanelFunctions.setSpatialLongitudeFilter(value);
+      GeneralFunctions.finishDraw();
+    }
+  }
+
+  static onSpatialLongitudeBlur() {
+    let value = this.valueAsNumber;
+    if (Number.isNaN(value)) {
+      value = INITIAL_LONGITUDE;
+      SidePanelFunctions.setSpatialLongitudeFilter(value);
+      GeneralFunctions.finishDraw();
+    }
   }
 
   static onSpatialRadiusChange() {
     // Valor en km
     // Value in km
-    const value = MiscFunctions.clamp(this. valueAsNumber, MIN_RADIUS, MAX_RADIUS);
-    SidePanelFunctions.setSpatialRadiusFilter(value);
-    GeneralFunctions.finishDraw();
+    let value = this.valueAsNumber;
+    if (!Number.isNaN) {
+      value = MiscFunctions.clamp(this. valueAsNumber, MIN_RADIUS, MAX_RADIUS);
+      SidePanelFunctions.setSpatialRadiusFilter(value);
+      GeneralFunctions.finishDraw();
+    }
+  }
+
+  static onSpatialRadiusBlur() {
+    let value = this.valueAsNumber;
+    if (Number.isNaN(value)) {
+      value = MIN_RADIUS;
+      SidePanelFunctions.setSpatialRadiusFilter(value);
+      GeneralFunctions.finishDraw();
+    }
+  }
+
+  static onSpatialRadiusFixedClick() {
+    let i, element;
+    const array = document.querySelectorAll('#spatialFiltersFixedRadiusCheckbox');
+    spatialRadiusFixed = !spatialRadiusFixed;
+    for (i = 0; i < array.length; i++) {
+      element = array[i];
+      element.checked = spatialRadiusFixed;
+    }
   }
 
   static onSpatialInsideTerritorialLimitClick() {

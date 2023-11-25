@@ -56,24 +56,22 @@ L.Control.FilterLegend = L.Control.extend({
   },
 
   initializeValues: function() {
-    const maxDate = QUAKES_MAX_DATE;
-    const minDate = MiscFunctions.getPreviousYearDate(QUAKES_MAX_DATE);
-    this.setValue('minQuakeMag', QUAKES_MIN_MAGNITUDE);
-    this.setValue('maxQuakeMag', QUAKES_MAX_MAGNITUDE);
-    this.setValue('minQuakeDepth', QUAKES_MIN_DEPTH);
-    this.setValue('maxQuakeDepth', QUAKES_MAX_DEPTH);
-    this.setValue('minQuakeInt', QUAKES_MIN_INTENSITY);
-    this.setValue('maxQuakeInt', QUAKES_MAX_INTENSITY);
-    this.setValue('minQuakeDate', minDate);
-    this.setValue('maxQuakeDate', maxDate);
+    this.setValue('minQuakeMag', INITIAL_QUAKES_MIN_MAGNITUDE);
+    this.setValue('maxQuakeMag', INITIAL_QUAKES_MAX_MAGNITUDE);
+    this.setValue('minQuakeDepth', INITIAL_QUAKES_MIN_DEPTH);
+    this.setValue('maxQuakeDepth', INITIAL_QUAKES_MAX_DEPTH);
+    this.setValue('minQuakeInt', INITIAL_QUAKES_MIN_INTENSITY);
+    this.setValue('maxQuakeInt', INITIAL_QUAKES_MAX_INTENSITY);
+    this.setValue('minQuakeDate', INITIAL_QUAKES_MIN_DATE);
+    this.setValue('maxQuakeDate', INITIAL_QUAKES_MAX_DATE);
 
-    this.setValue('minFaultMag', FAULTS_MIN_MAGNITUDE);
-    this.setValue('maxFaultMag', FAULTS_MAX_MAGNITUDE);
-    this.setValue('minFaultDepth', FAULTS_MIN_DEPTH);
-    this.setValue('maxFaultDepth', FAULTS_MAX_DEPTH);
+    this.setValue('minFaultMag', INITIAL_FAULTS_MIN_MAGNITUDE);
+    this.setValue('maxFaultMag', INITIAL_FAULTS_MAX_MAGNITUDE);
+    this.setValue('minFaultDepth', INITIAL_FAULTS_MIN_DEPTH);
+    this.setValue('maxFaultDepth', INITIAL_FAULTS_MAX_DEPTH);
 
-    this.setValue('minPopNumber', INITIAL_POPULATION_MIN_NUMBER);
-    this.setValue('maxPopNumber', POPULATIONS_MAX_NUMBER);
+    this.setValue('minPopNumber', INITIAL_POPULATIONS_MIN_NUMBER);
+    this.setValue('maxPopNumber', INITIAL_POPULATIONS_MAX_NUMBER);
   },
 
   update: function() {

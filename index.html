@@ -200,6 +200,11 @@
                     <p>
                       <span id="spatialRadiusFilterText"></span>
                       <input id="spatialRadiusFilterInput">
+                      <label class="switch">
+                        <input type="checkbox" id="spatialFiltersFixedRadiusCheckbox">
+                        <span class="slider round"></span>
+                      </label>
+                      <span id="spatialFiltersFixedRadiusText" class="biggerFont"></span>
                     </p>
                     <div>
                       <label class="switch">
@@ -267,6 +272,11 @@
                     <p>
                       <span id="spatialRadiusFilterText"></span>
                       <input id="spatialRadiusFilterInput">
+                      <label class="switch">
+                        <input type="checkbox" id="spatialFiltersFixedRadiusCheckbox">
+                        <span class="slider round"></span>
+                      </label>
+                      <span id="spatialFiltersFixedRadiusText" class="biggerFont"></span>
                     </p>
                     <div>
                       <label class="switch">
@@ -316,6 +326,11 @@
                     <p>
                       <span id="spatialRadiusFilterText"></span>
                       <input id="spatialRadiusFilterInput">
+                      <label class="switch">
+                        <input type="checkbox" id="spatialFiltersFixedRadiusCheckbox">
+                        <span class="slider round"></span>
+                      </label>
+                      <span id="spatialFiltersFixedRadiusText" class="biggerFont"></span>
                     </p>
                     <div>
                       <label class="switch">
@@ -355,6 +370,11 @@
                     <p>
                       <span id="spatialRadiusFilterText"></span>
                       <input id="spatialRadiusFilterInput">
+                      <label class="switch">
+                        <input type="checkbox" id="spatialFiltersFixedRadiusCheckbox">
+                        <span class="slider round"></span>
+                      </label>
+                      <span id="spatialFiltersFixedRadiusText" class="biggerFont"></span>
                     </p>
                     <div>
                       <label class="switch">
@@ -387,6 +407,11 @@
                     <p>
                       <span id="spatialRadiusFilterText"></span>
                       <input id="spatialRadiusFilterInput">
+                      <label class="switch">
+                        <input type="checkbox" id="spatialFiltersFixedRadiusCheckbox">
+                        <span class="slider round"></span>
+                      </label>
+                      <span id="spatialFiltersFixedRadiusText" class="biggerFont"></span>
                     </p>
                     <h2 id="spatialFiltersConditionTitle"></h2>
                     <div>
@@ -639,6 +664,7 @@
 
           // Otros objetos
           let previousCircleLat, previousCircleLng, previousCircleRadius;
+          let spatialRadiusFixed = DEAULT_RADIUS_FILTER_FIXED;
           let insideTerritorialLimit = DEFAULT_INSIDE_TERRITORIAL_LIMIT;
 
           // Controles / Controls

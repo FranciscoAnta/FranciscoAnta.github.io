@@ -19,6 +19,7 @@ class WindowFunctions {
   // Ventana de consulta / Query Window
 
   static getQueryWindow(map, title, content) {
+    this.deleteAllHtmlElements();
     const options = {
       title: title,
       content: content,
@@ -548,5 +549,37 @@ class WindowFunctions {
     const format = LangageFunctions.getText('ALERT_WINDOW_EXPORT_LAYER_FORMAT');
     const text = MiscFunctions.format(format, layerName);
     this.showAlertWindow(map, text);
+  }
+
+  // Otros / Others
+
+  static deleteAllHtmlElements() {
+    this.deleteInputElements();
+    this.deleteInput2Elements();
+    this.deleteButtonElements();
+  }
+
+  static deleteInputElements() {
+    this.deleteHtmlElements(document.querySelectorAll('#queryInput'));
+  }
+
+  static deleteInput2Elements() {
+    this.deleteHtmlElements(document.querySelectorAll('#queryInput2'));
+  }
+
+  static deleteSelectElements() {
+    this.deleteHtmlElements(document.querySelectorAll('#querySelect'));
+  }
+
+  static deleteButtonElements() {
+    this.deleteHtmlElements(document.querySelectorAll('#queryButton'));
+  }
+
+  static deleteHtmlElements(array) {
+    let i, element;
+    for (i = 0; i < array.length; i++) {
+      element = array[i];
+      element.remove();
+    }
   }
 }
