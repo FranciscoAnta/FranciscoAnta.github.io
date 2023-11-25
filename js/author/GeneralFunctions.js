@@ -82,7 +82,7 @@ class GeneralFunctions {
     LayerFunctions.addProvincesLayer();
     LayerFunctions.addTerritorialLimitLayer();
     LayerFunctions.addQuakesLayer(this.getQuakeInitialFilters());
-    LayerFunctions.addFaultsLayer();
+    LayerFunctions.addFaultsLayer(this.getFaultInitialFilters());
     LayerFunctions.addPopulationsLayer(this.getPopulationInitialFilters());
     LayerFunctions.addIntensitiesLayer();
 
@@ -185,7 +185,7 @@ class GeneralFunctions {
     if (coordinatesVisorControl) {
       GeneralFunctions.updateCoordinatesVisor(ev);
     }
-    if (GeneralFunctions.isDraw() && filterCircle && filterCircleOrigin) {
+    if (GeneralFunctions.isDraw() && filterCircle && filterCircleOrigin && !spatialRadiusFixed) {
       GeneralFunctions.updateFilterCircleRadius(ev);
     }
   }
@@ -197,8 +197,7 @@ class GeneralFunctions {
     }
     if (GeneralFunctions.isDraw()) {
       GeneralFunctions.processDrawMode();
-      GeneralFunctions.finishDrawMode();
-    } else {
+    } else if (!map.contextmenu.isVisible()) {
       if (filterCircle) GeneralFunctions.removeFilterCircle();
       if (filterBuffer) GeneralFunctions.removeFilterBuffer();
     }
@@ -320,10 +319,14 @@ class GeneralFunctions {
 
     map.contextmenu.disable();
     GeneralFunctions.setMode(mode);
-    if (filterCircle) {
-      LayerFunctions.removeFilterCircleLayer();
+
+    if (spatialRadiusFixed) {
+      GeneralFunctions.processDrawMode();
+    } else {
+      if (filterCircle) LayerFunctions.removeFilterCircleLayer();
+      LayerFunctions.addFilterCircleLayer(ev.latlng, true);
+      filterCircle.setRadius(previousCircleRadius * 1000);
     }
-    LayerFunctions.addFilterCircleLayer(ev.latlng, true);
   }
 
   static finishDrawMode() {
@@ -391,6 +394,7 @@ class GeneralFunctions {
       } else if (mode === VisorMode.LAST_INT_QUAKE) {
         WindowFunctions.showIntensitySelectQuery();
       }
+      GeneralFunctions.finishDrawMode();
   }
 
   static removeFilterCircle() {
@@ -470,15 +474,42 @@ class GeneralFunctions {
   // Otros / Others
   static getQuakeInitialFilters() {
     return {
-      minDate: MiscFunctions.getPreviousYearDate(QUAKES_MAX_DATE),
-      maxDate: QUAKES_MAX_DATE
+      minMagnitude: INITIAL_QUAKES_MIN_MAGNITUDE,
+      maxMagnitude: INITIAL_QUAKES_MAX_MAGNITUDE,
+      minIntensity: INITIAL_QUAKES_MIN_INTENSITY,
+      maxIntensity: INITIAL_QUAKES_MAX_INTENSITY,
+      minDepth: INITIAL_QUAKES_MIN_DEPTH,
+      maxDepth: INITIAL_QUAKES_MAX_DEPTH,
+      minDate: INITIAL_QUAKES_MIN_DATE,
+      maxDate: INITIAL_QUAKES_MAX_DATE,
+      latitude: INITIAL_LATITUDE,
+      longitude: INITIAL_LONGITUDE,
+      radius: INITIAL_RADIUS,
+      insideTerritorialLimit: DEFAULT_INSIDE_TERRITORIAL_LIMIT
+    }
+  }
+
+  static getFaultInitialFilters() {
+    return {
+      minMagnitude: INITIAL_FAULTS_MIN_MAGNITUDE,
+      maxMagnitude: INITIAL_FAULTS_MAX_MAGNITUDE,
+      minDepth: INITIAL_FAULTS_MIN_DEPTH,
+      maxDepth: INITIAL_FAULTS_MAX_DEPTH,
+      latitude: INITIAL_LATITUDE,
+      longitude: INITIAL_LONGITUDE,
+      radius: INITIAL_RADIUS,
+      insideTerritorialLimit: DEFAULT_INSIDE_TERRITORIAL_LIMIT
     }
   }
 
   static getPopulationInitialFilters() {
     return {
-      minNumber: INITIAL_POPULATION_MIN_NUMBER,
-      maxNumber: POPULATIONS_MAX_NUMBER
+      minNumber: INITIAL_POPULATIONS_MIN_NUMBER,
+      maxNumber: POPULATIONS_MAX_NUMBER,
+      latitude: INITIAL_LATITUDE,
+      longitude: INITIAL_LONGITUDE,
+      radius: INITIAL_RADIUS,
+      insideTerritorialLimit: DEFAULT_INSIDE_TERRITORIAL_LIMIT
     }
   }
 }
