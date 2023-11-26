@@ -58,7 +58,7 @@ class WindowFunctions {
   }
 
   static showFaultsNumberQuery(layerName, layers, lat, lng, r) {
-    const titleFormat = LangageFunctions.getText('QUERY_POPULATION_NUMBER_IN_RADIUS_TITLE');
+    const titleFormat = LangageFunctions.getText('QUERY_FAULT_NUMBER_IN_RADIUS_TITLE');
     const textFormat = LangageFunctions.getText('QUERY_OBJECT_NUMBER_IN_RADIUS_TEXT');
     const title = MiscFunctions.format(titleFormat, layerName);
     const text = MiscFunctions.format(textFormat, layers.length, lat, lng, r);
@@ -68,7 +68,7 @@ class WindowFunctions {
   }
 
   static showPopulationsNumberQuery(layerName, layers, lat, lng, r) {
-    const titleFormat = LangageFunctions.getText('QUERY_FAULT_NUMBER_IN_RADIUS_TITLE');
+    const titleFormat = LangageFunctions.getText('QUERY_POPULATION_NUMBER_IN_RADIUS_TITLE');
     const textFormat = LangageFunctions.getText('QUERY_OBJECT_NUMBER_IN_RADIUS_TEXT');
     const title = MiscFunctions.format(titleFormat, layerName);
     const text = MiscFunctions.format(textFormat, layers.length, lat, lng, r);
