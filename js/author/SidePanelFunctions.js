@@ -257,7 +257,8 @@ class SidePanelFunctions {
   }
 
   static setInstructionsTabTexts() {
-
+    this.setText('instructionsTabTitle', 'SIDE_PANEL_INSTRUCTIONS_TITLE');
+    this.setText('instructionsTabDescription', 'SIDE_PANEL_INSTRUCTIONS_DESCRIPTION');
   }
 
   static setContactTabTexts() {
