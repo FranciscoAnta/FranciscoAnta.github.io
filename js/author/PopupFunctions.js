@@ -1,3 +1,38 @@
+/*
+Este archivo permite configurar los "pop-ups" desplegables que se muestran al hacer click izquierdo sobre un evento
+de capa, como sismos, fallas, poblaciones e intensidades máximas.
+
+El archivo contiene una clase con métodos estáticos y cuatro objetos globales que permiten configurar los atributos que 
+se muestran en cada capa y como deben mostrarse.
+
+Para mostrar el atributo de cada capa es necesario crear un objeto dentro del objeto correspondiente ("PopupQuakeAttributes"
+para eventos de sismos, por ejemplo) con el nombre exacto del atributo. Dentro de dicho objeto se pueden crear las
+siguientes propiedades:
+  - Una propiededad que permite mostrar el nombre del atributo según el idioma seleccionado. Para ello es necesario
+    que el nombre de la propiedad sea exactamente el mismo que la clave del idioma. Pueden crearse tantas propiedades
+    de idioma como sean necesarias.
+  - Una propiedad llamada "suffix" que permite añadir un sufijo de texto al final del valor del attribute. Se utiliza
+    principalmente para indicar la unidad (metros, por ejemplo) del valor del atributo.
+  - Una propiedad llamada "precision" con un número entero, que permite mostrar el número máximo de decimales
+    del valor numérico del atributo.
+
+This file allows the configuration of the "pop-ups" that are shown when left clicking on a layer event, such as
+quakes, faults, populations and maximum intensities.
+
+This file contains a class with static methods and four global objects that allows to configure the attributes of each
+layer that will be shown and how to display them.
+
+To show the attribute of each layer it is necessary to create an object inside the matching object ("PopupQuakeAttributes"
+for quake events, for example) with the exact name of the attribute. Inside that object the following properties can
+be created:
+  - A property that shows the name of the attribute depending on the selected langage. To do so, it is mandatory for
+    the name of the property to be exactly the same as the langage key. You can create as many properties as necessary.
+  - A property called "suffix" to add a text suffix at the end of the attribute value. It used mainly to indicate
+    the attribute value unit (like meters).
+  - A property named "precision" with an integer that shows the maximum number of decimals of the attribute
+    numeric value.
+*/
+
 PopupQuakeAttributes = {
   localizacion: {
     spanish: "Localización",

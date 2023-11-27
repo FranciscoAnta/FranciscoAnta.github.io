@@ -1,11 +1,19 @@
 /*
-Esta clase únicamente contiene las "constantes" del visor, es decir, la configuración inicial y básica del sistema.
-No son constantes realmente, ya que por motivos de testeo pueden modificarse mientras el programa está funcionando,
-aunque es preferible evitarlo.
+Este archivo contiene las constantes del visor, que son objetos globales. Permiten configurar
+diversos aspectos del visor, como los valores iniciales o almacenar valores mínimos y máximos
+que dado que son llamados habitualmente es preferible obtenerlos al cargar el visor, por
+temas de rendimiento. 
 
-This class contains the visor "constants", the intial and basic system setup.
-These are not actual constants, since, for testing reasons, can be modified while the program is working, although
-it is preferable not to do so.
+Es muy aconsejable que este archivo sea cargado después que el resto archivos, pues
+contiene llamadas a funciones de otros archivos.
+
+This file contains the visor constants, that are global objects. They allow to configure
+various aspects of the visor, such as initial values or to store minimum and maximum values
+since they are called often an it is preferable to obtain them when loading the visor, for
+performance issues.
+
+It is very advisable for this file to be loaded after the rest of files, since it
+contains calls to functions from other files.
 */
 
 // Otros / Others

@@ -1,21 +1,20 @@
+/*
+Este archivo contiene una clase que controla el funcionamiento de los dos tipos de ventanas usadas en el visor.
+Las ventanas de tipo "QueryWindow" son modales y son utilizadas para introducir valores en consultas y mostrar
+resultados de estas.
+
+Las ventanas de tipo "AlertWindow" no son modales y son utilizadas para alertar cuando se ha realizado una
+acción, como filtrar o exportar una capa. Estas últimas contienen unas propiedades estáticas que permiten
+configurar su funcionamiento.
+
+This file contains a class that controls the functionality of the two types of windows used by the visor.
+The "QueryWindow" window types are modals and used to input values in queries and display their results.
+
+The "AlertWindow" window types are not modal and are used to alert when an action has been done, such as
+filtering or exporting a layer. These last ones contains some static properties to configure their behaviour.
+*/
+
 class WindowFunctions {
-
-  static getFilterCircleWindow(map, lat, lng, r) {
-    const content = "<p>Latitud:  <input type='number' size='5'> Longitud: <input type='number' size='5'</p>"
-    + "<p>Radio:  <input type='number' size='8'><button>Aceptar</button></p>"
-    const options = {
-      title: "Círculo de filtrado",
-      content: content,
-      modal: false,
-      closeButton: false
-    }
-    let win = L.control.window(map, options);
-    let container = win._container;
-    L.DomEvent.disableClickPropagation(container);
-    return win;
-  }
-
-
   // Ventana de consulta / Query Window
 
   static getQueryWindow(map, title, content) {

@@ -1,4 +1,23 @@
-AvailableLangages = ['spanish', 'english'];
+/*
+Este archivo controla las funciones principales de idioma del visor, lo que permite crear textos específicos para
+cada idioma. Para crear un idioma hay que crear un nuevo objeto estático dentro de la clase "LangangeFunctions"
+con la clave del idioma, escribir esa clave dentro del objeto global de tipo array "availableLangages", y 
+sustituir cada una de sus propiedades por el texto que se quiere mostrar en dicho idioma.
+Es recomendable copiar y pegar alguno de los dos idiomas definidos por defecto para asegurarse de que se traducen
+todos los textos del visor.
+
+* Nota: para traducir los textos de los pop-ups de eventos consultar el archivo "PopupFunctions.js".
+
+This file controls the visor main langange function, which lets the creation os specific texts for each langage.
+To create a langage a new static object must be created inside the "LangageFunctions" class with the langage key,
+type that key inside the "availableLangages" global array type object, and replace every of its properties with
+the text desired to show in that langage. It is recomended to copy and paste any of the two default langages
+to be sure that all texts are translated.
+
+* Note: to translate event pop-ups consult the "PopupFunctions.js" file.
+*/
+
+availableLangages = ['spanish', 'english'];
 
 class LangageFunctions {
   static getLangage() {

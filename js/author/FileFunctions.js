@@ -1,3 +1,11 @@
+/*
+Este archivo contiene únicamente una clase con métodos estáticos para la gestión de archivos,
+importanción, exportación e impresión.
+
+This file contains only a class with static methods for file managament, importation, exportation
+and print.
+*/
+
 class FileFunctions {
   // Impresión / Print
 
