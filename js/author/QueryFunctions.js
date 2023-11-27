@@ -1,3 +1,9 @@
+/*
+Este archivo contiene únicamente una clase con métodos estáticos para realizar las funciones de consulta.
+
+This file contains only a class with static methods to make query functions.
+*/
+
 class QueryFunctions {
 
   // Consultas de objetos más cercanos / Closest objects functions

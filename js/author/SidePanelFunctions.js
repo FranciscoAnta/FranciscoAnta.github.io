@@ -1,3 +1,10 @@
+/*
+Este archivo contiene una clase con métodos estáticos que controla el funcionamiento de todos los elementos
+del panel lateral.
+
+This file contains a class with static methods that controls the working of all elements of the side panel.
+*/
+
 class SidePanelFunctions {
   // Funciones de inicialización / Initialization functions
 
@@ -309,7 +316,7 @@ class SidePanelFunctions {
   }
 
   static initializeOptionsTabInputs() {
-    this.initializeSelect('optionsTabLangageInput', this.getLangageSelectOptions, AvailableLangages[0], this.onLangageSelectChange)
+    this.initializeSelect('optionsTabLangageInput', this.getLangageSelectOptions, availableLangages[0], this.onLangageSelectChange)
     this.initializeOptionsControlsInputs();
     this.initializeOptionsStylesInputs();
   }
@@ -408,8 +415,8 @@ class SidePanelFunctions {
   static getLangageSelectOptions() {
     let i, langage, option;
     let options = [];
-    for (i = 0; i < AvailableLangages.length; i++) {
-      langage = AvailableLangages[i];
+    for (i = 0; i < availableLangages.length; i++) {
+      langage = availableLangages[i];
       option = document.createElement('option');
       option.label = LangageFunctions.getText('NAME', langage);
       option.value = langage;

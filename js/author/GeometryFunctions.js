@@ -1,3 +1,11 @@
+/*
+Este archivo únicamente contiene una clase con métodos estáticos para cálculos geométricos, como obtención de distancias,
+objetos próximos o comprobar si un objeto está dentro de una capa.
+
+This file only contains a class with static methods for geometric calculations, like getting distances, close objects or
+to check if an object is inside a layer.
+*/
+
 class GeometryFunctions {
   // Distancias a punto (en metros)
   // Distances to point (in meters)
