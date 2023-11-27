@@ -1,3 +1,21 @@
+/*
+Este archivo contiene una clase con métodos estáticos para la gestión de estilos de capas 
+y un objeto global cuyas propiedades contienen el estilo o simbología de cada una de las capas.
+
+Estos valores pueden configurarse para modificar los estilos por defecto, aunque es recomendable
+no modificarlos una vez iniciado el visor salvo que se comprenda como funciona el motor de Leaflet,
+además hay que tener en cuenta que estos valores son modificados al cambiar el estilo de las capas
+en la pestaña de opciones del panel lateral.
+
+This file contains a class with static methods for the management of layer styles and a global
+object whose properties contains the style or symbology of each of the layers.
+
+These values can be configured to modify the default styles, although this is not recomended
+one the visor is booted, unless one understands how the Leaflet engine works, besides, it must
+be taken into account that this values are modified when changing the layer styles with the
+side panel options tab.
+*/
+
 LayerStyles = {
   // Comunidad Autónoma / Region
   regionBorderColor: '#000000',
@@ -26,7 +44,6 @@ LayerStyles = {
   populationFillColor: '#ffffff',
   populationFillOpacity: 1,
   populationWeight: 1.5,
-
 
   // Intensidad / Intensity
   intensityBorderColor: '#808080',

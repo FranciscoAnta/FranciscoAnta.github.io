@@ -1,3 +1,11 @@
+/*
+Este archivo contiene únicamente una clase con métodos estáticos para diversas funciones misceláneas
+que no tienen cabida en otras clases.
+
+This file contains only a class with static methods for various miscelaneous functions that
+belong to no other class.
+*/
+
 class MiscFunctions {
   static clamp(value, min, max) {
     return Math.max(min, Math.min(value, max));

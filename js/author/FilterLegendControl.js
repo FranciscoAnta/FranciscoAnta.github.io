@@ -1,3 +1,10 @@
+/*
+Este archivo contiene la función constructora de "leyendas de filtros", que extiende la clase "Control"
+de Leaflet.
+
+This file contains the factory function for "filter legends", which extends Leaflet's "Control" class.
+*/
+
 L.Control.FilterLegend = L.Control.extend({
   container: null,
   minimized: false,

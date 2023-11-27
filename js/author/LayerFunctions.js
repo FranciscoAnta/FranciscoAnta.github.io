@@ -1,3 +1,17 @@
+/*
+Este archivo contiene únicamente una clase con métodos estáticos para la obtención de objetos de capas,
+adición, eliminación, encendido, apagado y marcado. Es importante destacar que aunque yo utilizo el
+término "capa", la mayoría de objetos, a excepción del círculo de filtrado (que son dos capas), que son
+capas geoJSON, son realmente grupos de capas puesto que Leaflet considera que una capa es el elemento 
+mínimo y necesario que se dibuja.
+
+This file contains only a class with static methods for the obtention of layer objects, addition,
+removal, show, hide and mark functions. It is important to note that while I use the term "layer",
+most objects, with the exception of the filter circle (which are actually two layers), are geoJSON
+layers, which are actually layer groups, since Leaflet considers a layer is the minimum and necessary
+element that is drawn.
+*/
+
 class LayerFunctions {
 
   // Funciones de capa / Layer functions

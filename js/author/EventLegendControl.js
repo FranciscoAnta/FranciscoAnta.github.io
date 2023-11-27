@@ -1,3 +1,10 @@
+/*
+Este archivo contiene la función constructora de "leyendas de evento", que extiende la clase "Control"
+de Leaflet.
+
+This file contains the factory function for "event legends", which extends Leaflet's "Control" class.
+*/
+
 L.Control.EventLegend = L.Control.extend({
   container: null,
   minimized: false,

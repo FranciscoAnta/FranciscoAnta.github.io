@@ -1,3 +1,10 @@
+/*
+Este archivo contiene la función de construcción del "visor de coordenadas", que extiende la clase
+"Control" de Leaflet.
+
+This file contains the factory function for the "coordinates visor", which extends Leaflet's "Control" class.
+*/
+
 L.Control.CoordinatesVisor = L.Control.extend({
   container: null,
   visible: true,

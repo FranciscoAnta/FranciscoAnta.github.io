@@ -1,7 +1,12 @@
 /*
-Esta clase contiene las funciones principales del visor
+Este archivo contiene un objeto global que es una enumeración con los diferentes "modos" del visor,
+utilizados principalmente para dibujar y funciones de consultas y una clase con las funciones
+principales, utilizadas para principalmente para la configuración inicial del visor y la
+inicialización de capas y controles, así como otros métodos generales.
 
-This class contains the visor main functions.
+This file contains a global object which is an enumeration with the diferente visor "modes",
+used mainly to draw and query functions and a class with the main functions, used mostly for
+the initial setup and layer and control initialization as well as general methods.
 */
 
 VisorMode = {
@@ -24,7 +29,6 @@ class GeneralFunctions {
     this.initializeLayers();
     this.initializeMapEvents();
     this.initializeSecondControls();
-    this.initializeFilterCircleWindow();
   }
 
   static initializePanes() {
@@ -175,10 +179,6 @@ class GeneralFunctions {
     map.on('overlayremove', this.onMapOverlayRemove);
   }
 
-  static initializeFilterCircleWindow() {
-    filterCircleWindow = WindowFunctions.getFilterCircleWindow(map);
-  }
-
   // Eventos de mapa / Map events
 
   static onMapMouseMove(ev) {
@@ -250,11 +250,11 @@ class GeneralFunctions {
   // Funciones de modo visor / Visor mode functions
 
   static getMode() {
-    return visorMode;
+    return VisorMode;
   }
 
   static setMode(mode) {
-    visorMode = mode;
+    VisorMode = mode;
   }
 
   // Funciones de objeto de selección / Selection object functions
