@@ -105,7 +105,7 @@ class StyleFunctions {
     const magnitudeAttribute = AttributesConfig.QUAKE_MAGNITUDE;
     const value = Math.max(1, feature.properties[magnitudeAttribute]);
     return {
-      radius: 2 * Math.pow(value, 1.8),
+      radius: 2 * Math.pow(value, MAGNITUDE_EXPONENT),
       color: LayerStyles.quakeBorderColor,
       fillColor: LayerStyles.quakeFillColor,
       weight: LayerStyles.quakeWeight,

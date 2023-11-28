@@ -172,7 +172,7 @@ L.Control.EventLegend = L.Control.extend({
   },
 
   getQuakeSizeFormula: function(magnitude) {
-    return 4 * Math.pow(magnitude, 1.8);
+    return 4 * Math.pow(magnitude, MAGNITUDE_EXPONENT);
   },
 
   getQuakeText: function(mag, min, max) {
