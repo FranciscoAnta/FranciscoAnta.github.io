@@ -150,7 +150,7 @@ class QueryFunctions {
 
   static getBiggestIntensityInRadius(layers, attribute, xc, yc, r) {
     let i, layer, value, feature;
-    let maxValue = 0;
+    let maxValue = -1;
     let targetLayer = null;
     for (i = 0; i < layers.length; i++) {
       layer = layers[i];
