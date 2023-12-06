@@ -250,11 +250,11 @@ class GeneralFunctions {
   // Funciones de modo visor / Visor mode functions
 
   static getMode() {
-    return VisorMode;
+    return visorMode;
   }
 
   static setMode(mode) {
-    VisorMode = mode;
+    visorMode = mode;
   }
 
   // Funciones de objeto de selección / Selection object functions

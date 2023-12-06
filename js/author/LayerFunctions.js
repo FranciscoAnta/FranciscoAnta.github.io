@@ -209,7 +209,8 @@ class LayerFunctions {
     const options = {
       interactive: false,
       pane: PaneSymbol.REGIONS,
-      style: StyleFunctions.getRegionsStyle
+      style: StyleFunctions.getRegionsStyle,
+      attribution: "<a href='https://www.ign.es/'>IGN"
     }
     return L.geoJSON(regionsData, options);
   }
@@ -218,7 +219,8 @@ class LayerFunctions {
     const options = {
       interactive: false,
       pane: PaneSymbol.PROVINCES,
-      style: StyleFunctions.getProvincesStyle
+      style: StyleFunctions.getProvincesStyle,
+      attribution: "<a href='https://www.ign.es/'>IGN"
     }
     return L.geoJSON(provincesData, options);
   }
@@ -227,7 +229,8 @@ class LayerFunctions {
     const options = {
       interactive: false,
       pane: PaneSymbol.TERRITORIAL_LIMIT,
-      style: StyleFunctions.getTerritorialLimitStyle
+      style: StyleFunctions.getTerritorialLimitStyle,
+      attribution: "<a href='https://www.ign.es/'>IGN"
     }
     return L.geoJSON(territorialLimitData, options);
   }
@@ -241,6 +244,7 @@ class LayerFunctions {
       interactive: true,
       pane: pane,
       style: StyleFunctions.getQuakesStyle,
+      attribution: "<a href='https://www.ign.es/'>IGN",
       onEachFeature: this.getQuakesOnEachFeatureFunction,
       pointToLayer: function(feature, latlng) {
         return pointToLayerFunction(feature, latlng, pane);
@@ -260,6 +264,7 @@ class LayerFunctions {
       interactive: true,
       pane: pane,
       style: StyleFunctions.getFaultsStyle,
+      attribution: "<a href='http://info.igme.es/qafi/'>QAFI",
       onEachFeature: this.getFaultsOnEachFeatureFunction,
       filter: function(feature) {
         return filterFunction(feature, filters);
@@ -276,6 +281,7 @@ class LayerFunctions {
     let options = {
       interactive: true,
       pane: pane,
+      attribution: "<a href='https://www.ign.es/'>IGN",
       onEachFeature: this.getPopulationsOnEachFeatureFunction,
       pointToLayer: function(feature, latlng) {
         return pointToLayerFunction(feature, latlng, pane);
