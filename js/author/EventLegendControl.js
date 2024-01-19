@@ -97,6 +97,36 @@ L.Control.EventLegend = L.Control.extend({
   },
 
   getQuakesContains: function() {
+    return this.getQuakeDepthContains() + this.getQuakeMagnitudeContains();
+  },
+
+  getQuakeDepthContains() {
+    const title = LangageFunctions.getText('EVENT_LEGEND_CONTROL_DEPTH_TITLE');
+    const maxMag = Math.ceil(QUAKES_MAX_MAGNITUDE);
+    const maxSize = Math.max(150, this.getQuakeSizeFormula(maxMag));
+    const minDepth = String(MiscFunctions.getFilteredQuakesMinDepth());
+    const maxDepth = String(MiscFunctions.getFilteredQuakesMaxDepth());
+    const gradient = this.getDepthGradient();
+    const b = 4;
+    const ts = 8;
+    const w = maxSize + b * 2 + 30;
+    const yt = 16;
+    const h = 20;
+    const tw1 = minDepth.length * ts;
+    const tw2 = maxDepth.length * ts;
+    let contains = "<p>";
+    contains += "<div><b><em>" + title + "</em></b></div>";
+    contains += "<div><svg width='" + w + "' height='" + h + "'>";
+    contains += gradient;
+    contains += "<text x='0' y='" + yt + "'>" + minDepth + "</text>";
+    contains += "<rect x='" + (tw1 + b) + "' y='2' width='" + (w - tw1 - tw2 - b * 2) + "' height='" + 20 + "' fill='url(#depthGradient)'/>";
+    contains += "<text x='" + (w - tw2) + "' y='" + yt + "' >" + maxDepth + "</text>";
+    contains += "</svg></div>"
+    contains += "</p>";
+    return contains;
+  },
+
+  getQuakeMagnitudeContains() {
     let i, size, y, r, text, yl;
     const min = Math.max(1, Math.floor(QUAKES_MIN_MAGNITUDE));
     const max = Math.ceil(QUAKES_MAX_MAGNITUDE);
@@ -105,7 +135,8 @@ L.Control.EventLegend = L.Control.extend({
     const bc = StyleFunctions.getValue('quakeBorderColor');
     const fc = StyleFunctions.getValue('quakeFillColor');
     const sw = StyleFunctions.getValue('quakeWeight');
-    const fo = StyleFunctions.getValue('quakeFillOpacity');
+    // const fo = StyleFunctions.getValue('quakeFillOpacity');
+    const fo = 0;
     const b = 4;
     const ts = 60;
     const w = maxSize + b + ts;
@@ -144,6 +175,94 @@ L.Control.EventLegend = L.Control.extend({
   },
 
   getPopulationsContains: function() {
+    if (USE_OLD_POPULATION_SYMBOLOGY) {
+      return this.getPopulationContainsOld();
+    } else {
+      return this.getPopulationContainsNew();
+    }
+  },
+
+  getPopulationContainsNew: function() {
+    const title = LangageFunctions.getText('EVENT_LEGEND_CONTROL_POPULATION_TITLE');
+    let contains = "<p><div><b><em>" + title + "</em></b></div>";
+    contains += this.getPopulationGradientContents();
+    contains += this.getPopulationRadiusContents();
+    contains += "</p>";
+    return contains;
+  },
+
+  getPopulationGradientContents: function() {
+    const maxSize = Math.max(150, this.getPopulationSizeFormula(POPULATIONS_MAX_NUMBER));
+    const minValue = String(MiscFunctions.getFilteredPopulationsMinValue());
+    const maxValue = String(MiscFunctions.getFilteredPopulationsMaxValue());
+    const gradient = this.getPopulationGradient();
+    const b = 4;
+    const ts = 8;
+    const yt = 16;
+    const h = 20;
+    const tw1 = minValue.length * ts;
+    const tw2 = maxValue.length * ts;
+    const w = maxSize + 140;
+    let contains = "<div><svg width='" + w + "' height='" + h + "'>";
+    contains += gradient;
+    contains += "<text x='0' y='" + yt + "'>" + minValue + "</text>";
+    contains += "<rect x='" + (tw1 + b) + "' y='2' width='" + (w - tw1 - tw2 - b * 2) + "' height='" + 20 + "'fill='url(#populationGradient)'/>";
+    contains += "<text x='" + (w - tw2) + "' y='" + yt + "' >" + maxValue + "</text>";
+    contains += "</svg></div>"
+    return contains;
+  },
+
+  getPopulationRadiusContents: function() {
+    let i, value, size, y, r, text, yl;
+    const max = POPULATIONS_MAX_NUMBER;
+    const maxExponent = Math.max(0, Math.floor(Math.log10(POPULATIONS_MAX_NUMBER)));
+    const minExponent = 1;
+    const maxSize = this.getPopulationSizeFormula(max);
+    const bc = StyleFunctions.getValue('populationBorderColor');
+    const fc = StyleFunctions.getValue('populationFillColor');
+    const sw = StyleFunctions.getValue('populationWeight');
+    const fo = 0;
+    const b = 4;
+    const ts = 140;
+    const w = maxSize + b + ts;
+    const h = maxSize + b * 3;
+    const x = (maxSize + b) / 2;
+    const mr = maxSize / 2;
+    const xl = x + mr + b;
+    const xt = xl + b;
+    let contains = "<p>";
+    contains += "<div><svg width='" + w + "' height='" + h + "'>";
+
+    text = this.getPopulationTextNew(max, 0, max);
+    r = maxSize / 2;
+    y = h / 2 + mr - r;
+    yl = y - r;
+    contains += "<circle cx='" + x + "' cy='" + y + "'r='" + r + "' stroke='" + bc + "' stroke-width='" + sw + "' fill='" + fc + "' fill-opacity='" + fo + "'/>";
+    contains += "<line x1='" + x + "' x2='" + xl + "' y1='" + yl + "' y2='" + yl + "' stroke='black' stroke-width='1'/>";
+    contains += "<text x='" + xt + "' y='" + (yl + 4) +"'>" + text + "</text>";
+
+    for (i = maxExponent; i >= minExponent; i--) {
+      value = Math.pow(10, i);
+      text = this.getPopulationTextNew(value, Math.pow(10, minExponent), Math.pow(10, (maxExponent + 1)));
+      size = this.getPopulationSizeFormula(value);
+      r = size / 2;
+      y = h / 2 + mr - r;
+      yl = y - r;
+
+      contains += "<circle cx='" + x + "' cy='" + y + "'r='" + r + "' stroke='" + bc + "' stroke-width='" + sw + "' fill='" + fc + "' fill-opacity='" + fo + "'/>";
+      contains += "<line x1='" + x + "' x2='" + xl + "' y1='" + yl + "' y2='" + yl + "' stroke='black' stroke-width='1'/>";
+      if (i === minExponent) yl += 5;
+      contains += "<text x='" + xt + "' y='" + (yl + 4) +"'>" + text + "</text>";
+    }
+
+    contains += "</svg></div>"
+    contains += "</div>";
+    contains += "</p>";
+
+    return contains;
+  },
+
+  getPopulationContainsOld: function() {
     const title = LangageFunctions.getText('EVENT_LEGEND_CONTROL_POPULATION_TITLE');
     const bc = StyleFunctions.getValue('populationBorderColor');
     const fc = StyleFunctions.getValue('populationFillColor');
@@ -157,22 +276,26 @@ L.Control.EventLegend = L.Control.extend({
     let contains = "<p>";
     contains += "<div><b><em>" + title + "</em></b></div>";
     // Primera línea / First line
-    contains += "<div><svg width='" + w + "' height='" + h + "'><circle cx='" + w / 2 + "'cy='" + h / 2 + "' r='" + StyleFunctions.getPopulationRadius('circle') + "' stroke='" + bc + "' stroke-width='" + sw + "' fill='" + fc + "' fill-opacity='" + fo + "'/></svg>"
-    contains += "<svg width='" + tw + "' height='" + h + "'><text x='0' y='" + ty + "'>" + this.getPopulationText(null, 1000) + "</text></svg>";
+    contains += "<div><svg width='" + w + "' height='" + h + "'><circle cx='" + w / 2 + "'cy='" + h / 2 + "' r='" + StyleFunctions.getPopulationOldRadius('circle') + "' stroke='" + bc + "' stroke-width='" + sw + "' fill='" + fc + "' fill-opacity='" + fo + "'/></svg>"
+    contains += "<svg width='" + tw + "' height='" + h + "'><text x='0' y='" + ty + "'>" + this.getPopulationTextOld(null, 1000) + "</text></svg>";
     contains += "<svg width='" + w + "' height='" + h + "'><polygon points='8," + (h - 8) + " " + (w - 8) + "," + (h - 8) + " " + (w / 2) + ",8' stroke='" + bc + "' stroke-width='" + sw + "' fill='" + fc + "' fill-opacity='" + fo + "'/></svg>"
-    contains += "<svg width='" + tw + "' height='" + h + "'><text x='0' y='" + ty + "'>" + this.getPopulationText(1000, 10000) + "</text></svg><div>";
+    contains += "<svg width='" + tw + "' height='" + h + "'><text x='0' y='" + ty + "'>" + this.getPopulationTextOld(1000, 10000) + "</text></svg><div>";
 
     // Segunda línea / Second line
     contains += "<div><svg width='" + w + "' height='" + h + "'><rect x='13' y='-9' width='" + (32 - 15) + "' height='" + (32 - 15) + "' transform='rotate(45)' stroke='" + bc + "' stroke-width='" + sw + "' fill='" + fc + "' fill-opacity='" + fo + "'/></svg>"
-    contains += "<svg width='" + tw + "' height='" + h + "'><text x='0' y='" + ty + "'>" + this.getPopulationText(10000, 100000) + "</text></svg>";
+    contains += "<svg width='" + tw + "' height='" + h + "'><text x='0' y='" + ty + "'>" + this.getPopulationTextOld(10000, 100000) + "</text></svg>";
     contains += "<svg width='32' height='32' viewBox='8 8 16 16' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'  version='1.2' baseProfile='tiny'> <title>Qt SVG Document</title> <desc>Generated with Qt</desc> <defs></defs><g fill='none' stroke='black' stroke-width='1' fill-rule='evenodd' stroke-linecap='square' stroke-linejoin='bevel' ><g fill='" + fc + "' fill-opacity='" + fo + "' stroke='" + bc + "' stroke-opacity='1' stroke-width='1' stroke-linecap='square' stroke-linejoin='bevel' transform='matrix(1,0,0,1,0,0)' font-family='MS Shell Dlg 2' font-size='8.25' font-weight='400' font-style='normal'><path vector-effect='none' fill-rule='evenodd' d='M14.409,13.8101 L9.26023,13.8101 L13.4256,16.8365 L11.8346,21.7332 L16,18.7068 L20.1654,21.7332 L18.5744,16.8365 L22.7398,13.8101 L17.591,13.8101 L16,8.91339 L14.409,13.8101'/></g></g></svg>"
-    contains += "<svg width='" + tw + "' height='" + h + "'><text x='0' y='" + ty + "'>" + this.getPopulationText(100000) + "</text></svg><div>";
+    contains += "<svg width='" + tw + "' height='" + h + "'><text x='0' y='" + ty + "'>" + this.getPopulationTextOld(100000) + "</text></svg><div>";
     contains += "</p>";
     return contains;
   },
 
   getQuakeSizeFormula: function(magnitude) {
-    return 4 * Math.pow(magnitude, MAGNITUDE_EXPONENT);
+    return 4 * (Math.pow(magnitude, MAGNITUDE_EXPONENT) + 4);
+  },
+
+  getPopulationSizeFormula: function(value) {
+    return  2 * (Math.pow(Math.log10(value), POPULATION_EXPONENT) + 7);
   },
 
   getQuakeText: function(mag, min, max) {
@@ -188,7 +311,20 @@ L.Control.EventLegend = L.Control.extend({
     return text;
   },
 
-  getPopulationText: function(min, max) {
+  getPopulationTextNew: function(value, min, max) {
+    let text = "";
+    const letter = LangageFunctions.getText('EVENT_LEGEND_CONTROL_POPULATION_NUMBER_LETTER');
+    if (value === min) {
+      text = min + " ≤ " + letter;
+    } else if (value === max) {
+      text = value + " ≤ " + letter;
+    } else {
+      text = (value / 10) + " ≤ " + letter + " < " + String(value);
+    }
+    return text;
+  },
+
+  getPopulationTextOld: function(min, max) {
     let text = "";
     const letter = LangageFunctions.getText('EVENT_LEGEND_CONTROL_POPULATION_NUMBER_LETTER');
     if (min && max) {
@@ -199,6 +335,32 @@ L.Control.EventLegend = L.Control.extend({
       text = letter + " ≤ " + max;
     }
     return text;
+  },
+
+  getDepthGradient: function() {
+    return this.getGradient(StyleFunctions.getValue('quakeMinDepthColor'), 
+      StyleFunctions.getValue('quakeMaxDepthColor'), 'depthGradient');
+  },
+
+  getPopulationGradient: function() {
+    return this.getGradient(StyleFunctions.getValue('populationMinNumberColor'),
+      StyleFunctions.getValue('populationMaxNumberColor'), 'populationGradient');
+  },
+
+  getGradient: function(minColor, maxColor, gradientId) {
+    const color20 = StyleFunctions.getGradientColor(0.20, minColor, maxColor);
+    const color40 = StyleFunctions.getGradientColor(0.40, minColor, maxColor);
+    const color60 = StyleFunctions.getGradientColor(0.60, minColor, maxColor);
+    const color80 = StyleFunctions.getGradientColor(0.80, minColor, maxColor);
+    let contains = "<defs><linearGradient id='" + gradientId + "'>";
+    contains += "<stop offset='0%' stop-color='" + minColor + "'/>";
+    contains += "<stop offset='20%' stop-color='" + color20 + "'/>";
+    contains += "<stop offset='40%' stop-color='" + color40 + "'/>";
+    contains += "<stop offset='60%' stop-color='" + color60 + "'/>";
+    contains += "<stop offset='80%' stop-color='" + color80 + "'/>";
+    contains += "<stop offset='100%' stop-color='" + maxColor + "'/>";
+    contains += "</linearGradient></defs>";
+    return contains;
   },
 
   getContainer: function() {

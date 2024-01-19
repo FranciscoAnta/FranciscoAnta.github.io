@@ -167,9 +167,11 @@ class SidePanelFunctions {
     this.setText('quakeFiltersTabTitle', 'SIDE_PANEL_QUAKE_FILTERS_TAB_TITLE');
     this.setText('quakeFiltersTabDescription', 'SIDE_PANEL_QUAKE_FILTERS_TAB_DESCRIPTION');
     this.setText('quakeMagnitudeFiltersTitle', 'SIDE_PANEL_QUAKE_MAGNITUDE_FILTERS_TITLE');
+    this.setText('quakeMagnitudeFiltersDescription', 'SIDE_PANEL_QUAKE_MAGNITUDE_FILTERS_DESCRIPTION');
     this.setText('quakeMinMagnitudeFilterText', 'SIDE_PANEL_QUAKE_MIN_MAGNITUDE_FILTER_TEXT');
     this.setText('quakeMaxMagnitudeFilterText', 'SIDE_PANEL_QUAKE_MAX_MAGNITUDE_FILTER_TEXT');
     this.setText('quakeIntensityFiltersTitle', 'SIDE_PANEL_QUAKE_INTENSITY_FILTERS_TITLE');
+    this.setText('quakeIntensityFiltersDescription', 'SIDE_PANEL_QUAKE_INTENSITY_FILTERS_DESCRIPTION');
     this.setText('quakeMinIntensityFilterText', 'SIDE_PANEL_QUAKE_MIN_INTENSITY_FILTER_TEXT');
     this.setText('quakeMaxIntensityFilterText', 'SIDE_PANEL_QUAKE_MAX_INTENSITY_FILTER_TEXT');
     this.setText('quakeDepthFiltersTitle', 'SIDE_PANEL_QUAKE_DEPTH_FILTERS_TITLE');
@@ -240,11 +242,15 @@ class SidePanelFunctions {
     this.setText('optionsTabQuakesStylesTitle', 'SIDE_PANEL_OPTIONS_QUAKES_STYLES_TITLE');
     this.setText('optionsTabQuakesBorderColorText', 'SIDE_PANEL_OPTIONS_QUAKES_BORDER_COLOR_TEXT');
     this.setText('optionsTabQuakesFillColorText', 'SIDE_PANEL_OPTIONS_QUAKES_FILL_COLOR_TEXT');
+    this.setText('optionsTabQuakesMinDepthColorText', 'SIDE_PANEL_OPTIONS_QUAKES_MIN_DEPTH_COLOR_TEXT');
+    this.setText('optionsTabQuakesMaxDepthColorText', 'SIDE_PANEL_OPTIONS_QUAKES_MAX_DEPTH_COLOR_TEXT');
     this.setText('optionsTabFaultsStylesTitle', 'SIDE_PANEL_OPTIONS_FAULTS_STYLES_TITLE');
     this.setText('optionsTabFaultsBorderColorText', 'SIDE_PANEL_OPTIONS_FAULTS_BORDER_COLOR_TEXT');
     this.setText('optionsTabPopulationsStylesTitle', 'SIDE_PANEL_OPTIONS_POPULATIONS_STYLES_TITLE');
     this.setText('optionsTabPopulationsBorderColorText', 'SIDE_PANEL_OPTIONS_POPULATIONS_BORDER_COLOR_TEXT');
     this.setText('optionsTabPopulationsFillColorText', 'SIDE_PANEL_OPTIONS_POPULATIONS_FILL_COLOR_TEXT');
+    this.setText('optionsTabPopulationsMinNumberColorText', 'SIDE_PANEL_OPTIONS_POPULATIONS_MIN_NUMBER_COLOR_TEXT');
+    this.setText('optionsTabPopulationsMaxNumberColorText', 'SIDE_PANEL_OPTIONS_POPULATIONS_MAX_NUMBER_COLOR_TEXT');
     this.setText('optionsTabIntensitiesStylesTitle', 'SIDE_PANEL_OPTIONS_INTENSITIES_STYLES_TITLE');
     this.setText('optionsTabIntensitiesBorderColorText', 'SIDE_PANEL_OPTIONS_INTENSITIES_BORDER_COLOR_TEXT');
     this.setText('optionsTabRegionsStylesTitle', 'SIDE_PANEL_OPTIONS_REGIONS_STYLES_TITLE');
@@ -358,9 +364,13 @@ class SidePanelFunctions {
   static initializeOptionsStylesInputs() {
     this.initializeColorInput('optionsTabQuakesBorderColorInput', StyleFunctions.getValue('quakeBorderColor'), this.onOptionsQuakesBorderColorChange);
     this.initializeColorInput('optionsTabQuakesFillColorInput', StyleFunctions.getValue('quakeFillColor'), this.onOptionsQuakesFillColorChange);
+    this.initializeColorInput('optionsTabQuakesMinDepthColorInput', StyleFunctions.getValue('quakeMinDepthColor'), this.onOptionsQuakesMinDepthColorChange);
+    this.initializeColorInput('optionsTabQuakesMaxDepthColorInput', StyleFunctions.getValue('quakeMaxDepthColor'), this.onOptionsQuakesMaxDepthColorChange);
     this.initializeColorInput('optionsTabFaultsBorderColorInput', StyleFunctions.getValue('faultColor'), this.onOptionsFaultsBorderColorChange);
     this.initializeColorInput('optionsTabPopulationsBorderColorInput', StyleFunctions.getValue('populationBorderColor'), this.onOptionsPopulationsBorderColorChange);
     this.initializeColorInput('optionsTabPopulationsFillColorInput', StyleFunctions.getValue('populationFillColor'), this.onOptionsPopulationsFillColorChange);
+    this.initializeColorInput('optionsTabPopulationsMinNumberColorInput', StyleFunctions.getValue('populationMinNumberColor'), this.onOptionsPopulationsMinNumberColorChange);
+    this.initializeColorInput('optionsTabPopulationsMaxNumberColorInput', StyleFunctions.getValue('populationMaxNumberColor'), this.onOptionsPopulationsMaxNumberColorChange);
     this.initializeColorInput('optionsTabIntensitiesBorderColorInput', StyleFunctions.getValue('intensityBorderColor'), this.onOptionsIntensitiesBorderColorChange);
     this.initializeColorInput('optionsTabRegionsBorderColorInput', StyleFunctions.getValue('regionBorderColor'), this.onOptionsRegionsBorderColorChange);
     this.initializeColorInput('optionsTabProvincesBorderColorInput', StyleFunctions.getValue('provinceBorderColor'), this.onOptionsProvincesBorderColorChange);
@@ -636,6 +646,14 @@ class SidePanelFunctions {
     return document.querySelector('#optionsTabQuakesFillColorInput').value;
   }
 
+  static getOptionsQuakesMinDepthColor() {
+    return document.querySelector('#optionsTabQuakesMinDepthColorInput').value;
+  }
+
+  static getOptionsQuakesMaxDepthColor() {
+    return document.querySelector('#optionsTabQuakesMaxDepthColorInput').value;
+  }
+
   static getOptionsFaultsBorderColor() {
     return document.querySelector('#optionsTabFaultsBorderColorInput').value;
   }
@@ -646,6 +664,14 @@ class SidePanelFunctions {
 
   static getOptionsPopulationsFillColor() {
     return document.querySelector('#optionsTabPopulationsFillColorInput').value;
+  }
+
+  static getOptionsPopulationsMinNumberColor() {
+    return document.querySelector('#optionsTabPopulationsMinNumberColorInput').value;
+  }
+
+  static getOptionsPopulationsMaxNumberColor() {
+    return document.querySelector('#optionsTabPopulationsMaxNumberColorInput').value;
   }
 
   static getOptionsIntensitiesBorderColor() {
@@ -1402,6 +1428,7 @@ class SidePanelFunctions {
     const style = {color: value};
     StyleFunctions.setValue('quakeBorderColor', value);
     quakesLayer.setStyle(style);
+    if (duplicatedQuakesLayer) duplicatedQuakesLayer.setStyle(style);
     if (eventLegendControl) eventLegendControl.update();
   }
 
@@ -1410,6 +1437,23 @@ class SidePanelFunctions {
     const style = {fillColor: value};
     StyleFunctions.setValue('quakeFillColor', value);
     quakesLayer.setStyle(style);
+    if (duplicatedQuakesLayer) duplicatedQuakesLayer.setStyle(style);
+    if (eventLegendControl) eventLegendControl.update();
+  }
+
+  static onOptionsQuakesMinDepthColorChange() {
+    const value = SidePanelFunctions.getOptionsQuakesMinDepthColor();
+    StyleFunctions.setValue('quakeMinDepthColor', value);
+    StyleFunctions.updateQuakesLayerFillColor(quakesLayer);
+    if (duplicatedQuakesLayer) StyleFunctions.updateQuakesLayerFillColor(duplicatedQuakesLayer);
+    if (eventLegendControl) eventLegendControl.update();
+  }
+
+  static onOptionsQuakesMaxDepthColorChange() {
+    const value = SidePanelFunctions.getOptionsQuakesMaxDepthColor();
+    StyleFunctions.setValue('quakeMaxDepthColor', value);
+    StyleFunctions.updateQuakesLayerFillColor(quakesLayer);
+    if (duplicatedQuakesLayer) StyleFunctions.updateQuakesLayerFillColor(duplicatedQuakesLayer);
     if (eventLegendControl) eventLegendControl.update();
   }
 
@@ -1418,6 +1462,7 @@ class SidePanelFunctions {
     const style = {color: value};
     StyleFunctions.setValue('faultColor', value);
     faultsLayer.setStyle(style);
+    if (duplicatedFaultsLayer) duplicatedFaultsLayer.setStyle(style);
     if (eventLegendControl) eventLegendControl.update();
   }
 
@@ -1426,6 +1471,7 @@ class SidePanelFunctions {
     const style = {color: value};
     StyleFunctions.setValue('populationBorderColor', value);
     populationsLayer.setStyle(style);
+    if (duplicatedPopulationsLayer) duplicatedPopulationsLayer.setStyle(style);
     if (eventLegendControl) eventLegendControl.update();
   }
 
@@ -1434,6 +1480,23 @@ class SidePanelFunctions {
     const style = {fillColor: value};
     StyleFunctions.setValue('populationFillColor', value);
     populationsLayer.setStyle(style);
+    if (duplicatedPopulationsLayer) duplicatedPopulationsLayer.setStyle(style);
+    if (eventLegendControl) eventLegendControl.update();
+  }
+
+  static onOptionsPopulationsMinNumberColorChange() {
+    const value = SidePanelFunctions.getOptionsPopulationsMinNumberColor();
+    StyleFunctions.setValue('populationMinNumberColor', value);
+    StyleFunctions.updatePopulationsLayerFillColor(populationsLayer);
+    if (duplicatedPopulationsLayer) StyleFunctions.updatePopulationsLayerFillColor(duplicatedPopulationsLayer);
+    if (eventLegendControl) eventLegendControl.update();
+  }
+
+  static onOptionsPopulationsMaxNumberColorChange() {
+    const value = SidePanelFunctions.getOptionsPopulationsMaxNumberColor();
+    StyleFunctions.setValue('populationMaxNumberColor', value);
+    StyleFunctions.updatePopulationsLayerFillColor(populationsLayer);
+    if (duplicatedPopulationsLayer) StyleFunctions.updatePopulationsLayerFillColor(duplicatedPopulationsLayer);
     if (eventLegendControl) eventLegendControl.update();
   }
 

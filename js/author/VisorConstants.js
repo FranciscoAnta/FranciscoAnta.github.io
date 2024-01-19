@@ -24,6 +24,8 @@ const MAX_FILE_NAME = 20;
 const MAX_BUFFER_WIDTH = 1000; // En km / In km
 const CONTEXT_MENU_WIDTH = 400;
 const MAGNITUDE_EXPONENT = 1.8;
+const POPULATION_EXPONENT = 2.2;
+const USE_OLD_POPULATION_SYMBOLOGY = false;
 
 // Valores máximos y mínimos / Maximum and minimum values
 

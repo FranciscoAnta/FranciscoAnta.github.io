@@ -93,9 +93,11 @@ class LangageFunctions {
     SIDE_PANEL_QUAKE_FILTERS_TAB_TITLE: "Filtrar capa de sismos",
     SIDE_PANEL_QUAKE_FILTERS_TAB_DESCRIPTION: "Filtra únicamente la capa de sismos según los parámetros especificados.",
     SIDE_PANEL_QUAKE_MAGNITUDE_FILTERS_TITLE: "Filtros de magnitud",
+    SIDE_PANEL_QUAKE_MAGNITUDE_FILTERS_DESCRIPTION: "<em>La magnitud es un parámetro instrumental que mide la cantidad de enenergía liberada por el terremoto.</em>",
     SIDE_PANEL_QUAKE_MIN_MAGNITUDE_FILTER_TEXT: "Magnitud mínima:  ",
     SIDE_PANEL_QUAKE_MAX_MAGNITUDE_FILTER_TEXT: "Magnitud máxima:  ",
     SIDE_PANEL_QUAKE_INTENSITY_FILTERS_TITLE: "Filtros de intensidad",
+    SIDE_PANEL_QUAKE_INTENSITY_FILTERS_DESCRIPTION: "<em>La intensidad es un parámetro que estima los efectos del terremoto en los alrededores.</em>",
     SIDE_PANEL_QUAKE_MIN_INTENSITY_FILTER_TEXT: "Intensidad mínima:  ",
     SIDE_PANEL_QUAKE_MAX_INTENSITY_FILTER_TEXT: "Intensidad máxima:  ",
     SIDE_PANEL_QUAKE_DEPTH_FILTERS_TITLE: "Filtros de profundidad",
@@ -174,11 +176,15 @@ class LangageFunctions {
     SIDE_PANEL_OPTIONS_QUAKES_STYLES_TITLE: "Estilos de sismos",
     SIDE_PANEL_OPTIONS_QUAKES_BORDER_COLOR_TEXT: "Color de borde de sismo",
     SIDE_PANEL_OPTIONS_QUAKES_FILL_COLOR_TEXT: "Color de relleno de sismo",
+    SIDE_PANEL_OPTIONS_QUAKES_MIN_DEPTH_COLOR_TEXT: "C. de profundidad mínima",
+    SIDE_PANEL_OPTIONS_QUAKES_MAX_DEPTH_COLOR_TEXT: "C. de profundidad máxima",
     SIDE_PANEL_OPTIONS_FAULTS_STYLES_TITLE: "Estilos de fallas",
     SIDE_PANEL_OPTIONS_FAULTS_BORDER_COLOR_TEXT: "Color de borde de falla",
     SIDE_PANEL_OPTIONS_POPULATIONS_STYLES_TITLE: "Estilos de poblaciones",
     SIDE_PANEL_OPTIONS_POPULATIONS_BORDER_COLOR_TEXT: "Color de borde de población",
     SIDE_PANEL_OPTIONS_POPULATIONS_FILL_COLOR_TEXT: "Color de relleno de población",
+    SIDE_PANEL_OPTIONS_POPULATIONS_MIN_NUMBER_COLOR_TEXT: 'C. de nº habitantes mínimo',
+    SIDE_PANEL_OPTIONS_POPULATIONS_MAX_NUMBER_COLOR_TEXT: 'C. de nº habitantes máximo',
     SIDE_PANEL_OPTIONS_INTENSITIES_STYLES_TITLE: "Estilos de intensidades",
     SIDE_PANEL_OPTIONS_INTENSITIES_BORDER_COLOR_TEXT: "Color de borde de intensidad",
     SIDE_PANEL_OPTIONS_REGIONS_STYLES_TITLE: "Estilos de comunidades autónomas",
@@ -284,7 +290,8 @@ class LangageFunctions {
     + "<h2>Escuela</h2>Escuela Superior de Ingenieros en Topografía, Geodesia y Cartografía. Universidad Politécnica de Madrid."
     + "<h2>Información de contacto</h2><h3>Autor</h3><b>Nombre:</b> Francisco Manuel Anta Sánchez.<br>"
     + "<b>Correo electrónico:</b> <a href='mailto:francisco.anta.sanchez@gmail.com'>francisco.anta.sanchez@gmail.com</a>"
-    + "<h3>Tutor</h3><b>Nombre:</b> Jorge Miguel Gaspar Escribano."
+    + "<h3>Tutor</h3><b>Nombre:</b> Jorge M. Gaspar Escribano.<br>"
+    + "<b>Correo electrónico:</b> <a href='mailto:jorge.gaspar@upm.es'>jorge.gaspar@upm.es</a>"
     + "<h2>Créditos de plugins de terceros</h2>"
     + "<h3>Leaflet</h3><b>Autor:</b> Volodymyr Agafonkin.<br><b>Dirección:</b> <a href='https://leafletjs.com/' target='_blank'>https://leafletjs.com/</a>"
     + "<h3>Leaflet.SidePanel</h3><b>Autor:</b> Maxwell Ilai.<br><b>Dirección</b> <a href='https://github.com/maxwell-ilai/Leaflet.SidePanel' target='_blank'>https://github.com/maxwell-ilai/Leaflet.SidePanel</a>"
@@ -322,6 +329,7 @@ class LangageFunctions {
     // Textos del menú contextual
     // General
     CONTEXT_MENU_CENTER_MAP_ITEM: "Centrar mapa",
+    CONTEXT_MENU_RESTORE_INITIAL_VIEW_ITEM: "Restaurar vista inicial",
     CONTEXT_MENU_SET_COORDINATES_ITEM: "Fijar coordenadas",
     CONTEXT_MENU_DRAW_FILTER_CIRCLE_ITEM: "Dibujar círculo de filtrado",
     CONTEXT_MENU_ZOOM_TO_CLOSEST_QUAKES_ITEM: "Zoom a sismo más cercano al lugar seleccionado",
@@ -390,8 +398,9 @@ class LangageFunctions {
     EVENT_LEGEND_CONTROL_FAULT_TEXT: "Falla",
     EVENT_LEGEND_CONTROL_POPULATION_TITLE: "Habitantes",
     EVENT_LEGEND_CONTROL_MAGNITUDE_TITLE: "Magnitud",
+    EVENT_LEGEND_CONTROL_DEPTH_TITLE: "Profundidad [km]",
     EVENT_LEGEND_CONTROL_MAGNITUDE_LETTER: "M",
-    EVENT_LEGEND_CONTROL_POPULATION_NUMBER_LETTER: "M",
+    EVENT_LEGEND_CONTROL_POPULATION_NUMBER_LETTER: "H",
 
     // Textos de archivo
     PRINTED_MAP_FILENAME: "Captura de pantalla",
@@ -430,12 +439,13 @@ class LangageFunctions {
 
     // Quakes filters
     SIDE_PANEL_QUAKE_FILTERS_TAB_TITLE: "Filter quakes layer",
-    SIDE_PANEL_QUAKE_FILTERS_TAB_DESCRIPTION: "Filtra únicamente la capa de sismos según los parámetros especificados.",
     SIDE_PANEL_QUAKE_FILTERS_TAB_DESCRIPTION: "Filters only quakes layers by the specified parameters.",
     SIDE_PANEL_QUAKE_MAGNITUDE_FILTERS_TITLE: "Magnitude filters",
+    SIDE_PANEL_QUAKE_MAGNITUDE_FILTERS_DESCRIPTION: "<em>Magnitude is an instrumental parameter that measures the amount of energy liberated by the earthquake.</em>",
     SIDE_PANEL_QUAKE_MIN_MAGNITUDE_FILTER_TEXT: "Minimum magnitude:  ",
     SIDE_PANEL_QUAKE_MAX_MAGNITUDE_FILTER_TEXT: "Maximum magnitude:  ",
     SIDE_PANEL_QUAKE_INTENSITY_FILTERS_TITLE: "Intensity filters",
+    SIDE_PANEL_QUAKE_INTENSITY_FILTERS_DESCRIPTION: "<em>Intensity is a parameter that estimates the effects of the eartquake in its surroundings.</em>",
     SIDE_PANEL_QUAKE_MIN_INTENSITY_FILTER_TEXT: "Minimum intensity:  ",
     SIDE_PANEL_QUAKE_MAX_INTENSITY_FILTER_TEXT: "Maximum intensity:  ",
     SIDE_PANEL_QUAKE_DEPTH_FILTERS_TITLE: "Depth filters",
@@ -515,11 +525,15 @@ class LangageFunctions {
     SIDE_PANEL_OPTIONS_QUAKES_STYLES_TITLE: "Quakes styles",
     SIDE_PANEL_OPTIONS_QUAKES_BORDER_COLOR_TEXT: "Quake border color",
     SIDE_PANEL_OPTIONS_QUAKES_FILL_COLOR_TEXT: "Quake fill color",
+    SIDE_PANEL_OPTIONS_QUAKES_MIN_DEPTH_COLOR_TEXT: "Minimum depth fill color",
+    SIDE_PANEL_OPTIONS_QUAKES_MAX_DEPTH_COLOR_TEXT: "Maximum depth fill color",
     SIDE_PANEL_OPTIONS_FAULTS_STYLES_TITLE: "Faults styles",
     SIDE_PANEL_OPTIONS_FAULTS_BORDER_COLOR_TEXT: "Fault border color",
     SIDE_PANEL_OPTIONS_POPULATIONS_STYLES_TITLE: "Populations styles",
     SIDE_PANEL_OPTIONS_POPULATIONS_BORDER_COLOR_TEXT: "Population border color",
     SIDE_PANEL_OPTIONS_POPULATIONS_FILL_COLOR_TEXT: "Population fill color",
+    SIDE_PANEL_OPTIONS_POPULATIONS_MIN_NUMBER_COLOR_TEXT: 'Min population number color',
+    SIDE_PANEL_OPTIONS_POPULATIONS_MAX_NUMBER_COLOR_TEXT: 'Max population number color',
     SIDE_PANEL_OPTIONS_INTENSITIES_STYLES_TITLE: "Intensities styles",
     SIDE_PANEL_OPTIONS_INTENSITIES_BORDER_COLOR_TEXT: "Intensity border color",
     SIDE_PANEL_OPTIONS_REGIONS_STYLES_TITLE: "Regions styles",
@@ -624,8 +638,9 @@ class LangageFunctions {
     + "<h2>Subject</h2>Master in \"Ingeniería Geodésica y Cartografía\" final project."
     + "<h2>School</h2>\"Escuela Superior de Ingenieros en Topografía, Geodesia y Cartografía\". \"Universidad Politécnica de Madrid\"."
     + "<h2>Conctact information</h2><h3>Author</h3><b>Name:</b> Francisco Manuel Anta Sánchez.<br>"
-    + "<b>E-mail:</b> <a href='mailto:francisco.anta.sanchez@gmail.com'>francisco.anta.sanchez@gmail.com</a>"
-    + "<h3>Tutor</h3><b>Name:</b> Jorge Miguel Gaspar Escribano."
+    + "<b>E-mail:</b> <a href='mailto:francisco.anta.sanchez@gmail.com'>francisco.anta.sanchez@gmail.com</a><br>"
+    + "<h3>Tutor</h3><b>Name:</b> Jorge M. Gaspar Escribano."
+    + "<b>E-mail:</b> <a href='mailto:jorge.gaspar@upm.es'>jorge.gaspar@upm.es</a>"
     + "<h2>Third party plugin credits:</h2>"
     + "<h3>Leaflet</h3><b>Author:</b> Volodymyr Agafonkin.<br><b>Address:</b> <a href='https://leafletjs.com/' target='_blank'>https://leafletjs.com/</a>"
     + "<h3>Leaflet.SidePanel</h3><b>Author:</b> Maxwell Ilai.<br><b>Address</b> <a href='https://github.com/maxwell-ilai/Leaflet.SidePanel' target='_blank'>https://github.com/maxwell-ilai/Leaflet.SidePanel</a>"
@@ -663,6 +678,7 @@ class LangageFunctions {
     // Context menut texts
     // General
     CONTEXT_MENU_CENTER_MAP_ITEM: "Center map",
+    CONTEXT_MENU_RESTORE_INITIAL_VIEW_ITEM: "Restore initial view",
     CONTEXT_MENU_SET_COORDINATES_ITEM: "Set coordinates",
     CONTEXT_MENU_DRAW_FILTER_CIRCLE_ITEM: "Draw filter circle",
     CONTEXT_MENU_ZOOM_TO_CLOSEST_QUAKES_ITEM: "Zoom to closest quake to clicked position",
@@ -731,6 +747,7 @@ class LangageFunctions {
     EVENT_LEGEND_CONTROL_FAULT_TITLE: "Faults",
     EVENT_LEGEND_CONTROL_FAULT_TEXT: "Fault",
     EVENT_LEGEND_CONTROL_POPULATION_TITLE: "Population number",
+    EVENT_LEGEND_CONTROL_DEPTH_TITLE: "Depth [km]",
     EVENT_LEGEND_CONTROL_MAGNITUDE_TITLE: "Magnitude",
     EVENT_LEGEND_CONTROL_MAGNITUDE_LETTER: "M",
     EVENT_LEGEND_CONTROL_POPULATION_NUMBER_LETTER: "P",

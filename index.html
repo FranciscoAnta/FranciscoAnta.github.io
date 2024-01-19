@@ -12,6 +12,7 @@
     <meta name="description" content="Visor de eventos sísmicos de España con propósitos didácticos
     y emprendido como proyecto de fin de máster de la titulación de Máster en Ingeniería Geodésica y Cartografía">
 
+    <link rel="icon" type="image/png" href="images/favicon.png"/>
     <link rel="stylesheet" href="css/leaflet.css" />
     <link rel="stylesheet" href="css/leaflet.contextmenu.css" />
     <link rel="stylesheet" href="css/L.Control.BetterScale.css" />
@@ -130,6 +131,7 @@
                     <h1 id="allFiltersTabTitle"></h1>
                     <p id="allFiltersTabDescription"></p>
                     <h2 id="quakeFiltersTitle"></h2>
+                    <p id="quakeMagnitudeFiltersDescription"></p>
                     <p>
                       <span id="quakeMinMagnitudeFilterText"></span>
                       <input id="quakeMinMagnitudeFilterInput">
@@ -138,6 +140,7 @@
                       <span id="quakeMaxMagnitudeFilterText"></span>
                       <input id="quakeMaxMagnitudeFilterInput">
                     </p>
+                    <p id="quakeIntensityFiltersDescription"></p>
                     <p>
                       <span id="quakeMinIntensityFilterText"></span>
                       <select id="quakeMinIntensityFilterInput"></select>
@@ -225,6 +228,7 @@
                     <h1 id="quakeFiltersTabTitle"></h1>
                     <p id="quakeFiltersTabDescription"></p>
                     <h2 id="quakeMagnitudeFiltersTitle"></h2>
+                    <p id="quakeMagnitudeFiltersDescription"></p>
                     <p>
                       <span id="quakeMinMagnitudeFilterText"></span>
                       <input id="quakeMinMagnitudeFilterInput">
@@ -234,6 +238,7 @@
                       <input id="quakeMaxMagnitudeFilterInput">
                     </p>
                     <h2 id="quakeIntensityFiltersTitle"></h2>
+                    <p id="quakeIntensityFiltersDescription"></p>
                     <p>
                       <span id="quakeMinIntensityFilterText"></span>
                       <select id="quakeMinIntensityFilterInput"></select>
@@ -518,10 +523,20 @@
                       <input id="optionsTabQuakesBorderColorInput">
                       <span id="optionsTabQuakesBorderColorText" class="biggerFont"></span>
                     </div>
-                    <br>
+                    <!-- <br>
                     <div>
                       <input id="optionsTabQuakesFillColorInput">
                       <span id="optionsTabQuakesFillColorText" class="biggerFont"></span>
+                    </div> -->
+                    <br>
+                    <div>
+                      <input id="optionsTabQuakesMinDepthColorInput">
+                      <span id="optionsTabQuakesMinDepthColorText" class="biggerFont"></span>
+                    </div>
+                    <br>
+                    <div>
+                      <input id="optionsTabQuakesMaxDepthColorInput">
+                      <span id="optionsTabQuakesMaxDepthColorText" class="biggerFont"></span>
                     </div>
                     <h3 id="optionsTabFaultsStylesTitle"></h3>
                     <div>
@@ -534,9 +549,18 @@
                       <span id="optionsTabPopulationsBorderColorText" class="biggerFont"></span>
                     </div>
                     <br>
-                    <div>
+                    <!-- <div>
                       <input id="optionsTabPopulationsFillColorInput">
                       <span id="optionsTabPopulationsFillColorText" class="biggerFont"></span>
+                    </div> -->
+                    <div>
+                      <input id="optionsTabPopulationsMinNumberColorInput">
+                      <span id="optionsTabPopulationsMinNumberColorText" class="biggerFont"></span>
+                    </div>
+                    <br>
+                    <div>
+                      <input id="optionsTabPopulationsMaxNumberColorInput">
+                      <span id="optionsTabPopulationsMaxNumberColorText" class="biggerFont"></span>
                     </div>
                     <h3 id="optionsTabIntensitiesStylesTitle"></h3>
                     <div>
