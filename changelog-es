@@ -1,6 +1,15 @@
 Control de cambios:
+
 Versión 1.0:
  - ¡Lanzamiento inicial!
 
 Versión 1.1:
- - 
+ - La simbología de sismos incluye ahora un gradiente (modificable sus colores inicial y final) de tono en el relleno para mostrar la profundidad de los terremotos. El color depende del valor respecto a
+   los valores mínimo y máximo de los sismos filtrados.
+ - La simbología de poblaciones se muestra con círculos cuyo radio es función (en una escala logarítmica de base 10) del número de habitantes. El relleno contiene un gradiente (modificable sus colores inicial
+   y final) que muestra el número de habitantes respecto a los valores mínimo y máximo de los sismos filtrados.
+ - Añadido el correo de Jorge Gaspar a la información de contacto.
+ - Añadida la función de "Restaurar vista inicial" en el menú contextual.
+ - Añadido "favicon".
+ - Corregido error por el que al modificar la simbología de una capa no se modificaba su correspondiente duplicada.
+ - Corregidos otros errores de código y texto.
