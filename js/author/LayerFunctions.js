@@ -143,7 +143,11 @@ class LayerFunctions {
   }
 
   static getPopulationsPointToLayerFunction(feature, latlng, pane) {
-    return L.shapeMarker(latlng, StyleFunctions.getPopulationsStyle(feature, pane));
+    if (USE_OLD_POPULATION_SYMBOLOGY) {
+      return L.shapeMarker(latlng, StyleFunctions.getPopulationOldStyle(feature, pane));
+    } else {
+      return L.circleMarker(latlng, {pane: pane});
+    }
   }
 
   static getPopulationsFilterFunction(feature, filters) {
@@ -290,6 +294,11 @@ class LayerFunctions {
         return filterFunction(feature, filters);
       }
     }
+
+    if (!USE_OLD_POPULATION_SYMBOLOGY) {
+      options.style = StyleFunctions.getPopulationNewStyle
+    }
+
     return L.geoJSON(populationsData, options);
   }
 
@@ -361,6 +370,7 @@ class LayerFunctions {
     const layer = this.getQuakesLayer(PaneSymbol.QUAKES, filters);
     quakesLayer = layer;
     this.addLayer(layer, LangageFunctions.getText('QUAKES_LAYER'));
+    StyleFunctions.updateQuakesLayerFillColor(quakesLayer);
   }
 
   static addFaultsLayer(filters) {
@@ -373,6 +383,7 @@ class LayerFunctions {
     const layer = this.getPopulationsLayer(PaneSymbol.POPULATIONS, filters);
     populationsLayer = layer;
     this.addLayer(layer, LangageFunctions.getText('POPULATIONS_LAYER'));
+    StyleFunctions.updatePopulationsLayerFillColor(populationsLayer);
   }
 
   static addIntensitiesLayer() {
@@ -385,6 +396,7 @@ class LayerFunctions {
     const layer = this.getQuakesLayer(PaneSymbol.DUPLICATED_QUAKES, filters);
     duplicatedQuakesLayer = layer;
     this.addLayer(layer, LangageFunctions.getText('DUPLICATED_QUAKES_LAYER'));
+    StyleFunctions.updateQuakesLayerFillColor(duplicatedQuakesLayer);
   }
 
   static addDuplicatedFaultsLayer(filters) {
@@ -397,6 +409,7 @@ class LayerFunctions {
     const layer = this.getPopulationsLayer(PaneSymbol.DUPLICATED_POPULATIONS, filters);
     duplicatedPopulationsLayer = layer;
     this.addLayer(layer, LangageFunctions.getText('DUPLICATED_POPULATIONS_LAYER'));
+    StyleFunctions.updatePopulationsLayerFillColor(duplicatedPopulationsLayer);
   }
 
   static addFilterCircleLayer(latLng, isInteractive) {
@@ -806,6 +819,10 @@ class LayerFunctions {
   }
 
   // Otras funciones / Other functions
+
+  static setAllQuakesDepthColor(layer) {
+    StyleFunctions.setAllQuakesDepthColor(layer.getLayers());
+  }
 
   static getLayerByKeyName(key) {
     if (key === 'quakesLayer') {

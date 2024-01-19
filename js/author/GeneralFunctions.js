@@ -286,6 +286,7 @@ class GeneralFunctions {
   static getContextMenuItemsBasicFunctions() {
     let array = [];
     array.push({text: LangageFunctions.getText('CONTEXT_MENU_CENTER_MAP_ITEM'), callback: this.centerMap});
+    array.push({text: LangageFunctions.getText('CONTEXT_MENU_RESTORE_INITIAL_VIEW_ITEM'), callback: this.restoreInitialView});
     array.push({text: LangageFunctions.getText('CONTEXT_MENU_SET_COORDINATES_ITEM'), callback: this.setCoordinates});
     array.push({text: LangageFunctions.getText('CONTEXT_MENU_DRAW_FILTER_CIRCLE_ITEM'), callback: this.starDrawFilterCircle});
     return array;
@@ -293,6 +294,11 @@ class GeneralFunctions {
 
   static centerMap(ev) {
     map.panTo(ev.latlng);
+  }
+
+  static restoreInitialView(ev) {
+    const latlng = L.latLng(INITIAL_LATITUDE, INITIAL_LONGITUDE);
+    map.setView(latlng, INITIAL_ZOOM_LEVEL);
   }
 
   static setCoordinates(ev) {

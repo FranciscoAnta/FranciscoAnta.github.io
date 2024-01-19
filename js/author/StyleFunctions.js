@@ -34,6 +34,8 @@ LayerStyles = {
   quakeBorderColor: '#000000',
   quakeWeight: 2,
   quakeFillOpacity: 0.8,
+  quakeMinDepthColor: '#009933',
+  quakeMaxDepthColor: '#663300',
 
   // Falla / Fault
   faultColor: '#ff0000',
@@ -42,8 +44,12 @@ LayerStyles = {
   // Población / Population
   populationBorderColor: '#000000',
   populationFillColor: '#ffffff',
-  populationFillOpacity: 1,
+  populationMinNumberColor: '#ffaa00',
+  populationMaxNumberColor: '#4d3300',
+  populationFillOpacity: 0.8,
   populationWeight: 1.5,
+  populationMinRadius: 1,
+  populationMaxRadius: 3,
 
   // Intensidad / Intensity
   intensityBorderColor: '#808080',
@@ -103,9 +109,9 @@ class StyleFunctions {
 
   static getQuakesStyle(feature) {
     const magnitudeAttribute = AttributesConfig.QUAKE_MAGNITUDE;
-    const value = Math.max(1, feature.properties[magnitudeAttribute]);
+    const magnitude = Math.max(1, feature.properties[magnitudeAttribute]);
     return {
-      radius: 2 * Math.pow(value, MAGNITUDE_EXPONENT),
+      radius: 2 * Math.pow(magnitude, MAGNITUDE_EXPONENT),
       color: LayerStyles.quakeBorderColor,
       fillColor: LayerStyles.quakeFillColor,
       weight: LayerStyles.quakeWeight,
@@ -120,10 +126,23 @@ class StyleFunctions {
     }
   }
 
-  static getPopulationsStyle(feature, pane) {
+  static getPopulationNewStyle(feature, pane) {
+    const valueAttribute = AttributesConfig.POPULATION_NUMBER;
+    const value = feature.properties[valueAttribute];
+    const radius = StyleFunctions.getPopulationNewRadius(value);
+    return {
+      radius: radius,
+      color: LayerStyles.populationBorderColor,
+      fillColor: LayerStyles.populationFillColor,
+      weight: LayerStyles.quakeWeight,
+      fillOpacity: LayerStyles.populationFillOpacity
+    }
+  }
+
+  static getPopulationOldStyle(feature, pane) {
     const valueAttribute = AttributesConfig.POPULATION_NUMBER;
     const shape = this.getPopulationShape(feature.properties[valueAttribute]);
-    const radius = this.getPopulationRadius(shape);
+    const radius = this.getPopulationOldRadius(shape);
     return {
       pane: pane,
       color: LayerStyles.populationBorderColor,
@@ -186,6 +205,12 @@ class StyleFunctions {
     }
   }
 
+  static getQuakeFillColor(depth, max) {
+    const rate = depth / max;
+    return this.getGradientColor(rate, LayerStyles.quakeMinDepthColor, LayerStyles.quakeMaxDepthColor);
+  }
+
+
   static getPopulationShape(populationNumber) {
     if (populationNumber > 100000) {
       return 'star-5';
@@ -198,7 +223,16 @@ class StyleFunctions {
     }
   }
 
-  static getPopulationRadius(shape) {
+  static getPopulationFillColor(populationNumber, max) {
+    const rate = populationNumber / max;
+    return this.getGradientColor(rate, LayerStyles.populationMinNumberColor, LayerStyles.populationMaxNumberColor);
+  }
+
+  static getPopulationNewRadius(populationNumber) {
+    return Math.pow(Math.log10(populationNumber), POPULATION_EXPONENT) + 4;
+  }
+
+  static getPopulationOldRadius(shape) {
     if (shape === 'star-5') {
       return 20;
     } else if (shape === 'diamond') {
@@ -240,6 +274,26 @@ class StyleFunctions {
     return color;
   }
 
+  static getGradientColor(rate, minColor, maxColor) {
+    // Los parámetros minColor y maxColor deben estar en color hexadecimal
+    // Parameters minColor and maxColor must be in hexadecimal color
+    const minHsvColor = MiscFunctions.hexColorToHsvColor(minColor);
+    const maxHsvColor = MiscFunctions.hexColorToHsvColor(maxColor);
+    const maxH = maxHsvColor[0];
+    const maxS = maxHsvColor[1];
+    const maxV = maxHsvColor[2];
+    const minH = minHsvColor[0];
+    const minS = minHsvColor[1];
+    const minV = minHsvColor[2];
+    const dH = maxH - minH;
+    const dS = maxS - minS;
+    const dV = maxV - minV;
+    const h = (rate * dH) + minH;
+    const s = (rate * dS) + minS;
+    const v = (rate * dV) + minV; 
+    return MiscFunctions.hsvColorToHexColor([h, s, v]);
+  }
+
   // Funciones de resaltado / Highlight functions
 
   static highlightLayer(ev) {
@@ -278,5 +332,31 @@ class StyleFunctions {
       weight: newWeight,
       color: color
     })
+  }
+
+  // Otras / Others
+
+  static updateQuakesLayerFillColor(groupLayer) {
+    let i, layer, value, color;
+    const maxValue = MiscFunctions.getFilteredQuakesMaxDepth();
+    const layers = groupLayer.getLayers();
+    for (i = 0; i < layers.length; i++) {
+      layer = layers[i];
+      value = layer.feature.properties[AttributesConfig.QUAKE_DEPTH];
+      color = StyleFunctions.getQuakeFillColor(value, maxValue);
+      layer.setStyle({fillColor: color});
+    }
+  }
+
+  static updatePopulationsLayerFillColor(groupLayer) {
+    let i, layer, value, color;
+    const maxValue = MiscFunctions.getFilteredPopulationsMaxValue();
+    const layers = groupLayer.getLayers();
+    for (i = 0; i < layers.length; i++) {
+      layer = layers[i];
+      value = layer.feature.properties[AttributesConfig.POPULATION_NUMBER];
+      color = StyleFunctions.getPopulationFillColor(value, maxValue);
+      layer.setStyle({fillColor: color});
+    }
   }
 }
