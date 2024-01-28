@@ -349,14 +349,16 @@ class StyleFunctions {
   }
 
   static updatePopulationsLayerFillColor(groupLayer) {
-    let i, layer, value, color;
-    const maxValue = MiscFunctions.getFilteredPopulationsMaxValue();
-    const layers = groupLayer.getLayers();
-    for (i = 0; i < layers.length; i++) {
-      layer = layers[i];
-      value = layer.feature.properties[AttributesConfig.POPULATION_NUMBER];
-      color = StyleFunctions.getPopulationFillColor(value, maxValue);
-      layer.setStyle({fillColor: color});
+    if (!USE_OLD_POPULATION_SYMBOLOGY) {
+      let i, layer, value, color;
+      const maxValue = MiscFunctions.getFilteredPopulationsMaxValue();
+      const layers = groupLayer.getLayers();
+      for (i = 0; i < layers.length; i++) {
+        layer = layers[i];
+        value = layer.feature.properties[AttributesConfig.POPULATION_NUMBER];
+        color = StyleFunctions.getPopulationFillColor(value, maxValue);
+        layer.setStyle({fillColor: color});
+      } 
     }
   }
 }
