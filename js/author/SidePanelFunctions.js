@@ -1218,7 +1218,7 @@ class SidePanelFunctions {
     LayerFunctions.removeDuplicatedPopulationsLayer();
     LayerFunctions.addDuplicatedPopulationsLayer(SidePanelFunctions.getPopulationFilters());
     SidePanelFunctions.initializeExportLayerSelect();
-    WindowFunctions.showDuplicateWindow();
+    WindowFunctions.showDuplicatePopulationsWindow();
     SidePanelFunctions.setFilterLegendDuplicatedPopulationsFilters();
   }
 
