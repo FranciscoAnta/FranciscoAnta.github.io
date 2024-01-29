@@ -291,7 +291,7 @@ L.Control.EventLegend = L.Control.extend({
   },
 
   getQuakeSizeFormula: function(magnitude) {
-    return 4 * (Math.pow(magnitude, MAGNITUDE_EXPONENT) + 4);
+    return 4 * (Math.pow(magnitude, MAGNITUDE_EXPONENT));
   },
 
   getPopulationSizeFormula: function(value) {
