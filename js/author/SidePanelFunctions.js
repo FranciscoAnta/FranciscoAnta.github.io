@@ -1098,7 +1098,7 @@ class SidePanelFunctions {
     // Valor en km
     // Value in km
     let value = this.valueAsNumber;
-    if (!Number.isNaN) {
+    if (!Number.isNaN(value)) {
       value = MiscFunctions.clamp(this. valueAsNumber, MIN_RADIUS, MAX_RADIUS);
       SidePanelFunctions.setSpatialRadiusFilter(value);
       GeneralFunctions.finishDraw();
