@@ -59,7 +59,7 @@ class GeneralFunctions {
     map.getPane(PaneSymbol.TERRITORIAL_LIMIT).style.zIndex = PaneZIndex.TERRITORIAL_LIMIT;
     map.getPane(PaneSymbol.FILTER_BUFFER).style.zIndex = PaneZIndex.FILTER_BUFFER;
     map.getPane(PaneSymbol.QUAKES).style.zIndex = PaneZIndex.QUAKES;
-    map.getPane(PaneSymbol.DUPLICATED_QUAKES).style.zIndex = PaneZIndex.INTENSITIES;
+    map.getPane(PaneSymbol.DUPLICATED_QUAKES).style.zIndex = PaneZIndex.DUPLICATED_QUAKES;
     map.getPane(PaneSymbol.POPULATIONS).style.zIndex = PaneZIndex.POPULATIONS;
     map.getPane(PaneSymbol.DUPLICATED_POPULATIONS).style.zIndex = PaneZIndex.DUPLICATED_POPULATIONS;
     map.getPane(PaneSymbol.FAULTS).style.zIndex = PaneZIndex.FAULTS;
