@@ -119,7 +119,6 @@ class LayerFunctions {
 
     if (filters.insideTerritorialLimit) {
       isInsideTerritorialLimit = GeometryFunctions.isFeatureInsidelayerGroup(territorialLimitLayer, feature);
-      //isInsideTerritorialLimit = true;
     } else {
       isInsideTerritorialLimit = true;
     }
@@ -143,11 +142,7 @@ class LayerFunctions {
   }
 
   static getPopulationsPointToLayerFunction(feature, latlng, pane) {
-    if (USE_OLD_POPULATION_SYMBOLOGY) {
-      return L.shapeMarker(latlng, StyleFunctions.getPopulationOldStyle(feature, pane));
-    } else {
-      return L.circleMarker(latlng, {pane: pane});
-    }
+    return L.shapeMarker(latlng, StyleFunctions.getPopulationOldStyle(feature, pane));
   }
 
   static getPopulationsFilterFunction(feature, filters) {
@@ -294,11 +289,6 @@ class LayerFunctions {
         return filterFunction(feature, filters);
       }
     }
-
-    if (!USE_OLD_POPULATION_SYMBOLOGY) {
-      options.style = StyleFunctions.getPopulationNewStyle
-    }
-
     return L.geoJSON(populationsData, options);
   }
 
@@ -383,7 +373,6 @@ class LayerFunctions {
     const layer = this.getPopulationsLayer(PaneSymbol.POPULATIONS, filters);
     populationsLayer = layer;
     this.addLayer(layer, LangageFunctions.getText('POPULATIONS_LAYER'));
-    StyleFunctions.updatePopulationsLayerFillColor(populationsLayer);
   }
 
   static addIntensitiesLayer() {
@@ -409,7 +398,6 @@ class LayerFunctions {
     const layer = this.getPopulationsLayer(PaneSymbol.DUPLICATED_POPULATIONS, filters);
     duplicatedPopulationsLayer = layer;
     this.addLayer(layer, LangageFunctions.getText('DUPLICATED_POPULATIONS_LAYER'));
-    StyleFunctions.updatePopulationsLayerFillColor(duplicatedPopulationsLayer);
   }
 
   static addFilterCircleLayer(latLng, isInteractive) {

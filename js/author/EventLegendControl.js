@@ -175,94 +175,6 @@ L.Control.EventLegend = L.Control.extend({
   },
 
   getPopulationsContains: function() {
-    if (USE_OLD_POPULATION_SYMBOLOGY) {
-      return this.getPopulationContainsOld();
-    } else {
-      return this.getPopulationContainsNew();
-    }
-  },
-
-  getPopulationContainsNew: function() {
-    const title = LangageFunctions.getText('EVENT_LEGEND_CONTROL_POPULATION_TITLE');
-    let contains = "<p><div><b><em>" + title + "</em></b></div>";
-    contains += this.getPopulationGradientContents();
-    contains += this.getPopulationRadiusContents();
-    contains += "</p>";
-    return contains;
-  },
-
-  getPopulationGradientContents: function() {
-    const maxSize = Math.max(150, this.getPopulationSizeFormula(POPULATIONS_MAX_NUMBER));
-    const minValue = String(MiscFunctions.getFilteredPopulationsMinValue());
-    const maxValue = String(MiscFunctions.getFilteredPopulationsMaxValue());
-    const gradient = this.getPopulationGradient();
-    const b = 4;
-    const ts = 8;
-    const yt = 16;
-    const h = 20;
-    const tw1 = minValue.length * ts;
-    const tw2 = maxValue.length * ts;
-    const w = maxSize + 140;
-    let contains = "<div><svg width='" + w + "' height='" + h + "'>";
-    contains += gradient;
-    contains += "<text x='0' y='" + yt + "'>" + minValue + "</text>";
-    contains += "<rect x='" + (tw1 + b) + "' y='2' width='" + (w - tw1 - tw2 - b * 2) + "' height='" + 20 + "'fill='url(#populationGradient)'/>";
-    contains += "<text x='" + (w - tw2) + "' y='" + yt + "' >" + maxValue + "</text>";
-    contains += "</svg></div>"
-    return contains;
-  },
-
-  getPopulationRadiusContents: function() {
-    let i, value, size, y, r, text, yl;
-    const max = POPULATIONS_MAX_NUMBER;
-    const maxExponent = Math.max(0, Math.floor(Math.log10(POPULATIONS_MAX_NUMBER)));
-    const minExponent = 1;
-    const maxSize = this.getPopulationSizeFormula(max);
-    const bc = StyleFunctions.getValue('populationBorderColor');
-    const fc = StyleFunctions.getValue('populationFillColor');
-    const sw = StyleFunctions.getValue('populationWeight');
-    const fo = 0;
-    const b = 4;
-    const ts = 140;
-    const w = maxSize + b + ts;
-    const h = maxSize + b * 3;
-    const x = (maxSize + b) / 2;
-    const mr = maxSize / 2;
-    const xl = x + mr + b;
-    const xt = xl + b;
-    let contains = "<p>";
-    contains += "<div><svg width='" + w + "' height='" + h + "'>";
-
-    text = this.getPopulationTextNew(max, 0, max);
-    r = maxSize / 2;
-    y = h / 2 + mr - r;
-    yl = y - r;
-    contains += "<circle cx='" + x + "' cy='" + y + "'r='" + r + "' stroke='" + bc + "' stroke-width='" + sw + "' fill='" + fc + "' fill-opacity='" + fo + "'/>";
-    contains += "<line x1='" + x + "' x2='" + xl + "' y1='" + yl + "' y2='" + yl + "' stroke='black' stroke-width='1'/>";
-    contains += "<text x='" + xt + "' y='" + (yl + 4) +"'>" + text + "</text>";
-
-    for (i = maxExponent; i >= minExponent; i--) {
-      value = Math.pow(10, i);
-      text = this.getPopulationTextNew(value, Math.pow(10, minExponent), Math.pow(10, (maxExponent + 1)));
-      size = this.getPopulationSizeFormula(value);
-      r = size / 2;
-      y = h / 2 + mr - r;
-      yl = y - r;
-
-      contains += "<circle cx='" + x + "' cy='" + y + "'r='" + r + "' stroke='" + bc + "' stroke-width='" + sw + "' fill='" + fc + "' fill-opacity='" + fo + "'/>";
-      contains += "<line x1='" + x + "' x2='" + xl + "' y1='" + yl + "' y2='" + yl + "' stroke='black' stroke-width='1'/>";
-      if (i === minExponent) yl += 5;
-      contains += "<text x='" + xt + "' y='" + (yl + 4) +"'>" + text + "</text>";
-    }
-
-    contains += "</svg></div>"
-    contains += "</div>";
-    contains += "</p>";
-
-    return contains;
-  },
-
-  getPopulationContainsOld: function() {
     const title = LangageFunctions.getText('EVENT_LEGEND_CONTROL_POPULATION_TITLE');
     const bc = StyleFunctions.getValue('populationBorderColor');
     const fc = StyleFunctions.getValue('populationFillColor');
@@ -342,22 +254,9 @@ L.Control.EventLegend = L.Control.extend({
       StyleFunctions.getValue('quakeMaxDepthColor'), 'depthGradient');
   },
 
-  getPopulationGradient: function() {
-    return this.getGradient(StyleFunctions.getValue('populationMinNumberColor'),
-      StyleFunctions.getValue('populationMaxNumberColor'), 'populationGradient');
-  },
-
   getGradient: function(minColor, maxColor, gradientId) {
-    const color20 = StyleFunctions.getGradientColor(0.20, minColor, maxColor);
-    const color40 = StyleFunctions.getGradientColor(0.40, minColor, maxColor);
-    const color60 = StyleFunctions.getGradientColor(0.60, minColor, maxColor);
-    const color80 = StyleFunctions.getGradientColor(0.80, minColor, maxColor);
     let contains = "<defs><linearGradient id='" + gradientId + "'>";
     contains += "<stop offset='0%' stop-color='" + minColor + "'/>";
-    contains += "<stop offset='20%' stop-color='" + color20 + "'/>";
-    contains += "<stop offset='40%' stop-color='" + color40 + "'/>";
-    contains += "<stop offset='60%' stop-color='" + color60 + "'/>";
-    contains += "<stop offset='80%' stop-color='" + color80 + "'/>";
     contains += "<stop offset='100%' stop-color='" + maxColor + "'/>";
     contains += "</linearGradient></defs>";
     return contains;

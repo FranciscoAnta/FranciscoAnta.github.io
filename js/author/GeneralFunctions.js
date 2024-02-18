@@ -435,9 +435,10 @@ class GeneralFunctions {
   }
 
   static toogleLayerControlCollpase() {
-    if (layerControl) {
+    if (map && layerControl) {
+      map.removeControl(layerControl);
       layerControl.options.collapsed = !layerControl.options.collapsed;
-      this.updateLayerControl();
+      map.addControl(layerControl);
     }
   }
 
