@@ -34,8 +34,8 @@ LayerStyles = {
   quakeBorderColor: '#000000',
   quakeWeight: 2,
   quakeFillOpacity: 0.8,
-  quakeMinDepthColor: '#009933',
-  quakeMaxDepthColor: '#663300',
+  quakeMinDepthColor: '#ffe564',
+  quakeMaxDepthColor: '#783c0a',
 
   // Falla / Fault
   faultColor: '#ff0000',
@@ -44,8 +44,6 @@ LayerStyles = {
   // Población / Population
   populationBorderColor: '#000000',
   populationFillColor: '#ffffff',
-  populationMinNumberColor: '#ffaa00',
-  populationMaxNumberColor: '#4d3300',
   populationFillOpacity: 0.8,
   populationWeight: 1.5,
   populationMinRadius: 1,
@@ -69,7 +67,7 @@ LayerStyles = {
   importedLayerFillColor: '#3388ff',
 
   // Sistema / System
-  markedColor: '#008000',
+  markedColor: '#ffff00',
   markedWeightGain: 2,
   highlighWeightGain: 2
 }
@@ -274,24 +272,38 @@ class StyleFunctions {
     return color;
   }
 
+  // static getGradientColor(rate, minColor, maxColor) {
+  //   // Los parámetros minColor y maxColor deben estar en color hexadecimal
+  //   // Parameters minColor and maxColor must be in hexadecimal color
+  //   const minHsvColor = MiscFunctions.hexColorToHsvColor(minColor);
+  //   const maxHsvColor = MiscFunctions.hexColorToHsvColor(maxColor);
+  //   const maxH = maxHsvColor[0];
+  //   const maxS = maxHsvColor[1];
+  //   const maxV = maxHsvColor[2];
+  //   const minH = minHsvColor[0];
+  //   const minS = minHsvColor[1];
+  //   const minV = minHsvColor[2];
+  //   const dH = maxH - minH;
+  //   const dS = maxS - minS;
+  //   const dV = maxV - minV;
+  //   const h = (rate * dH) + minH;
+  //   const s = (rate * dS) + minS;
+  //   const v = (rate * dV) + minV; 
+  //   return MiscFunctions.hsvColorToHexColor([h, s, v]);
+  // }
+
   static getGradientColor(rate, minColor, maxColor) {
     // Los parámetros minColor y maxColor deben estar en color hexadecimal
     // Parameters minColor and maxColor must be in hexadecimal color
-    const minHsvColor = MiscFunctions.hexColorToHsvColor(minColor);
-    const maxHsvColor = MiscFunctions.hexColorToHsvColor(maxColor);
-    const maxH = maxHsvColor[0];
-    const maxS = maxHsvColor[1];
-    const maxV = maxHsvColor[2];
-    const minH = minHsvColor[0];
-    const minS = minHsvColor[1];
-    const minV = minHsvColor[2];
-    const dH = maxH - minH;
-    const dS = maxS - minS;
-    const dV = maxV - minV;
-    const h = (rate * dH) + minH;
-    const s = (rate * dS) + minS;
-    const v = (rate * dV) + minV; 
-    return MiscFunctions.hsvColorToHexColor([h, s, v]);
+    const minRgbColor = MiscFunctions.hexColorToRgbColor(minColor);
+    const maxRgbColor = MiscFunctions.hexColorToRgbColor(maxColor);
+    const dr = maxRgbColor[0] - minRgbColor[0];
+    const dg = maxRgbColor[1] - minRgbColor[1];
+    const db = maxRgbColor[2] - minRgbColor[2];
+    const r = Math.round(minRgbColor[0] + (rate * dr));
+    const g = Math.round(minRgbColor[1] + (rate * dg));
+    const b = Math.round(minRgbColor[2] + (rate * db));
+    return MiscFunctions.rgbColorToHexColor([r, g, b]);
   }
 
   // Funciones de resaltado / Highlight functions
@@ -345,20 +357,6 @@ class StyleFunctions {
       value = layer.feature.properties[AttributesConfig.QUAKE_DEPTH];
       color = StyleFunctions.getQuakeFillColor(value, maxValue);
       layer.setStyle({fillColor: color});
-    }
-  }
-
-  static updatePopulationsLayerFillColor(groupLayer) {
-    if (!USE_OLD_POPULATION_SYMBOLOGY) {
-      let i, layer, value, color;
-      const maxValue = MiscFunctions.getFilteredPopulationsMaxValue();
-      const layers = groupLayer.getLayers();
-      for (i = 0; i < layers.length; i++) {
-        layer = layers[i];
-        value = layer.feature.properties[AttributesConfig.POPULATION_NUMBER];
-        color = StyleFunctions.getPopulationFillColor(value, maxValue);
-        layer.setStyle({fillColor: color});
-      } 
     }
   }
 }

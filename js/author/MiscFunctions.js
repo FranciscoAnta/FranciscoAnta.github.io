@@ -11,21 +11,45 @@ class MiscFunctions {
     return Math.max(min, Math.min(value, max));
   }
 
+  // static searchPopulation() {
+  //   let i, obj, latlng, coords;
+  //   const array = populationsData.features;
+  //   const value = searchboxControl.getValue();
+  //   if (value !== "") {
+  //     for (i = 0; i < array.length; i++) {
+  //       obj = array[i];
+  //       if (obj.properties.nombre === value) {
+  //         coords = obj.geometry.coordinates;
+  //         latlng = L.latLng(coords[1], coords[0]);
+  //         map.setView(latlng, 12);
+  //       }
+  //     }
+  //   }
+
+  //   searchboxControl.hide();
+  //   searchboxControl.clear();
+  // }
+
   static searchPopulation() {
-    let i, obj, latlng, coords;
-    const array = populationsData.features;
+    let i, name, population, coordinates, latlng;
+    const populationArray = populationsData.features;
     const value = searchboxControl.getValue();
-    if (value !== "") {
-      for (i = 0; i < array.length; i++) {
-        obj = array[i];
-        if (obj.properties.nombre === value) {
-          coords = obj.geometry.coordinates;
-          latlng = L.latLng(coords[1], coords[0]);
-          map.setView(latlng, 12);
+    if (value) {
+      const searchArray = fuse.search(value);
+      if (searchArray.length > 0) {
+        name = searchArray[0].item;
+      }
+      if (name) {
+        for (i = 0; i < populationArray.length; i++) {
+          population = populationArray[i];
+          if (name === population.properties[AttributesConfig.POPULATION_NAME]) {
+            coordinates = population.geometry.coordinates;
+            latlng = L.latLng(coordinates[1], coordinates[0]);
+            map.setView(latlng, 12);
+          }
         }
       }
     }
-
     searchboxControl.hide();
     searchboxControl.clear();
   }
