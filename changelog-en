@@ -11,3 +11,10 @@ Version 1.1:
  - Added "favicon".
  - Corrected an error that did not modify the simbology of a duplicated layer when it was modified.
  - Corrected other code and text errors.
+
+Version 1.2:
+ - Modified default colors for the minimum and maximum quake depth symbologies.
+ - Modified the searchbox populationc control. Now on pressing "ENTER" o clicking on the magnifying lens icon the first sugested population will be selected.
+ - Updated quake catalog to 18/02/2024.
+ - Added to the option to display the layer control always deployed or contracted when not on focus.
+ - Minor changes.
