@@ -311,7 +311,7 @@ class LangageFunctions {
     + "<h3>Sismos</h3><b>Autor:</b> Instituto Geográfico Nacional (IGN).<br><b>Dirección:</b> <a href='https://www.ign.es/' target='_blank'>https://www.ign.es/</a>"
     + "<h3>Fallas</h3><b>Autor:</b> QAFI (Quaternary Active Faults database of Iberia), Instituto Geológico y Minero de España (IGME).<br><b>Dirección:</b> <a href='http://info.igme.es/qafi/' target='_blank'>http://info.igme.es/qafi/</a>"
     + "<h3>Poblaciones</h3><b>Autor:</b> Centroides generados con QGIS (<a href='https://www.qgis.org/es/site/' target='_blank'>https://www.qgis.org/es/site/</a>) a partir de datos de población del Instituto Geográfico Nacional (IGN).<br><b>Dirección:</b> <a href='https://www.ign.es/' target='_blank'>https://www.ign.es/</a>"
-    + "<h3>Intensidades</h3><b>Autor:</b> Generado a partir de la publicación \"Mapa de intensidades máximas (MIM) de España (península Ibérica y Baleares)\" de María José García Rodríguez, Luis Cabañas Rodríguez y Cecilia Albizua del Olmo, X Asamblea Hispano Portuguesa de Geodesia y Geofísica, Toledo, 2023 y de la publicación \"Revisión del Catálogo Sísmico de la Islas Canarias\" del Instituto Geográfico Nacional (IGN)."
+    + "<h3>Intensidades</h3><b>Autor:</b> Generado a partir de la publicación \"Mapa de Intensidad Máxima (MIM) de España (Península Ibérica y Baleares). M. José García y Luis Cabañas. 10ª Asamblea Hispano Portuguesa de Geodesia y Geofísica-Artículos-2023. Toledo 28 nov-1 dic 2022. Pags. 500-507.\" y de la publicación \"Revisión del Catálogo Sísmico de la Islas Canarias\" del Instituto Geográfico Nacional (IGN)."
     + "<h3>Iconos del panel lateral</h3><b>Dirección:</b> <a href='https://www.reshot.com/free-svg-icons' target='_blank'>https://www.reshot.com/free-svg-icons</a>",
 
     // Ventana de alerta
@@ -660,7 +660,7 @@ class LangageFunctions {
     + "<h3>Quakes</h3><b>Author:</b> Instituto Geográfico Nacional (IGN).<br><b>Address:</b> <a href='https://www.ign.es/' target='_blank'>https://www.ign.es/</a>"
     + "<h3>Faults</h3><b>Author:</b> QAFI (Quaternary Active Faults database of Iberia), Instituto Geológico y Minero de España (IGME).<br><b>Address:</b> <a href='http://info.igme.es/qafi/' target='_blank'>http://info.igme.es/qafi/</a>"
     + "<h3>Poblaciones</h3><b>Author:</b> Centroids generated with QGIS (<a href='https://qgis.org/en/site/' target='_blank'>https://qgis.org/en/site/</a>) from poblational data from Instituto Geográfico Nacional (IGN).<br><b>Address:</b> <a href='https://www.ign.es/' target='_blank'>https://www.ign.es/</a>"
-    + "<h3>Intensidades</h3><b>Author:</b> Generated from the publication \"Mapa de intensidades máximas (MIM) de España (península Ibérica y Baleares)\" de María José García Rodríguez, Luis Cabañas Rodríguez y Cecilia Albizua del Olmo, X Asamblea Hispano Portuguesa de Geodesia y Geofísica, Toledo, 2023 y and the publication \"Revisión del Catálogo Sísmico de la Islas Canarias\" del Instituto Geográfico Nacional (IGN)."
+    + "<h3>Intensidades</h3><b>Author:</b> Generated from the publication \"Mapa de Intensidad Máxima (MIM) de España (Península Ibérica y Baleares). M. José García y Luis Cabañas. 10ª Asamblea Hispano Portuguesa de Geodesia y Geofísica-Artículos-2023. Toledo 28 nov-1 dic 2022. Pags. 500-507.\" y and the publication \"Revisión del Catálogo Sísmico de la Islas Canarias\" del Instituto Geográfico Nacional (IGN)."
     + "<h3>Side panel icons</h3><b>Address:</b> <a href='https://www.reshot.com/free-svg-icons' target='_blank'>https://www.reshot.com/free-svg-icons</a>",
 
     // Alert window
